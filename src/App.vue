@@ -21,17 +21,38 @@ const requestOptions = ref({
 const result = ref('')
 async function postRequest(){
   try {
+
+    const kiseki = 'されどこの胸の炎は消させない'.replace(/[\u4E00-\u9FFF]+/g,'([\\u3040-\\u309F]+)')
+
+    const re = RegExp(`${kiseki}`, 'g')       // Two \ are required in a non-raw string literal
+
+    const kesekiHira = 'やみよをかけぬけて どこへむかう'
+
+  const str = 'されどこのむねのほのおはけさせない';
+
+const matches = [];
+let [,...result] = re.exec(str)
+let match;
+while ((match = re.exec(str))) { // 遍歷字符串中所有匹配的子串
+
+  matches.push(match[2]); // 將捕獲群組中的單詞添加到 matches 中
+}
+
+
+    const lyricsArr2 = lyrics.value.value.split('\n')
     reqData.value.sentence = lyrics.value.value.replace(/\n/gm,'||')
     requestOptions.value.body = JSON.stringify(reqData.value)
-    const response = await fetch("https://labs.goo.ne.jp/api/hiragana", requestOptions.value)
+    // console.log('%c 結果 ', 'background: #EA0000; color: #ffffff',lyrics.value.value.split('\n').map(i=>i.replace(/[\u4E00-\u9FFF]+/g,'[\u4E00-\u9FFF]+')));
+    // const response = await fetch("https://labs.goo.ne.jp/api/hiragana", requestOptions.value)
 
-    if(!response.ok){ throw new Error('Network response was not ok.') }
-    const data = await response.json();
-    const hiraganaLyrics = data.converted.split('||').map(i=>i.trim().replace(/[\s](?!\s)/mg,''))
-    lyrics.value.value.split('\n').map((sentence,i)=>{
-      furigana(sentence,hiraganaLyrics[i])
-    })
-    lyricsArr.value = lyricsArr.value.map(sentence => `<p>${sentence}</p>`).join('')
+    // if(!response.ok){ throw new Error('Network response was not ok.') }
+    // const data = await response.json();
+    // const hiraganaLyrics = data.converted.split('||').map(i=>i.trim().replace(/[\s](?!\s)/mg,''))
+    // console.log('%c 結果 ', 'background: #009393; color: #ffffff',lyricsArr2,hiraganaLyrics);
+    // lyrics.value.value.split('\n').map((sentence,i)=>{
+    //   furigana(sentence,hiraganaLyrics[i])
+    // })
+    // lyricsArr.value = lyricsArr.value.map(sentence => `<p>${sentence}</p>`).join('')
   } catch (error) {
     return error
   }
@@ -44,12 +65,7 @@ function furigana(japanese, hiragana) {
 
   let html = '';
   diff.push([0,'']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
-  diff.reduce((acc,[kind,text],index)=>{
-    if(index==0){
-      console.log('%c 結果 ', 'background: #009393; color: #ffffff',japanese,hiragana);
-    }
-    console.log('%c 結果 ', 'background: #EA0000; color: #ffffff',kind,text);     
-
+  diff.reduce((acc,[kind,text],index)=>{  
     if(kind === 0){
       if(acc.kanji || acc.hiragana){
         html += `<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana}</rt><rp>)</rp></ruby>`;
@@ -117,7 +133,7 @@ function getMatchingPositions(sentence,kanji) {
       <label for="">歌詞</label>
       <textarea name="" id="" cols="100" rows="10" ref="lyrics"></textarea>
     </div>
-    <template v-if="lyricsArr.length" >
+    <template v-if="lyricsArr.length">
       <div v-html="lyricsArr"></div>
     </template>
     <button @click="postRequest">點我</button>
@@ -127,5 +143,4 @@ function getMatchingPositions(sentence,kanji) {
 </template>
 
 <style scoped>
-
 </style>

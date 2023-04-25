@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "diff-match-patch": "^1.0.5",
-    "vue": "^3.2.47"
+    "pinia": "^2.0.35",
+    "vue": "^3.2.47",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",

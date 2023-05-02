@@ -1,9 +1,11 @@
 <template>
-  <mols-search-song/>
+  <test/>
+  <!-- <organ-song-list/> -->
 </template>
 
 <script setup>
-  import MolsSearchSong from './components/molecules/MolsSearchSong.vue'
+import test from './components/test/TestLayout.vue';
+import OrganSongList from './components/organisms/OrganSongList.vue';
 </script>
 
 <style>

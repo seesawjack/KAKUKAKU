@@ -1,13 +1,13 @@
 <template>
   <atmos-input @search-result="searchResult" :inputPh="'請輸入您要搜尋的音樂'"/>
-  <atmos-list-card class="mt-5" :resultData="resultData"/>
+  <mols-list-card class="max-w-[512px] mx-auto mt-5" :resultData="resultData"/>
 </template>
 
 <script setup>
 import { ref,onMounted } from 'vue';
 import { useRequestStore } from '../../stores/request';
 import AtmosInput from '../atmos/AtmosInput.vue';
-import AtmosListCard from '../atmos/AtmosListCard.vue';
+import MolsListCard from '../molecules/MolsListCard.vue';
 
 const reqStroe = useRequestStore();
 let youtubeURL = ref('https://youtube.googleapis.com/youtube/v3/search?');

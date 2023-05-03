@@ -71,7 +71,7 @@
   <div>
     <p class="text-xs">此網站僅供學習資源使用，版權仍歸於原創者</p>
   </div> -->
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col max-w-[650px] mx-auto">
     <!-- <div class="relative w-[640px] mb-5">
       <div class="flex flex-col">
         <atmos-card 

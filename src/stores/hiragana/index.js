@@ -16,6 +16,7 @@ export const useHiraganaStore = defineStore('hiragana',()=>{
     }
 
     async function kanjiLabelHiragana(apiData,lyrics){
+
         const hiraganaLyrics = apiData.split('||').map(i=>i.trim().replace(/[\s](?!\s)/mg,''))
 
         await lyrics.split('\n').map((sentence,i)=>{

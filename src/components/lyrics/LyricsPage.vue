@@ -11,7 +11,7 @@ const lyrics = ref('');
 const resultLyrics = hiraganaStore.resultLyrics; 
 async function generateHiraganaLyrics(){
   const reqData = hiraganaStore.updateLyricsInput(lyrics.value.value.replace(/\n/g,'||'));
-  const hiraganaLyrics = await reqStore.request(JSON.stringify(reqData))
+  const hiraganaLyrics = await reqStore.request('https://labs.goo.ne.jp/api/hiragana','POST',JSON.stringify(reqData))
   hiraganaStore.kanjiLabelHiragana(hiraganaLyrics.converted,lyrics.value.value)
 
 }

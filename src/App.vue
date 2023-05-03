@@ -1,11 +1,8 @@
 <template>
-  <test/>
-  <!-- <organ-song-list/> -->
+  <router-view></router-view>
 </template>
 
 <script setup>
-import test from './components/test/TestLayout.vue';
-import OrganSongList from './components/organisms/OrganSongList.vue';
 </script>
 
 <style>

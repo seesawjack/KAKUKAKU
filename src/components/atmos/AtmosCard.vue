@@ -1,9 +1,36 @@
 <template>
-  <div class="flex justify-center text-left">
+  <router-link v-if="!useAlone" class="flex justify-center text-left" :to="`/SongList/${id.videoId || id.channelId}`">
     <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
-      <div v-if="useAlone">
-        <p class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1">已選歌曲</p>
+      <div class="w-full relative before:block before:pb-[56%] overflow-hidden">
+        <picture>
+          <source
+            :srcset="data?.thumbnails.medium.url || url"
+            :media="`(min-width: ${data?.thumbnails.default.width || width}px)`"
+            :width="data?.thumbnails.default.width || width"
+            :height="data?.thumbnails.default.height || height"
+          />
+          <img
+            :srcset="data?.thumbnails.medium.url || url"
+            :width="data?.thumbnails.default.width || width"
+            :height="data?.thumbnails.default.height || height"
+            :alt="data?.title"
+            class="img-to-cover transition-transform group-hover:scale-[125%]"
+          />
+        </picture>
       </div>
+    </div>
+    <div class="w-full max-w-[390px] pl-5">
+      <p class="line-clamp">{{ data?.title || title }}</p>
+      <div class="text-xs text-slate-500 leading-5">
+        <p>{{ data?.channelTitle || subTitle }}</p>
+      </div>
+    </div>
+  </router-link>
+  <div v-else class="flex justify-center text-left">
+    <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
+      <p class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1">
+        已選歌曲
+      </p>
       <div class="w-full relative before:block before:pb-[56%] overflow-hidden">
         <picture>
           <source
@@ -40,6 +67,7 @@ const props = defineProps({
   title: String,
   subTitle: String,
   useAlone: Boolean,
+  id: Object
 });
 </script>
 

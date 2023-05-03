@@ -2,11 +2,11 @@ import { defineStore } from "pinia";
 
 export const useRequestStore = defineStore('request',()=>{
 
-    async function request({ url , method , headers , databody },option={}){
+    async function request({ url , method , headers , sendData },option={}){
         try {
             const response = await fetch( url , {
                 method: method || 'GET',
-                body: databody ? JSON.stringify(databody
+                body: sendData ? JSON.stringify(sendData
                     ) : null,
                 headers: headers || {
                     'content-type': 'application/json'

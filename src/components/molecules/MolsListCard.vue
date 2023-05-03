@@ -5,7 +5,11 @@
       v-for="item in resultData.items"
       :key="item.id.videoId"
     >
-      <atmos-card :data="item.snippet" />
+      <atmos-card 
+      :data="item.snippet"
+      :id="item.id"
+      :useAlone="false" 
+      />
     </div>
   </div>
 </template>
@@ -16,7 +20,6 @@ import AtmosCard from "../atmos/AtmosCard.vue";
 const props = defineProps({
   resultData: Object,
 });
-
 </script>
 
 <style>

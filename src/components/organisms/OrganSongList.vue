@@ -24,7 +24,7 @@ async function searchResult(inputValue){
     for(const [key,value] of Object.entries(queryString)){
         youtubeURL.value += `${key}=${value}&`   
     }
-    resultData.value = await reqStroe.request({ url : youtubeURL.value });
+    // resultData.value = await reqStroe.request({ url : youtubeURL.value });
 }
 
 onMounted(()=>{

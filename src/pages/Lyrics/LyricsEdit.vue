@@ -1,9 +1,9 @@
 <template>
-  
+    <organ-lyric-edit/>
 </template>
 
-<script>
-
+<script setup>
+ import OrganLyricEdit from '../../components/organisms/OrganLyricEdit.vue'
 </script>
 
 <style>

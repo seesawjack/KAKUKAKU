@@ -8,10 +8,10 @@ import LyricsResult from './pages/Lyrics/LyricsResult.vue'
 const router = createRouter({
     history:createWebHistory(),
     routes: [
-        { path: '/', redirect:'/SongList' },
-        { path: '/SongList', component:HomePage },
-        { path: '/SongList/edit/:id', component:LyricsEdit },
-        { path: '/SongList/:id', component:LyricsResult }
+        { path: '/', redirect:'/songlist' },
+        { path: '/songlist', component:HomePage },
+        { path: '/songlist/edit/:id', component:LyricsEdit },
+        { path: '/songlist/:id', component:LyricsResult }
         // {path: '/:notFound(.*)',component:NotFound}
 
     ],

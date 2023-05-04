@@ -28,10 +28,10 @@ const error = ref(null)
 
 function sendLyric(){
   if(!lyric.value.length){
-      error.value = '請輸入或上傳歌詞'
+      error.value = '請輸入或上傳歌詞';
+      return;
   }
-
-  // emit('getLyric',lyric.value)
+  emit('getLyric',lyric.value)
 }
 
 function handleError(){

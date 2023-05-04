@@ -1,5 +1,10 @@
 <template>
-  <router-link v-if="!useAlone" class="flex justify-center text-left" :to="`/SongList/${id.videoId || id.channelId}`">
+  <router-link
+    v-if="!useAlone"
+    class="flex justify-center text-left"
+    @click="selectedSong"
+    :to="`/songlist/edit/${id.videoId || id.channelId}`"
+  >
     <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
       <div class="w-full relative before:block before:pb-[56%] overflow-hidden">
         <picture>
@@ -59,6 +64,10 @@
 </template>
 
 <script setup>
+import { useGlobalStore } from "../../stores/index";
+
+const globalStore = useGlobalStore();
+
 const props = defineProps({
   data: Object,
   url: String,
@@ -67,8 +76,19 @@ const props = defineProps({
   title: String,
   subTitle: String,
   useAlone: Boolean,
-  id: Object
+  id: Object,
 });
+
+function selectedSong() {
+  globalStore.selectedSong({
+    id: props.id.videoId || props.id.channelId,
+    url: props.data.thumbnails.medium.url,
+    width: props.data.thumbnails.default.width,
+    height: props.data.thumbnails.default.height,
+    title: props.data.title,
+    subTitle: props.data.channelTitle,
+  });
+}
 </script>
 
 <style scoped>

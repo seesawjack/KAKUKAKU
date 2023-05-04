@@ -4,6 +4,12 @@
 
 <script setup>
 import { onMounted } from "vue";
+const props = defineProps({
+  id:{
+    type: String,
+    required: true
+  }
+})
 
 const tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
@@ -17,7 +23,7 @@ window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player("player", {
     height: "390",
     width: "640",
-    videoId: "ZRtdQ81jPUQ",
+    videoId: props.id,
     playerVars: {
       playsinline: 1,
     },

@@ -14,7 +14,7 @@ export const useRequestStore = defineStore('request',()=>{
                 mode: 'cors',
                 ...option
             }) 
-            if(!response.ok){ throw new Error('Network response was not ok.') }
+            if(!response.ok){ throw new Error(`${response.status}_請求失敗`) }
             const data = await response.json();
             return data;
         } catch (error) {

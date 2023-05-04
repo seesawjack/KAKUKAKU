@@ -1,13 +1,18 @@
 <template>
   <div>
+    <atmos-dialog :show="!!error" title="偵測到未輸入歌詞"  @close="handleError">
+      <p class="text-white text-center">{{error}}</p>
+    </atmos-dialog>
     <textarea
       class="resize-none bg-[transparent] border border-solid rounded-xl py-2 px-5"
       cols="53"
       rows="14"
-      ref="lyric"
+      v-model.trim="lyric"
     ></textarea>
     <div class="flex">
-      <button class="flex-1 border border-solid rounded-xl mr-2" @click="sendLyric">確定</button>
+      <button 
+      class="flex-1 border border-solid rounded-xl mr-2 hover:bg-slate-600" 
+      @click="sendLyric">確定</button>
       <button class="flex-1 border border-solid rounded-xl">上傳歌詞</button>
     </div>
   </div>
@@ -15,12 +20,22 @@
 
 <script setup>
 import { ref } from 'vue';
+import AtmosDialog from './AtmosDialog.vue';
 
-const lyric = ref('');
 const emit = defineEmits(['getLyric']);
+const lyric = ref('');
+const error = ref(null)
 
 function sendLyric(){
-  emit('getLyric',lyric.value.value)
+  if(!lyric.value.length){
+      error.value = '請輸入或上傳歌詞'
+  }
+
+  // emit('getLyric',lyric.value)
+}
+
+function handleError(){
+  error.value = null
 }
 </script>
 

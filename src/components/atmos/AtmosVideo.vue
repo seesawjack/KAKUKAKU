@@ -3,6 +3,8 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
+
 const tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
 
@@ -15,11 +17,9 @@ window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player("player", {
     height: "390",
     width: "640",
-    videoId: "YzoNZ-ozS3o",
+    videoId: "ZRtdQ81jPUQ",
     playerVars: {
       playsinline: 1,
-      loop: 1,
-      playlist: "YzoNZ-ozS3o",
     },
     events: {
       onReady: onPlayerReady,
@@ -43,6 +43,10 @@ function onPlayerStateChange(event) {
 function stopVideo() {
   player.stopVideo();
 }
+
+// onMounted(()=>{
+//   onPlayerReady();
+// })
 </script>
 
 <style>

@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "diff-match-patch": "^1.0.5",
+    "node-sass": "^8.0.0",
     "pinia": "^2.0.35",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.2",
     "vue": "^3.2.47",
     "vue-router": "4"
   },

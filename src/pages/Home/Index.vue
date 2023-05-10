@@ -1,11 +1,11 @@
 <template>
-    <OrganSongList />
+  <OrganSongList />
 </template>
 
 <script setup>
-    import OrganSongList from '../../components/organisms/OrganSongList.vue'
+import { ref } from "vue";
+import OrganSongList from "../../components/organisms/OrganSongList.vue";
 </script>
 
-<style>
-
+<style lang="scss">
 </style>

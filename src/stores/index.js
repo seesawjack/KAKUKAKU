@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 
 export const useGlobalStore = defineStore('global',()=>{
     const selectedSongInfo = ref({
@@ -12,6 +12,7 @@ export const useGlobalStore = defineStore('global',()=>{
     })
 
     function selectedSong(song){
+        localStorage.setItem('songHistory',JSON.stringify(song));
         selectedSongInfo.value = song
     }
     return{

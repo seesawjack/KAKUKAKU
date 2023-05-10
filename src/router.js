@@ -10,8 +10,8 @@ const router = createRouter({
     routes: [
         { path: '/', redirect:'/songlist' },
         { path: '/songlist', component:HomePage },
-        { path: '/songlist/edit/:id', component:LyricsEdit },
-        { path: '/songlist/:id', component:LyricsResult }
+        { path: '/song/edit', component:LyricsEdit },
+        { path: '/song', component:LyricsResult }
         // {path: '/:notFound(.*)',component:NotFound}
 
     ],

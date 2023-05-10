@@ -3,21 +3,21 @@
     v-if="!useAlone"
     class="flex justify-center text-left"
     @click="selectedSong"
-    :to="`/songlist/edit/${id.videoId || id.channelId}`"
+    :to="`/song/edit?search=${id.videoId || id.channelId}`"
   >
     <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
       <div class="w-full relative before:block before:pb-[56%] overflow-hidden">
         <picture>
           <source
             :srcset="data?.thumbnails.medium.url || url"
-            :media="`(min-width: ${data?.thumbnails.default.width || width}px)`"
-            :width="data?.thumbnails.default.width || width"
-            :height="data?.thumbnails.default.height || height"
+            :media="`(min-width: ${data?.thumbnails.default.width || width || 120}px)`"
+            :width="data?.thumbnails.default.width || width || 120"
+            :height="data?.thumbnails.default.height || height || 90"
           />
           <img
             :srcset="data?.thumbnails.medium.url || url"
-            :width="data?.thumbnails.default.width || width"
-            :height="data?.thumbnails.default.height || height"
+            :width="data?.thumbnails.default.width || width || 120"
+            :height="data?.thumbnails.default.height || height || 90"
             :alt="data?.title"
             class="img-to-cover transition-transform group-hover:scale-[125%]"
           />
@@ -40,14 +40,14 @@
         <picture>
           <source
             :srcset="data?.thumbnails.medium.url || url"
-            :media="`(min-width: ${data?.thumbnails.default.width || width}px)`"
-            :width="data?.thumbnails.default.width || width"
-            :height="data?.thumbnails.default.height || height"
+            :media="`(min-width: ${data?.thumbnails.default.width || width || 120}px)`"
+            :width="data?.thumbnails.default.width || width ||120"
+            :height="data?.thumbnails.default.height || height || 90"
           />
           <img
             :srcset="data?.thumbnails.medium.url || url"
-            :width="data?.thumbnails.default.width || width"
-            :height="data?.thumbnails.default.height || height"
+            :width="data?.thumbnails.default.width || width || 120"
+            :height="data?.thumbnails.default.height || height || 90"
             :alt="data?.title"
             class="img-to-cover transition-transform group-hover:scale-[125%]"
           />
@@ -80,14 +80,16 @@ const props = defineProps({
 });
 
 function selectedSong() {
-  globalStore.selectedSong({
+  const songInfo = {
     id: props.id.videoId || props.id.channelId,
     url: props.data.thumbnails.medium.url,
     width: props.data.thumbnails.default.width,
     height: props.data.thumbnails.default.height,
     title: props.data.title,
     subTitle: props.data.channelTitle,
-  });
+  };
+  
+  globalStore.selectedSong(songInfo);
 }
 </script>
 

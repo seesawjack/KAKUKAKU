@@ -25,10 +25,12 @@ function handleError(){
   error.value = null
 }
 
-const { id } = useGlobalStore().selectedSongInfo;
+const songInfo = useGlobalStore().selectedSongInfo;
+
 const videoId = computed(()=>{
-  return id || route.query.video
+  return route.query.video
 });
+
 onMounted(()=>{
   if(!videoId.value){
     error.value = '未找到來源'

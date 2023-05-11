@@ -47,7 +47,7 @@ const globalStore = useGlobalStore();
 
 const props = defineProps({
   data: Object,
-  id: Object,
+  id: String,
   url: String,
   width: Number,
   height: Number,
@@ -57,7 +57,7 @@ const props = defineProps({
 });
 
 const songDetail = ref({
-  id: props.id?.videoId || props.id?.channelId,
+  id: props.id,
   url: props.data?.thumbnails.medium.url || props.url,
   width: props.data?.thumbnails.default.width || props.width || 120,
   height: props.data?.thumbnails.default.height || props.height || 90,

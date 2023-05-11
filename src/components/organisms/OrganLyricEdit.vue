@@ -2,6 +2,7 @@
   <div class="flex flex-col max-w-[510px] mx-auto">
     <div class="relative mb-5">
       <atmos-card
+        v-if="showCard"
         :url="songInfo.url"
         :width="songInfo.width"
         :height="songInfo.height"
@@ -16,7 +17,6 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { diff_match_patch } from "diff-match-patch";
 import { useRequestStore } from "../../stores/request";
 import { useHiraganaStore } from "../../stores/hiragana";
 import { useGlobalStore } from "../../stores/index";
@@ -28,11 +28,15 @@ const hiraganaStore = useHiraganaStore();
 const router = useRouter();
 const route = useRoute();
 const globalStore = useGlobalStore();
-const songInfo = ref(globalStore.selectedSongInfo);
-const showCard = ref(true);
-computed(() => {
-  showCard.value = songInfo.value ? true : false;
+const showCard = ref(false);
+
+const songInfo = computed(() => {
+  return (
+    globalStore.selectedSongInfo ||
+    JSON.parse(localStorage.getItem("songHistory"))
+  );
 });
+
 async function generateHiraganaLyrics(lyric) {
   hiraganaStore.resultLyrics.length = 0; //初始化
   const reqData = hiraganaStore.updateLyricsInput(lyric.replace(/\n/g, "||"));
@@ -44,16 +48,10 @@ async function generateHiraganaLyrics(lyric) {
   hiraganaStore.kanjiLabelHiragana(hiraganaLyrics.converted, lyric);
   router.push(`/song?video=${route.query.search}`);
 }
-
 onMounted(() => {
-  const localSongInfo = JSON.parse(localStorage.getItem("songHistory"));
-  if (
-    !Object.values(globalStore.selectedSongInfo).filter((i) => i != "")
-      .length &&
-    localSongInfo
-  ) {
-    songInfo.value = localSongInfo.id === route.query.search ? localSongInfo : "";
-    showCard.value = songInfo.value ? true : false;
+  if (route.query.search) {
+    return showCard.value =
+      route.query.search === songInfo.value.id ? true : false;
   }
 });
 </script>

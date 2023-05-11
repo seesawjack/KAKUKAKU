@@ -9,15 +9,15 @@
           <source
             :srcset="data?.thumbnails.medium.url || url"
             :media="`(min-width: ${
-              data?.thumbnails.default.width || width || 120
+              data?.thumbnails.default.width || width
             }px)`"
-            :width="data?.thumbnails.default.width || width || 120"
-            :height="data?.thumbnails.default.height || height || 90"
+            :width="data?.thumbnails.default.width || width"
+            :height="data?.thumbnails.default.height || height"
           />
           <img
             :srcset="data?.thumbnails.medium.url || url"
-            :width="data?.thumbnails.default.width || width || 120"
-            :height="data?.thumbnails.default.height || height || 90"
+            :width="data?.thumbnails.default.width || width"
+            :height="data?.thumbnails.default.height || height"
             :alt="data?.title"
             class="img-to-cover transition-transform group-hover:scale-[125%]"
           />

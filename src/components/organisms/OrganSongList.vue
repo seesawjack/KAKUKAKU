@@ -1,4 +1,5 @@
 <template>
+  <h1 class="mb-5 mx-auto">一鍵平假名，輕鬆搞定日文歌</h1>
   <atmos-input
     @search-result="searchResult"
     :inputPh="'請輸入您要搜尋的音樂'"
@@ -35,3 +36,33 @@ async function searchResult(inputValue) {
 //   searchResult("the first take");
 // });
 </script>
+
+<style scoped>
+
+
+/* DEMO-SPECIFIC STYLES */
+h1 {
+  width: 627px;
+  color: #fff;
+  font-family: monospace;
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .15rem solid rgb(79, 124, 196); /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  letter-spacing: .15rem; /* Adjust as needed */
+  animation: 
+    typing 3.5s steps(30, end),
+    blink-caret .7s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 615px }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: rgb(79, 124, 196) }
+}
+</style>

@@ -2,13 +2,11 @@
   <div class="flex flex-col max-w-[510px] mx-auto">
     <div class="relative mb-5">
       <atmos-card
-        v-if="showCard"
         :url="songInfo.url"
         :width="songInfo.width"
         :height="songInfo.height"
         :title="songInfo.title"
         :subTitle="songInfo.subTitle"
-        :useAlone="true"
       />
     </div>
     <atmos-edit @getLyric="generateHiraganaLyrics" />

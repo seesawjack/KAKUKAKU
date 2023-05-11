@@ -1,47 +1,17 @@
 <template>
-  <router-link
-    v-if="!useAlone"
-    class="flex justify-center text-left"
-    @click="selectedSong"
-    :to="`/song/edit?search=${id.videoId || id.channelId}`"
-  >
+  <component :is="href ? 'a' : 'div'" @click="selectedSong" :href="href" class="flex justify-center text-left">
     <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
-      <div class="w-full relative before:block before:pb-[56%] overflow-hidden">
-        <picture>
-          <source
-            :srcset="data?.thumbnails.medium.url || url"
-            :media="`(min-width: ${data?.thumbnails.default.width || width || 120}px)`"
-            :width="data?.thumbnails.default.width || width || 120"
-            :height="data?.thumbnails.default.height || height || 90"
-          />
-          <img
-            :srcset="data?.thumbnails.medium.url || url"
-            :width="data?.thumbnails.default.width || width || 120"
-            :height="data?.thumbnails.default.height || height || 90"
-            :alt="data?.title"
-            class="img-to-cover transition-transform group-hover:scale-[125%]"
-          />
-        </picture>
-      </div>
-    </div>
-    <div class="w-full max-w-[390px] pl-5">
-      <p class="line-clamp">{{ data?.title || title }}</p>
-      <div class="text-xs text-slate-500 leading-5">
-        <p>{{ data?.channelTitle || subTitle }}</p>
-      </div>
-    </div>
-  </router-link>
-  <div v-else class="flex justify-center text-left">
-    <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
-      <p class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1">
+      <p v-if="!href" class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1">
         已選歌曲
       </p>
       <div class="w-full relative before:block before:pb-[56%] overflow-hidden">
         <picture>
           <source
             :srcset="data?.thumbnails.medium.url || url"
-            :media="`(min-width: ${data?.thumbnails.default.width || width || 120}px)`"
-            :width="data?.thumbnails.default.width || width ||120"
+            :media="`(min-width: ${
+              data?.thumbnails.default.width || width || 120
+            }px)`"
+            :width="data?.thumbnails.default.width || width || 120"
             :height="data?.thumbnails.default.height || height || 90"
           />
           <img
@@ -60,7 +30,7 @@
         <p>{{ data?.channelTitle || subTitle }}</p>
       </div>
     </div>
-  </div>
+  </component>
 </template>
 
 <script setup>
@@ -75,11 +45,12 @@ const props = defineProps({
   height: Number,
   title: String,
   subTitle: String,
-  useAlone: Boolean,
+  href: String,
   id: Object,
 });
 
 function selectedSong() {
+  if(!props.href){return ;}
   const songInfo = {
     id: props.id.videoId || props.id.channelId,
     url: props.data.thumbnails.medium.url,
@@ -88,7 +59,7 @@ function selectedSong() {
     title: props.data.title,
     subTitle: props.data.channelTitle,
   };
-  
+
   globalStore.selectedSong(songInfo);
 }
 </script>

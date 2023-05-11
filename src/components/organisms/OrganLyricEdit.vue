@@ -3,6 +3,7 @@
     <div class="relative mb-5">
       <atmos-card
         v-if="showCard"
+        :id="songInfo.id"
         :url="songInfo.url"
         :width="songInfo.width"
         :height="songInfo.height"

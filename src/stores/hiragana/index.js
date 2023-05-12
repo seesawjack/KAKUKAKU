@@ -33,7 +33,7 @@ export const useHiraganaStore = defineStore('hiragana',()=>{
         diff.reduce((acc,[kind,text])=>{  
           if(kind === 0){
             if(acc.kanji || acc.hiragana){
-              html += acc.kanji !== null ?`<ruby>${acc.kanji}<rp>(</rp><rt>${acc?.hiragana}</rt><rp>)</rp></ruby>`:'';
+              html += !acc.kanji.match(/[a-zA-Z]+/gm) ?`<ruby>${acc.kanji}<rp>(</rp><rt>${acc?.hiragana}</rt><rp>)</rp></ruby>`:acc.kanji;
               acc.kanji = null;
               acc.hiragana = null;
             };

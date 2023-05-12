@@ -33,7 +33,8 @@ const videoId = computed(()=>{
 
 onMounted(()=>{
   if(!videoId.value){
-    error.value = '未找到來源'
+    error.value = '未找到來源';
+    router.push('/songlist')
   }
 })
 

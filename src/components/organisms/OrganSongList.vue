@@ -1,21 +1,25 @@
 <template>
-  <h1 class="mb-5 mx-auto">一鍵平假名，輕鬆搞定日文歌</h1>
-  <atmos-input
-    @search-result="searchResult"
-    :inputPh="'請輸入您要搜尋的音樂'"
-  />
+  <div
+    class="w-[640px] h-[56px] overflow-hidden mb-5 mx-auto transiti"
+    :class="disappear"
+  >
+    <h1 :class="{ 'move-down': isActive }">一鍵平假名，輕鬆學日文歌</h1>
+  </div>
+  <atmos-input @search-result="searchResult" :inputPh="'請輸入歌曲名稱'" />
   <mols-list-card class="max-w-[512px] mx-auto mt-5" :resultData="resultData" />
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRequestStore } from "../../stores/request";
 import AtmosInput from "../atmos/AtmosInput.vue";
 import MolsListCard from "../molecules/MolsListCard.vue";
 
 const reqStroe = useRequestStore();
-let youtubeURL = ref("https://youtube.googleapis.com/youtube/v3/search?");
+let youtubeURL = "https://youtube.googleapis.com/youtube/v3/search?";
+const isActive = ref(false);
 const resultData = ref({});
+
 const queryString = {
   part: "snippet",
   q: "",
@@ -23,46 +27,71 @@ const queryString = {
   key: import.meta.env.VITE_YOUTUBE_API_KEY,
 };
 const error = ref("");
+const disappear = ref();
 
 async function searchResult(inputValue) {
+  if (!isActive.value) {
+    isActive.value = true;
+    setTimeout(() => {
+      disappear.value = "disappear";
+    }, 300);
+  }
+
   queryString.q = encodeURI(inputValue);
   for (const [key, value] of Object.entries(queryString)) {
-    youtubeURL.value += `${key}=${value}&`;
+    youtubeURL += `${key}=${value}&`;
   }
-  resultData.value = await reqStroe.request({ url: youtubeURL.value });
-}
 
-// onMounted(() => {
-//   searchResult("the first take");
-// });
+  resultData.value = await reqStroe.request({ url: youtubeURL });
+}
 </script>
 
 <style scoped>
-
-
-/* DEMO-SPECIFIC STYLES */
 h1 {
-  width: 627px;
   color: #fff;
-  font-family: monospace;
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: .15rem solid rgb(79, 124, 196); /* The typwriter cursor */
-  white-space: nowrap; /* Keeps the content on a single line */
-  letter-spacing: .15rem; /* Adjust as needed */
-  animation: 
-    typing 3.5s steps(30, end),
-    blink-caret .7s step-end infinite;
+  font-family: "Helvetica", "Arial", "LiHei Pro", "黑體-繁", "微軟正黑體",
+    sans-serif;
+  overflow: hidden;
+  border-right: 0.15rem solid rgb(79, 124, 196);
+  white-space: nowrap;
+  letter-spacing: 0.15rem;
+  animation: typing 3s steps(30, end), blink-caret 0.7s step-end infinite;
 }
 
-/* The typing effect */
+.move-down {
+  animation: move-down 0.3s ease-in forwards;
+}
+
+.disappear {
+  height: 0px;
+  margin: 0px;
+  transition: 0.5s;
+}
+
 @keyframes typing {
-  from { width: 0 }
-  to { width: 615px }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
-/* The typewriter cursor effect */
 @keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: rgb(79, 124, 196) }
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgb(79, 124, 196);
+  }
+}
+@keyframes move-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100px);
+  }
 }
 </style>

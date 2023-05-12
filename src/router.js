@@ -11,9 +11,8 @@ const router = createRouter({
         { path: '/', redirect:'/songlist' },
         { path: '/songlist', component:HomePage },
         { path: '/song/edit', component:LyricsEdit },
-        { path: '/song', component:LyricsResult }
-        // {path: '/:notFound(.*)',component:NotFound}
-
+        { path: '/song', component:LyricsResult },
+        { path: '/:notFound(.*)',redirect:'/songlist' }
     ],
 });
 

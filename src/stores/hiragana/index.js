@@ -18,10 +18,11 @@ export const useHiraganaStore = defineStore('hiragana',()=>{
     async function kanjiLabelHiragana(apiData,lyrics){
 
         const hiraganaLyrics = apiData.split('||').map(i=>i.trim().replace(/[\s](?!\s)/mg,''))
-
+        console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',hiraganaLyrics);
         await lyrics.split('\n').map((sentence,i)=>{
             furigana(sentence,hiraganaLyrics[i])
         })
+        console.log('%c 結果(綠) ', 'background: #006400; color: #ffffff',resultLyrics.value);
     }
 
     function furigana(lyrics, hiraganaLyrics) {
@@ -32,8 +33,8 @@ export const useHiraganaStore = defineStore('hiragana',()=>{
         let html = '';
         diff.reduce((acc,[kind,text])=>{  
           if(kind === 0){
-            if(acc.kanji || acc.hiragana){
-              html += !acc.kanji.match(/[a-zA-Z]+/gm) ?`<ruby>${acc.kanji}<rp>(</rp><rt>${acc?.hiragana}</rt><rp>)</rp></ruby>`:acc.kanji;
+            if(acc.kanji){
+              html += !acc.kanji?.match(/[a-zA-Z]+/gm) ?`<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana || ''}</rt><rp>)</rp></ruby>`: acc.kanji;
               acc.kanji = null;
               acc.hiragana = null;
             };

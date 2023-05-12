@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col max-w-[510px] mx-auto">
-    <div class="relative mb-5">
+    <div class="relative">
       <atmos-card
         v-if="showCard"
         :id="songInfo.id"
@@ -11,6 +11,7 @@
         :subTitle="songInfo.subTitle"
       />
     </div>
+    <atmos-keywords/>
     <atmos-edit @getLyric="generateHiraganaLyrics" />
   </div>
 </template>
@@ -23,6 +24,7 @@ import { useHiraganaStore } from "../../stores/hiragana";
 import { useGlobalStore } from "../../stores/index";
 import AtmosCard from "../atmos/AtmosCard.vue";
 import AtmosEdit from "../atmos/AtmosEdit.vue";
+import AtmosKeywords from '../atmos/AtmosKeywords.vue';
 
 const reqStore = useRequestStore();
 const hiraganaStore = useHiraganaStore();

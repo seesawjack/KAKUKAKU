@@ -1,17 +1,16 @@
 <template>
   <particle-bg />
+  <the-header/>
   <router-view></router-view>
+  <the-footer/>
 </template>
 
 <script setup>
+import TheHeader from './components/layouts/TheHeader.vue'
 import ParticleBg from "./components/layouts/ParticleBg.vue";
+import TheFooter from './components/layouts/TheFooter.vue'
 </script>
 
 <style>
-body {
-  position: relative;
-  z-index: -2;
-  background: #2c2d44;
-  background-image: linear-gradient(45deg, #3f3251 2%, #002025 100%);
-}
+
 </style>

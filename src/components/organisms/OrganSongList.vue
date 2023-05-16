@@ -1,12 +1,17 @@
 <template>
-  <div
-    class="w-[640px] h-[56px] overflow-hidden mb-5 mx-auto transiti"
-    :class="disappear"
-  >
-    <h1 :class="{ 'move-down': isActive }">一鍵平假名，輕鬆學日文歌</h1>
+  <div>
+    <div
+      class="w-[640px] h-[56px] overflow-hidden mb-5 mx-auto"
+      :class="disappear"
+    >
+      <h1 :class="{ 'move-down': isActive }">一鍵平假名，輕鬆學日文歌</h1>
+    </div>
+    <atmos-input @search-result="searchResult" :inputPh="'請輸入歌曲名稱'" />
+    <mols-list-card
+      class="max-w-[512px] mx-auto mt-5"
+      :resultData="resultData"
+    />
   </div>
-  <atmos-input @search-result="searchResult" :inputPh="'請輸入歌曲名稱'" />
-  <mols-list-card class="max-w-[512px] mx-auto mt-5" :resultData="resultData" />
 </template>
 
 <script setup>

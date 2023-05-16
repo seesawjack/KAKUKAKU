@@ -1,5 +1,5 @@
 <template>
-  <div class="my-3 flex flex-wrap">
+  <div class="mt-3 mb-4 flex flex-wrap">
     <ul class="flex items-center flex-wrap">
       <li class="mr-3">
         <span class="p-1 bg-slate-700 rounded text-xs">歌詞關鍵字搜尋</span>

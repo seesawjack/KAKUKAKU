@@ -1,6 +1,6 @@
 <template>
   <div>
-    <atmos-dialog :show="!!error" title="偵測到未輸入歌詞"  @close="handleError">
+    <atmos-dialog :show="!!error" title="請輸入 / 貼上 / 上傳歌詞"  @close="handleError">
       <p class="text-white text-center">{{error}}</p>
     </atmos-dialog>
     <textarea

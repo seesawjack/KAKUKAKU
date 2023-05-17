@@ -1,15 +1,19 @@
 <template>
   <div>
-    <atmos-header-button @show-drop="showDropDown"/>
+    <atmos-header-button @show-drop="showDropDown" />
     <atmos-drop-down v-if="isShow">
       <div>
         <p class="text-left">文字大小</p>
         <div class="flex justify-between items-end mt-3">
-          <p class="border text-2xl leading-9 w-10 h-10 rounded-lg">大</p>
-          <p class="border text-lg leading-[2.4rem] w-10 h-10 rounded-lg">中</p>
-          <p class="border text-base leading-[2.4rem] w-10 h-10 rounded-lg">
-            小
-          </p>
+          <label :for="font.id"  v-for="(font, index) in globalStore.lyricConfiguration.fontSize"
+              :key="index"
+              class="border cursor-pointer hover:bg-slate-500 w-10 h-10 rounded-lg"
+              :class="[font.class,{'bg-slate-900':font.id === fontSelect,'text-blue-400':font.id === fontSelect}]">
+            <input type="radio" hidden :id="font.id" :value="font.id" v-model="fontSelect"/>
+            <p>
+              {{ font.name }}
+            </p>
+          </label>
         </div>
       </div>
 
@@ -32,7 +36,7 @@
         >
           <input type="checkbox" value="" class="sr-only peer" />
           <div
-            class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-300"
+            class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-300"
           ></div>
           <span
             class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
@@ -45,12 +49,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref,watch } from "vue";
+import { useGlobalStore } from "../../stores/index";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import AtmosHeaderButton from "../atmos/AtmosHeaderButton.vue";
 
-const isShow = ref(false)
-function showDropDown(value){
-    isShow.value = !isShow.value
+const isShow = ref(false);
+
+function showDropDown(value) {
+  isShow.value = !isShow.value;
 }
+const globalStore = useGlobalStore();
+const fontSelect = ref('middle');
+
+watch(()=>fontSelect.value,()=>{
+  globalStore.selectedFontStyle(fontSelect.value)
+})
 </script>

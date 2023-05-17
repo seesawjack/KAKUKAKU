@@ -18,8 +18,9 @@
       <div>
         <p class="text-left">標註形式</p>
         <div class="flex justify-between items-end mt-3">
-          <p class="border px-3 py-1 rounded-lg">平假名</p>
-          <p class="border px-3 py-1 rounded-lg">羅馬字</p>
+          <p class="border px-2 py-1 rounded-lg">無</p>
+          <p class="border px-2 py-1 rounded-lg">平假名</p>
+          <p class="border px-2 py-1 rounded-lg">羅馬字</p>
         </div>
       </div>
 

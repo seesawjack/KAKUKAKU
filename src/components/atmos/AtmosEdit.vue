@@ -8,6 +8,7 @@
       cols="53"
       rows="14"
       v-model.trim="lyric"
+      placeholder="輸入 / 貼上 / 上傳歌詞"
     ></textarea>
     <div class="flex">
       <button 

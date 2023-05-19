@@ -15,7 +15,7 @@ import { useGlobalStore } from '../../stores/index';
 
 const props = defineProps({
   lyrics:Array,
-  className:String,
+  className:Array,
 })
 
 const globalStore = useGlobalStore(); 

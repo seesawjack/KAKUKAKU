@@ -3,7 +3,7 @@
     <atmos-dialog :show="!!error" title="偵測" @close="handleError">
       <p class="text-white text-center">{{ error }}</p>
     </atmos-dialog>
-    <atmos-video :id="videoId" v-if="videoId" />
+    <atmos-video :id="videoId" v-if="videoId" :class="[isFixVideo ?'fixVideo':'']"/>
     <atmos-lyric :lyrics="lyric" :className="[showHiragana,showHiraganaWord]" />
   </div>
 </template>
@@ -45,8 +45,9 @@ onMounted(() => {
   }
 });
 
-let showHiragana = ref("");
-let showHiraganaWord = ref("")
+const showHiragana = ref("");
+const showHiraganaWord = ref("");
+const isFixVideo = ref(false)
 watch(
   () => global.lyricConfiguration.labelTypeSelected,
   () => {
@@ -74,6 +75,14 @@ watch(()=>global.lyricConfiguration.allHiragana,()=>{
   }
   showHiraganaWord.value = ""
 })
+
+watch(()=>global.lyricConfiguration.fixVideo,()=>{
+  if(global.lyricConfiguration.fixVideo){
+    isFixVideo.value = true;
+    return;
+  }
+  isFixVideo.value = false
+})
 </script>
 
 <style>
@@ -91,5 +100,9 @@ watch(()=>global.lyricConfiguration.allHiragana,()=>{
 }
 .showHiragana .init, .showHiragana .romaji{
   display: none;
+}
+.fixVideo{
+  position: sticky;
+  top: 0px;
 }
 </style>

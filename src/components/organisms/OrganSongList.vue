@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ease-in-out duration-700" :class="[isActive?'mt-14':'mt-72']">
     <div
       class="w-[640px] h-[56px] overflow-hidden mb-5 mx-auto"
       :class="disappear"

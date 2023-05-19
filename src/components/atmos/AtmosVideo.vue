@@ -1,15 +1,17 @@
 <template>
-  <div id="player"></div>
+  <div>
+    <div id="player"></div>
+  </div>
 </template>
 
 <script setup>
 import { onMounted } from "vue";
 const props = defineProps({
-  id:{
+  id: {
     type: String,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
 const tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";

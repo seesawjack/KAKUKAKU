@@ -37,7 +37,8 @@ export const useGlobalStore = defineStore('global', () => {
             }
         },
         labelTypeSelected:'hiragana',
-        allHiragana: false
+        allHiragana: false,
+        fixVideo: false,
     })
 
     function selectedSong(song) {

@@ -14,3 +14,12 @@
 import TheLogo from "../svg/TheLogo.vue";
 import MolsHeaderConfigure from "../molecules/MolsHeaderConfigure.vue";
 </script>
+
+<style scoped>
+header{
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  z-index: 40;
+}
+</style>

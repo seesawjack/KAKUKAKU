@@ -79,6 +79,24 @@
           >
         </label>
       </div>
+
+      <hr class="border-gray-200 dark:border-gray-500 my-3" />
+
+      <div>
+        <label
+          for="fixVideo"
+          class="w-full relative inline-flex justify-between items-center cursor-pointer"
+        >
+          <input type="checkbox" id="fixVideo" v-model="fixVideo" class="sr-only peer" />
+          <div
+            class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-300"
+          ></div>
+          <span
+            class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >影片固定</span
+          >
+        </label>
+      </div>
     </atmos-drop-down>
   </div>
 </template>
@@ -98,7 +116,8 @@ function showDropDown(value) {
 const globalStore = useGlobalStore();
 const fontSelect = ref("middle");
 const labelSelect = ref('hiragana');
-const allHiragana = ref(false)
+const allHiragana = ref(false);
+const fixVideo = ref(false);
 
 watch(
   () => fontSelect.value,
@@ -116,5 +135,9 @@ watch(
 
 watch(()=>allHiragana.value,()=>{
   globalStore.lyricConfiguration.allHiragana = allHiragana.value;
+})
+
+watch(()=>fixVideo.value,()=>{
+  globalStore.lyricConfiguration.fixVideo = fixVideo.value
 })
 </script>

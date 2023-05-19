@@ -2,7 +2,7 @@
   <teleport to="body">
     <div v-if="show" @click="closeModal" class="backdrop z-0"></div>
     <transition name="dialog">
-      <div v-if="show" class="absolute top-0 w-full text-white bg-gradient-to-r from-rose-600 from-50% to-rose-400 bg-opacity-30 border-b border-slate-50 z-10">
+      <div v-if="show" class="absolute z-50 top-0 w-full text-white bg-gradient-to-r from-rose-600 from-50% to-rose-400 bg-opacity-30 border-b border-slate-50">
         <div
           class="container flex items-center justify-between px-6 py-2 mx-auto"
         >

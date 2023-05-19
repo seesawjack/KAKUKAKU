@@ -1,7 +1,7 @@
 <template>
   <particle-bg />
   <the-header/>
-  <router-view class="mt-[56px]"></router-view>
+  <router-view class="pt-[56px]"></router-view>
   <the-footer/>
 </template>
 

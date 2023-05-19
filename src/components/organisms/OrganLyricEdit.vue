@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col max-w-[510px] mx-auto mt-24">
+  <div class="flex flex-col max-w-[510px] mx-auto mt-10">
     <div class="relative">
       <atmos-card
         v-if="showCard"

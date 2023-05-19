@@ -23,11 +23,21 @@ export const useGlobalStore = defineStore('global', () => {
         },
         fontSizeSelecetd:'middle',
         labelType: {
-            none:false,
-            hiragana:true,
-            romaji:false
+            none:{
+                id:'none',
+                name:'無',
+            },
+            hiragana:{
+                id:'hiragana',
+                name:'平假名',
+            },
+            romaji:{
+                id:'romaji',
+                name:'羅馬字',
+            }
         },
-        allHirgana: false
+        labelTypeSelected:'hiragana',
+        allHiragana: false
     })
 
     function selectedSong(song) {
@@ -38,10 +48,14 @@ export const useGlobalStore = defineStore('global', () => {
     function selectedFontStyle(style){
         lyricConfiguration.value.fontSizeSelecetd = style;
     }
+    function selectedLabelStyle(type){
+        lyricConfiguration.value.labelTypeSelected = type; 
+    }
     return {
         lyricConfiguration,
         selectedSongInfo,
         selectedSong,
-        selectedFontStyle
+        selectedFontStyle,
+        selectedLabelStyle
     }
 })

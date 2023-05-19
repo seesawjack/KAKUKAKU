@@ -43,12 +43,15 @@ const songInfo = computed(() => {
 async function generateHiraganaLyrics(lyric) {
   hiraganaStore.resultLyrics.length = 0; //初始化
   const reqData = hiraganaStore.updateLyricsInput(lyric.replace(/\n/g, "||"));
-  const hiraganaLyrics = await reqStore.request({
+
+  const requestLyrics = await reqStore.request({
     url: "https://labs.goo.ne.jp/api/hiragana",
     method: "POST",
     sendData: reqData,
   });
-  hiraganaStore.kanjiLabelHiragana(hiraganaLyrics.converted, lyric);
+  const hiraganaLyrics = requestLyrics.converted.split('||').map(i=>i.trim().replace(/[\s](?!\s)/mg,''))
+  hiraganaStore.hiraganaLyrics = hiraganaLyrics;
+  hiraganaStore.kanjiLabelHiragana(hiraganaLyrics, lyric);
   router.push(`/song?video=${route.query.search}`);
 }
 onMounted(() => {

@@ -6,11 +6,10 @@
 </template>
 
 <script setup>
-import TheHeader from './components/layouts/TheHeader.vue'
+import TheHeader from './components/layouts/TheHeader.vue';
 import ParticleBg from "./components/layouts/ParticleBg.vue";
-import TheFooter from './components/layouts/TheFooter.vue'
+import TheFooter from './components/layouts/TheFooter.vue';
 </script>
 
 <style>
-
 </style>

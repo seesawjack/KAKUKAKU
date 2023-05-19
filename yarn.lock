@@ -2291,6 +2291,11 @@ vue@^3.2.47:
     "@vue/server-renderer" "3.2.47"
     "@vue/shared" "3.2.47"
 
+wanakana@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/wanakana/-/wanakana-5.1.0.tgz#04a97c0e006d600e8e406bace3519d8e9db94dd0"
+  integrity sha512-QJ5XNTqL5gM1JR2ikESMi+xKx16TIuZDynj6LagqK4YCWnRihtxprzCnVI1SappWI8RuiSAANGoePEV5pptiiQ==
+
 which@^2.0.1, which@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"

@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { diff_match_patch }from 'diff-match-patch';
+import { toRomaji } from 'wanakana';
 
 export const useHiraganaStore = defineStore('hiragana',()=>{
     const resultLyrics = ref([])
+    const hiraganaLyrics = ref([])
+    const romajiLyrics = ref([])
     const requsetData =ref({
         app_id:import.meta.env.VITE_HIRAGANA_API_KEY,
         output_type:"hiragana",
@@ -16,12 +19,11 @@ export const useHiraganaStore = defineStore('hiragana',()=>{
     }
 
     async function kanjiLabelHiragana(apiData,lyrics){
-
-        const hiraganaLyrics = apiData.split('||').map(i=>i.trim().replace(/[\s](?!\s)/mg,''))
-
         await lyrics.split('\n').map((sentence,i)=>{
-            furigana(sentence,hiraganaLyrics[i])
+            furigana(sentence,apiData[i])
         })
+        hiraganaLyrics.value = apiData;
+        romajiLyrics.value = hiraganaLyrics.value.map(i=>toRomaji(i))
     }
 
     function furigana(lyrics, hiraganaLyrics) {
@@ -52,7 +54,9 @@ export const useHiraganaStore = defineStore('hiragana',()=>{
     return{
         requsetData,
         resultLyrics,
+        hiraganaLyrics,
+        romajiLyrics,
         kanjiLabelHiragana,
-        updateLyricsInput
+        updateLyricsInput,
     }
 })

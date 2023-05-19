@@ -108,14 +108,15 @@
         </div>
         <hr class="border-gray-200 dark:border-gray-500 my-3" />
       </div>
+      <!-- 基本選項 -->
       <div>
-        <a
-          href="#"
+        <router-link
+          to="/about"
           class="flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
         >
           <the-logo class="h-5 mx-1" />
           <span class="mx-1"> 關於網站 </span>
-        </a>
+        </router-link>
         <a
           href="#"
           class="flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"

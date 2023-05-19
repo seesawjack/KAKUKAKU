@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import HomePage from './pages/Home/Index.vue';
 import LyricsEdit from './pages/Lyrics/LyricsEdit.vue';
-import LyricsResult from './pages/Lyrics/LyricsResult.vue'
+import LyricsResult from './pages/Lyrics/LyricsResult.vue';
+import AboutPage from './pages/AboutPage.vue'
 // import NotFound from './pages/NotFound.vue';
 
 const router = createRouter({
@@ -12,6 +13,7 @@ const router = createRouter({
         { path: '/songlist', component:HomePage },
         { path: '/song/edit', component:LyricsEdit },
         { path: '/song', component:LyricsResult },
+        { path: '/about', component:AboutPage },
         { path: '/:notFound(.*)',redirect:'/songlist' }
     ],
 });

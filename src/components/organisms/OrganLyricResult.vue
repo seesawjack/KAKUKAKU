@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col max-w-[650px] mx-auto">
+  <div class="flex flex-col max-w-[640px] mx-auto">
     <atmos-dialog :show="!!error" title="偵測" @close="handleError">
       <p class="text-white text-center">{{ error }}</p>
     </atmos-dialog>
     <atmos-video :id="videoId" v-if="videoId" :class="[isFixVideo ?'fixVideo':'']"/>
-    <atmos-lyric :lyrics="lyric" :className="[showHiragana,showHiraganaWord]" />
+    <atmos-lyric :lyrics="lyric" class="max-w-[640px]" :className="[showHiragana,showHiraganaWord]" />
   </div>
 </template>
 

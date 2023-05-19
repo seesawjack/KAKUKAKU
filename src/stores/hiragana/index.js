@@ -47,7 +47,7 @@ export const useHiraganaStore = defineStore('hiragana',()=>{
           };
         },{ kanji: null,hiragana: null});
       
-        resultLyrics.value.push(`<p>${html}</p>`);
+        resultLyrics.value.push(`<p class="init">${html}</p>`);
         return;
     }
 

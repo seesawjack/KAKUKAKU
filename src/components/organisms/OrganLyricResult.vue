@@ -89,4 +89,7 @@ watch(()=>global.lyricConfiguration.allHiragana,()=>{
 .showHiragana .hiragana{
   display: block;
 }
+.showHiragana .init, .showHiragana .romaji{
+  display: none;
+}
 </style>

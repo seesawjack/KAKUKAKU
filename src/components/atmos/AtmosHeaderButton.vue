@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
-    <dark-mood-button />
-    <like-button class="mx-3" />
+    <dark-mood-button class="hidden"/>
+    <like-button class="mx-3 hidden" />
     <adjustment-button class="cursor-pointer" @click="showDropDown" />
   </div>
 </template>

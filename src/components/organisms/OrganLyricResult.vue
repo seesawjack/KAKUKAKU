@@ -104,6 +104,5 @@ watch(()=>global.lyricConfiguration.fixVideo,()=>{
 .fixVideo{
   position: sticky;
   top: 0px;
-  transition:top 250ms ease-in-out;
 }
 </style>

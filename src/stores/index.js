@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { ref } from 'vue';
+import { ref,reactive } from 'vue';
 
 export const useGlobalStore = defineStore('global', () => {
     const selectedSongInfo = ref(null);
-    const lyricConfiguration = ref({
+    const lyricConfiguration = reactive({
         fontSize: {
             big: {
                 id:'big',
@@ -21,7 +21,6 @@ export const useGlobalStore = defineStore('global', () => {
                 class: ["text-base", "leading-[2.4rem]"],
             },
         },
-        fontSizeSelecetd:'middle',
         labelType: {
             none:{
                 id:'none',
@@ -36,21 +35,23 @@ export const useGlobalStore = defineStore('global', () => {
                 name:'羅馬字',
             }
         },
-        labelTypeSelected:'hiragana',
-        allHiragana: false,
-        fixVideo: false,
+        selected:{
+            fontSize:'middle',
+            labelType:'hiragana',
+            allHiragana: false,
+            fixedVideo: false
+        }
     })
 
     function selectedSong(song) {
         localStorage.setItem('songHistory', JSON.stringify(song));
         selectedSongInfo.value = song;
     }
-
     function selectedFontStyle(style){
-        lyricConfiguration.value.fontSizeSelecetd = style;
+        lyricConfiguration.selected.fontSize = style;
     }
     function selectedLabelStyle(type){
-        lyricConfiguration.value.labelTypeSelected = type; 
+        lyricConfiguration.selected.labelType = type; 
     }
     return {
         lyricConfiguration,

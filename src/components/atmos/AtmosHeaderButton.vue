@@ -7,13 +7,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import AdjustmentButton from "../svg/AdjustmentButton.vue";
 import LikeButton from "../svg/LikeButton.vue";
 import DarkMoodButton from "../svg/DarkMoodButton.vue";
 
-const emit = defineEmits(['showDrop'])
+const emit = defineEmits(['showDrop']);
+
 function showDropDown() {
   emit('showDrop',null)
-}
+};
 </script>

@@ -6,7 +6,7 @@
     >
       <h1 :class="{ 'move-down': isActive }">一鍵平假名，輕鬆學日文歌</h1>
     </div>
-    <atmos-input @search-result="searchResult" :inputPh="'請輸入歌曲名稱'" />
+    <atmos-input @search-result="searchResult" :inputTips="'請輸入歌曲名稱'" />
     <mols-list-card
       class="max-w-[512px] mx-auto mt-5"
       :resultData="resultData"
@@ -16,25 +16,16 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRequestStore } from "../../stores/request";
+import { useSearchStore } from "../../stores/search";
 import AtmosInput from "../atmos/AtmosInput.vue";
 import MolsListCard from "../molecules/MolsListCard.vue";
 
-const reqStroe = useRequestStore();
-let youtubeURL = "https://youtube.googleapis.com/youtube/v3/search?";
+const { youtubeSearch } = useSearchStore();
 const isActive = ref(false);
 const resultData = ref({});
-
-const queryString = {
-  part: "snippet",
-  q: "",
-  maxResults: 10,
-  key: import.meta.env.VITE_YOUTUBE_API_KEY,
-};
-const error = ref("");
 const disappear = ref();
 
-async function searchResult(inputValue) {
+async function searchResult(value) {
   if (!isActive.value) {
     isActive.value = true;
     setTimeout(() => {
@@ -42,12 +33,7 @@ async function searchResult(inputValue) {
     }, 300);
   }
 
-  queryString.q = encodeURI(inputValue);
-  for (const [key, value] of Object.entries(queryString)) {
-    youtubeURL += `${key}=${value}&`;
-  }
-
-  resultData.value = await reqStroe.request({ url: youtubeURL });
+  resultData.value = await youtubeSearch(value);
 }
 </script>
 

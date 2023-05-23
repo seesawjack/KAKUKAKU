@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
 const props = defineProps({
   id: {
     type: String,

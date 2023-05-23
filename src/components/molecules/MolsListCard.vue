@@ -5,10 +5,10 @@
       v-for="item in resultData.items"
       :key="item.id.videoId || item.id.channelId"
     >
-      <atmos-card 
-      :data="item.snippet"
-      :id="item.id.videoId || item.id.channelId"
-      :href="`/song/edit?search=${item.id.videoId || item.id.channelId}`"
+      <atmos-card
+        :data="item.snippet"
+        :id="item.id.videoId || item.id.channelId"
+        :href="`/song/edit?search=${item.id.videoId || item.id.channelId}`"
       />
     </div>
   </div>
@@ -18,7 +18,10 @@
 import AtmosCard from "../atmos/AtmosCard.vue";
 
 const props = defineProps({
-  resultData: Object,
+  resultData: {
+    type: Object,
+    required: true,
+  },
 });
 </script>
 

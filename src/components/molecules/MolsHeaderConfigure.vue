@@ -88,13 +88,13 @@
         <!-- ▼開關 影片固定 -->
         <div>
           <label
-            for="fixVideo"
+            for="fixedVideo"
             class="w-full relative inline-flex justify-between items-center cursor-pointer"
           >
             <input
               type="checkbox"
-              id="fixVideo"
-              v-model="fixVideo"
+              id="fixedVideo"
+              v-model="fixedVideo"
               class="sr-only peer"
             />
             <div
@@ -130,8 +130,7 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
-import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref,toRefs, watch, onMounted, onBeforeUnmount } from "vue";
 import { useGlobalStore } from "../../stores/index";
 import { useRoute } from "vue-router";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
@@ -139,44 +138,35 @@ import AtmosHeaderButton from "../atmos/AtmosHeaderButton.vue";
 import TheLogo from "../svg/TheLogo.vue";
 import SigninButton from "../svg/SigninButton.vue";
 
-const isShow = ref(false);
 const router = useRoute();
+const globalStore = useGlobalStore();
+const { lyricConfiguration } = globalStore;
+const { selected } = toRefs(lyricConfiguration)
+
+const isShow = ref(false);
 function showDropDown() {
   isShow.value = !isShow.value;
 }
-const globalStore = useGlobalStore();
 const fontSelect = ref("middle");
 const labelSelect = ref("hiragana");
 const allHiragana = ref(false);
-const fixVideo = ref(false);
+const fixedVideo = ref(false);
 
-watch(
-  () => fontSelect.value,
-  () => {
-    globalStore.selectedFontStyle(fontSelect.value);
-  }
-);
+watch(fontSelect, () => {
+  globalStore.selectedFontStyle(fontSelect.value);
+});
 
-watch(
-  () => labelSelect.value,
-  () => {
-    globalStore.selectedLabelStyle(labelSelect.value);
-  }
-);
+watch(labelSelect, () => {
+  globalStore.selectedLabelStyle(labelSelect.value);
+});
 
-watch(
-  () => allHiragana.value,
-  () => {
-    globalStore.lyricConfiguration.allHiragana = allHiragana.value;
-  }
-);
+watch(allHiragana, () => {
+  selected.value.allHiragana = allHiragana.value;
+});
 
-watch(
-  () => fixVideo.value,
-  () => {
-    globalStore.lyricConfiguration.fixVideo = fixVideo.value;
-  }
-);
+watch(fixedVideo, () => {
+  selected.value.fixedVideo = fixedVideo.value;
+});
 
 onMounted(() => {
   document.addEventListener("click", () => {
@@ -185,6 +175,7 @@ onMounted(() => {
     }
   });
 });
+
 onBeforeUnmount(() => {
   document.body.removeEventListener("click", () => {
     if (!event.target.closest(".dropdown")) {

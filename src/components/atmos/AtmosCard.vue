@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,reactive } from 'vue';
 import { useGlobalStore } from "../../stores/index";
 
 const globalStore = useGlobalStore();
@@ -56,7 +56,7 @@ const props = defineProps({
   href: String,
 });
 
-const songDetail = ref({
+const songDetail = reactive({
   id: props.id,
   url: props.data?.thumbnails.medium.url || props.url,
   width: props.data?.thumbnails.default.width || props.width || 120,
@@ -66,10 +66,8 @@ const songDetail = ref({
 }); 
 
 function selectedSong() {
-  if (!props.href) {
-    return;
-  }
-  globalStore.selectedSong(songDetail.value);
+  if (!props.href) return;
+  globalStore.selectedSong(songDetail);
 }
 </script>
 

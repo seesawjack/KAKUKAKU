@@ -1,38 +1,51 @@
 <template>
-  <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl"
-  :class="[font,className]">
-    <template v-for="(lyric,index) in lyrics" :key="index">
+  <div
+    class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl"
+    :class="[font, className]"
+  >
+    <template v-for="(lyric, index) in lyrics" :key="index">
       <div class="tracking-[2px]" v-html="lyric"></div>
-      <div v-if="index !== lyrics.length-1" class="line border-t h-px my-4"></div>
+      <div
+        v-if="index !== lyrics.length - 1"
+        class="line border-t h-px my-4"
+      ></div>
     </template>
-    </div>
+  </div>
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
-import { ref,watch } from 'vue';
-import { useGlobalStore } from '../../stores/index';
+import { ref, watch,toRefs } from "vue";
+import { useGlobalStore } from "../../stores/index";
 
 const props = defineProps({
-  lyrics:Array,
-  className:Array,
-})
+  lyrics: {
+    type: Array,
+    required: true,
+  },
+  className: {
+    type: Array,
+    required: true,
+  },
+});
 
-const globalStore = useGlobalStore(); 
-const font = ref('text-xl')
+const globalStore = useGlobalStore();
+const { lyricConfiguration } = globalStore;
+const { fontSize, selected } = toRefs(lyricConfiguration);
+const font = ref("text-xl");
 
-watch(()=>globalStore.lyricConfiguration.fontSizeSelecetd,()=>{
-  const global = globalStore.lyricConfiguration;
-  font.value = global.fontSize[global.fontSizeSelecetd].class[0]
-})
-
+watch(
+  () => selected.value.fontSize,
+  () => {
+    font.value = fontSize.value[selected.value.fontSize].class[0];
+  }
+);
 </script>
 
-<style scoped>  
-.line{
-  border-style:inset;
+<style scoped>
+.line {
+  border-style: inset;
 }
-rt{
+rt {
   display: none;
 }
 </style>

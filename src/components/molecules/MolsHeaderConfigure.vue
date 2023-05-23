@@ -118,7 +118,7 @@
           <span class="mx-1"> 關於網站 </span>
         </router-link>
         <a
-          href="#"
+          href="/signin"
           class="flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
         >
           <signin-button class="h-5 mx-1" />

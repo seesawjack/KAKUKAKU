@@ -29,7 +29,6 @@ window.onYouTubeIframeAPIReady = function () {
       playsinline: 1,
     },
     events: {
-      onReady: onPlayerReady,
       onStateChange: onPlayerStateChange,
     },
   });

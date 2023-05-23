@@ -58,8 +58,11 @@ export const useLyricStore = defineStore('lyric', () => {
         return acc;
       };
     }, { kanji: null, hiragana: null });
-
-    resultLyrics.value.push(`<p class="init">${html}</p>`);
+    if(lyrics === ''){
+      resultLyrics.value.push('<p class="text-center">*************************</p>');
+    }else{
+      resultLyrics.value.push(`<p class="init">${html}</p>`);
+    }
     return;
   }
 

@@ -8,13 +8,13 @@
     <atmos-lyric
       :lyrics="lyrics"
       class="max-w-[640px]"
-      :className="[showHiragana, showHiraganaWord]"
+      :className="[labelType, allHiragana]"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import AtmosVideo from "../../components/atmos/AtmosVideo.vue";
 import AtmosLyric from "../../components/atmos/AtmosLyric.vue";
@@ -25,17 +25,15 @@ import { useGlobalStore } from "../../stores/index";
 const route = useRoute();
 const router = useRouter();
 
-const globalStore = useGlobalStore();
-const { lyricConfiguration } = globalStore;
-const { selected } = toRefs(lyricConfiguration);
-const lyricStore = useLyricStore();
+const { lyricConfiguration:{selected} } = useGlobalStore();
+const { resultLyrics,hiraganaLyrics,romajiLyrics } = useLyricStore();
 
 const lyrics = ref(
-  lyricStore.resultLyrics.map(
+  resultLyrics.map(
     (sentence, i) =>
       sentence +
-      `<p class="hiragana">${lyricStore.hiraganaLyrics[i]}</p>` +
-      `<span class="romaji">${lyricStore.romajiLyrics[i]}</span>`
+      `<p class="hiragana">${hiraganaLyrics[i]}</p>` +
+      `<span class="romaji">${romajiLyrics[i]}</span>`
   )
 );
 
@@ -43,22 +41,22 @@ const videoId = computed(() => {
   return route.query.video;
 });
 
-const showHiragana = ref("");
-const showHiraganaWord = ref("");
+const labelType = ref("");
+const allHiragana = ref("");
 const isfixedVideo = ref(false);
 
 watch(
-  () => selected.value.labelType,
+  () => selected.labelType,
   () => {
-    switch (selected.value.labelType) {
+    switch (selected.labelType) {
       case "none":
-        showHiragana.value = "hiddenHiragana";
+        labelType.value = "hiddenHiragana";
         break;
       case "hiragana":
-        showHiragana.value = "";
+        labelType.value = "";
         break;
       case "romaji":
-        showHiragana.value = "onlyhiragana";
+        labelType.value = "onlyhiragana";
         break;
       default:
         break;
@@ -67,16 +65,16 @@ watch(
 );
 
 watch(
-  () => selected.value.allHiragana,
+  () => selected.allHiragana,
   () => {
-    showHiraganaWord.value = selected.value.allHiragana ? "showHiragana" : "";
+    allHiragana.value = selected.allHiragana ? "showHiragana" : "";
   }
 );
 
 watch(
-  () => selected.value.fixedVideo,
+  () => selected.fixedVideo,
   () => {
-    isfixedVideo.value = selected.value.fixedVideo ? true : false;
+    isfixedVideo.value = selected.fixedVideo || false;
   }
 );
 </script>

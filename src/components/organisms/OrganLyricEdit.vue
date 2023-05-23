@@ -38,7 +38,7 @@ const songInfo = computed(() => {
 onMounted(() => {
   if (route.query.search) {
     return showCard.value =
-      route.query.search === songInfo.value.id ? true : false;
+      route.query.search === songInfo.value.id || false;
   }
 });
 </script>

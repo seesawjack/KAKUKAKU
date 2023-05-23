@@ -23,7 +23,7 @@ import MolsListCard from "../molecules/MolsListCard.vue";
 const { youtubeSearch } = useSearchStore();
 const isActive = ref(false);
 const resultData = ref({});
-const disappear = ref();
+const disappear = ref('');
 
 async function searchResult(value) {
   if (!isActive.value) {

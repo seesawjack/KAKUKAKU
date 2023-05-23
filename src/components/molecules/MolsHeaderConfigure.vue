@@ -10,7 +10,7 @@
           <div class="flex justify-between items-end mt-3">
             <label
               :for="font.id"
-              v-for="(font, index) in globalStore.lyricConfiguration.fontSize"
+              v-for="(font, index) in fontSize"
               :key="index"
               class="border cursor-pointer hover:bg-slate-500 w-10 h-10 rounded-lg"
               :class="[
@@ -41,7 +41,7 @@
           <div class="flex justify-between items-end mt-3">
             <label
               :for="font.id"
-              v-for="(font, index) in globalStore.lyricConfiguration.labelType"
+              v-for="(font, index) in labelType"
               :key="index"
               class="border cursor-pointer hover:bg-slate-500 px-2 py-1 rounded-lg"
               :class="{
@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import { ref,toRefs, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, toRefs, watch, onMounted, onBeforeUnmount } from "vue";
 import { useGlobalStore } from "../../stores/index";
 import { useRoute } from "vue-router";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
@@ -139,9 +139,7 @@ import TheLogo from "../svg/TheLogo.vue";
 import SigninButton from "../svg/SigninButton.vue";
 
 const router = useRoute();
-const globalStore = useGlobalStore();
-const { lyricConfiguration } = globalStore;
-const { selected } = toRefs(lyricConfiguration)
+const { lyricConfiguration: { fontSize,labelType,selected },selectedFontStyle,selectedLabelStyle } = useGlobalStore();
 
 const isShow = ref(false);
 function showDropDown() {
@@ -153,19 +151,19 @@ const allHiragana = ref(false);
 const fixedVideo = ref(false);
 
 watch(fontSelect, () => {
-  globalStore.selectedFontStyle(fontSelect.value);
+  selectedFontStyle(fontSelect.value);
 });
 
 watch(labelSelect, () => {
-  globalStore.selectedLabelStyle(labelSelect.value);
+  selectedLabelStyle(labelSelect.value);
 });
 
 watch(allHiragana, () => {
-  selected.value.allHiragana = allHiragana.value;
+  selected.allHiragana = allHiragana.value;
 });
 
 watch(fixedVideo, () => {
-  selected.value.fixedVideo = fixedVideo.value;
+  selected.fixedVideo = fixedVideo.value;
 });
 
 onMounted(() => {

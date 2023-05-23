@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import OrganSongList from "../../components/organisms/OrganSongList.vue";
 </script>
 

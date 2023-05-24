@@ -1,7 +1,7 @@
 <template>
-    <atmos-auth/>
+    <mols-auth class="w-1/2"/>
 </template>
 
 <script setup>
-import AtmosAuth from '../atmos/AtmosAuth.vue';
+import MolsAuth from '../molecules/MolsAuth.vue';
 </script>

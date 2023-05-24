@@ -20,8 +20,9 @@
             sign up
           </a>
         </div>
+        <slot name="input"></slot>
         <!-- 使用者名稱輸入框 -->
-        <div class="relative flex items-center mt-8">
+        <!-- <div class="relative flex items-center mt-8">
           <span class="absolute">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -44,9 +45,9 @@
             class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder="Username"
           />
-        </div>
+        </div> -->
         <!-- 信箱輸入框 -->
-        <div class="relative flex items-center mt-6">
+        <!-- <div class="relative flex items-center mt-6">
           <span class="absolute">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -69,9 +70,9 @@
             class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder="Email address"
           />
-        </div>
+        </div> -->
         <!-- 密碼輸入框 -->
-        <div class="relative flex items-center mt-4">
+        <!-- <div class="relative flex items-center mt-4">
           <span class="absolute">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -94,9 +95,9 @@
             class="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder="Password"
           />
-        </div>
+        </div> -->
         <!-- 再次確認密碼輸入框 -->
-        <div class="relative flex items-center mt-4">
+        <!-- <div class="relative flex items-center mt-4">
           <span class="absolute">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -119,9 +120,10 @@
             class="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder="Confirm Password"
           />
-        </div>
+        </div> -->
         <!-- 登入/登出按鈕 -->
-        <div class="mt-6">
+        <slot name="button"></slot>
+        <!-- <div class="mt-6">
           <button
             class="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
           >
@@ -136,7 +138,7 @@
               Already have an account?
             </a>
           </div>
-        </div>
+        </div> -->
       </form>
     </div>
   </section>

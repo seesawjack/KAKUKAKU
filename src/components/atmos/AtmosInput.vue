@@ -4,18 +4,15 @@
       :class="inputClass"
       type="text"
       :placeholder="inputTips"
-      v-model.trim.lazy="searchValue"
+      v-model.trim.lazy="value"
     />
     <slot></slot>
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs, watch } from "vue";
-import SearchGlasses from "../svg/SearchGlasses.vue";
-import { useSearchStore } from "../../stores/search/";
+import { computed } from "vue";
 
-const { searchSong } = toRefs(useSearchStore());
 const props = defineProps({
   inputTips: {
     type: String,
@@ -25,14 +22,20 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  modelValue:{
+    type: String,
+    required: true
+  }
 });
 
-const searchValue = ref("");
-
-watch(
-  () => searchValue.value,
-  () => {
-    searchSong.value = searchValue.value || "";
+const emit = defineEmits(['update:modelValue']);
+const value = computed({
+  get(){
+    return props.modelValue
+  },
+  set(value){
+    emit('update:modelValue',value)
   }
-);
+})
+
 </script>

@@ -1,25 +1,26 @@
 <template>
   <section>
-    <div
-      class="container flex items-center justify-center px-6 mx-auto"
-    >
+    <div class="container flex items-center justify-center px-6 mx-auto">
       <form class="w-full max-w-md">
+        <!-- sign in & sign up href -->
         <div class="flex items-center justify-center mt-6">
           <a
-            href="#"
-            class="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b dark:border-gray-400 dark:text-gray-300"
+            href="/signin"
+            class="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b"
+            :class="[isSigninpage ? isSigninClass : '']"
           >
             sign in
           </a>
 
           <a
-            href="#"
-            class="w-1/3 pb-4 font-medium text-center text-gray-800 capitalize border-b-2 border-blue-500 dark:border-blue-400 dark:text-white"
+            href="/signup"
+            class="w-1/3 pb-4 font-medium text-center text-gray-600 capitalize border-b"
+            :class="[!isSigninpage ? isSigninClass : '']"
           >
             sign up
           </a>
         </div>
-
+        <!-- 使用者名稱輸入框 -->
         <div class="relative flex items-center mt-8">
           <span class="absolute">
             <svg
@@ -44,7 +45,7 @@
             placeholder="Username"
           />
         </div>
-
+        <!-- 信箱輸入框 -->
         <div class="relative flex items-center mt-6">
           <span class="absolute">
             <svg
@@ -69,7 +70,7 @@
             placeholder="Email address"
           />
         </div>
-
+        <!-- 密碼輸入框 -->
         <div class="relative flex items-center mt-4">
           <span class="absolute">
             <svg
@@ -94,7 +95,7 @@
             placeholder="Password"
           />
         </div>
-
+        <!-- 再次確認密碼輸入框 -->
         <div class="relative flex items-center mt-4">
           <span class="absolute">
             <svg
@@ -119,7 +120,7 @@
             placeholder="Confirm Password"
           />
         </div>
-
+        <!-- 登入/登出按鈕 -->
         <div class="mt-6">
           <button
             class="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
@@ -142,5 +143,12 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const isSigninClass = ref("border-b-2 border-blue-500 text-white");
+const isSigninpage = computed(() => {
+  return route.path.indexOf("signin") !== -1;
+});
 </script>

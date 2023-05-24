@@ -9,6 +9,7 @@
     <atmos-input
       :inputTips="'請輸入歌曲名稱'"
       :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full'"
+      v-model="songInfo"
     >
       <search-glasses
         class="absolute right-3 top-2"
@@ -20,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref,toRefs,watch } from "vue";
+import { ref,computed } from "vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
 import SearchGlasses from "../svg/SearchGlasses.vue";
 import { useSearchStore } from "../../stores/search/index";
@@ -31,24 +32,20 @@ const props = defineProps({
     required: true,
   },
 });
+
+const songInfo = ref('')
 const emit = defineEmits(["search"]);
-const { searchSong } = toRefs(useSearchStore());
 const { youtubeSearch } = useSearchStore();
 
-async function searchSongs() {
-  if (!searchSong.value) return;
-  const data = await youtubeSearch(searchSong.value);
+async function searchSongs(value) {
+  if (!songInfo.value) return;
+  const data = await youtubeSearch(songInfo.value);
   emit("search", data);
 }
 
-const iconOpacity = ref(false);
-
-watch(
-  () => searchSong.value,
-  () => {
-    iconOpacity.value = searchSong.value ? true : false;
-  }
-);
+const iconOpacity = computed(()=>{
+  return songInfo.value ? true : false
+});
 
 </script>
 

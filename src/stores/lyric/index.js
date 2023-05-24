@@ -35,7 +35,7 @@ export const useLyricStore = defineStore('lyric', () => {
       furigana(sentence, apiData[i])
     })
     hiraganaLyrics.value = apiData;
-    romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i))
+    romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i.split('').join(' '),{ customRomajiMapping: { は: 'wa' } }));
   }
 
   function furigana(lyrics, hiraganaLyrics) {

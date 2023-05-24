@@ -1,12 +1,8 @@
 <template>
-  <div class="ease-in-out duration-700" :class="[isActive?'':'mt-56']">
-    <div
-      class="w-[640px] h-[56px] overflow-hidden mb-5 mx-auto"
-      :class="disappear"
-    >
+  <div class="ease-in-out duration-700" :class="[isActive ? '' : 'mt-56']">
+    <mols-search-song :className="disappear" @search="searchResult">
       <h1 :class="{ 'move-down': isActive }">一鍵平假名，輕鬆學日文歌</h1>
-    </div>
-    <atmos-input @search-result="searchResult" :inputTips="'請輸入歌曲名稱'" />
+    </mols-search-song>
     <mols-list-card
       class="max-w-[512px] mx-auto mt-5"
       :resultData="resultData"
@@ -17,13 +13,12 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useSearchStore } from "../../stores/search";
-import AtmosInput from "../atmos/AtmosInput.vue";
 import MolsListCard from "../molecules/MolsListCard.vue";
+import MolsSearchSong from '../molecules/MolsSearchSong.vue';
 
-const { youtubeSearch } = useSearchStore();
 const isActive = ref(false);
 const resultData = ref({});
-const disappear = ref('');
+const disappear = ref("");
 
 async function searchResult(value) {
   if (!isActive.value) {
@@ -33,7 +28,7 @@ async function searchResult(value) {
     }, 300);
   }
 
-  resultData.value = await youtubeSearch(value);
+  resultData.value = value;
 }
 </script>
 

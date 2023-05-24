@@ -4,6 +4,7 @@ import { useRequestStore } from '../request';
 
 export const useSearchStore = defineStore('search', () => {
     const { request } = useRequestStore();
+    const searchSong = ref('');
     
     async function youtubeSearch(value) {
         let youtubeURL = "https://youtube.googleapis.com/youtube/v3/search?";
@@ -20,6 +21,7 @@ export const useSearchStore = defineStore('search', () => {
     }
 
     return{
+        searchSong,
         youtubeSearch
     }
 })

@@ -7,11 +7,13 @@ export const useAuthStore = defineStore('auth',()=>{
             email:{
                 icon:'UserIcon',
                 tips:'信箱',
+                type:'email',
                 value:''
             },
             password:{
                 icon:'PasswordIcon',
                 tips:'密碼',
+                type:'password',
                 value:''
             }
         },
@@ -19,21 +21,25 @@ export const useAuthStore = defineStore('auth',()=>{
             userName:{
                 icon:'UserIcon',
                 tips:'使用者名稱',
+                type:'text',
                 value:''
             },
             email:{
                 icon:'EmailIcon',
                 tips:'信箱',
+                type:'email',
                 value:''
             },
             password:{
                 icon:'PasswordIcon',
                 tips:'密碼',
+                type:'password',
                 value:''
             },
             checkPassword:{
                 icon:'PasswordIcon',
                 tips:'再次確認密碼',
+                type:'password',
                 value:''
             }
         }

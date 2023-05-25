@@ -2,7 +2,7 @@
   <div class="relative max-w-xl mx-auto">
     <input
       :class="inputClass"
-      type="text"
+      :type="inputType || 'text'"
       :placeholder="inputTips"
       v-model.trim.lazy="value"
     />
@@ -25,6 +25,10 @@ const props = defineProps({
   modelValue:{
     type: String,
     required: true
+  },
+  inputType:{
+    type:String,
+    rqueired: false
   }
 });
 

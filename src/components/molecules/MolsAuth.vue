@@ -11,6 +11,35 @@
       >
         <component :is="iconType[item.icon]" class="absolute top-3"></component>
       </atmos-input>
+      <div v-if="formType === 'signup'">
+        <atmos-date-picker />
+        <div class="flex justify-between items-center mt-8">
+          <p>性別</p>
+          <select
+            v-model="custom.gender"
+            class="w-1/3 border border-gray-600 rounded-lg text-center dark:bg-gray-900 dark:text-gray-300 py-3"
+          >
+            <option disabled value="">請選擇</option>
+            <option>男性</option>
+            <option>女性</option>
+          </select>
+        </div>
+        <div class="flex justify-between items-center mt-8">
+          <p>日本語能力(JLPT)</p>
+          <select
+            v-model="custom.level"
+            class="w-1/3 border border-gray-600 rounded-lg text-center dark:bg-gray-900 dark:text-gray-300 py-3"
+          >
+            <option disabled value="">請選擇</option>
+            <option>無</option>
+            <option>N1</option>
+            <option>N2</option>
+            <option>N3</option>
+            <option>N4</option>
+            <option>N5</option>
+          </select>
+        </div>
+      </div>
     </template>
     <template #button>
       <div class="mt-6">
@@ -39,17 +68,23 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import AtmosAuth from "../atmos/AtmosAuth.vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
+import AtmosDatePicker from "../atmos/AtmosDatePicker.vue";
 import UserIcon from "../svg/UserIcon.vue";
 import PasswordIcon from "../svg/PasswordIcon.vue";
 import EmailIcon from "../svg/EmailIcon.vue";
 
 const { formInfo } = useAuthStore();
+const {
+  formInfo: { custom },
+} = useAuthStore();
 const route = useRoute();
+
 const iconType = {
   UserIcon,
   PasswordIcon,
   EmailIcon,
 };
+const selected = ref();
 const formType = computed(() => {
   return route.path.replace("/", "");
 });

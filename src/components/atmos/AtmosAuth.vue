@@ -34,11 +34,13 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
+import { useRegexStore } from "../../stores/regex";
 import AtmosDialog from "../atmos/AtmosDialog.vue";
 
 const route = useRoute();
+const { passwordRegex } = useRegexStore();
 const {
-  formInfo: { signin, signup },
+  formInfo: { signin, signup, custom },
 } = useAuthStore();
 const isSigninClass = ref("border-b-2 border-blue-500 text-white");
 const isSigninpage = computed(() => {
@@ -56,28 +58,25 @@ function sendAuth() {
       email: signin.email.value,
       password: signin.password.value,
     };
-    Object.values(signinInfo).map((input,index)=>{
-      if(!input){
+    Object.values(signinInfo).map((input, index) => {
+      if (!input) {
         isError.value = true;
-        errorMessage.value = '帳號或密碼為空';
+        errorMessage.value = "帳號或密碼為空";
       }
-      // if(index === 2 ){
-      // }
-      
-      console.log('%c 結果(藍) ', 'background: #009393; color: #ffffff',/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,30}$/g.test(input));
-    })
+    });
   } else {
     const signupInfo = {
       name: signup.userName.value,
       email: signup.email.value,
       password: signup.password.value,
       checkPassword: signup.checkPassword.value,
+      birth: custom.birth,
+      gender: custom.gender,
+      level: custom.level,
     };
-    console.log(
-      "%c 結果(綠) ",
-      "background: #006400; color: #ffffff",
-      signupInfo
-    );
+    Object.values(signupInfo).map((input, index) => {
+      console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',input);
+    });
   }
 }
 </script>

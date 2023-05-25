@@ -42,6 +42,11 @@ export const useAuthStore = defineStore('auth',()=>{
                 type:'password',
                 value:''
             }
+        },
+        custom:{
+            gender:[],
+            level:[],
+            birth:''
         }
     })
     return{

@@ -1,5 +1,5 @@
 <template>
-    <mols-auth class="w-1/3"/>
+    <mols-auth class="w-full max-w-sm"/>
 </template>
 
 <script setup>

@@ -1,7 +1,7 @@
 <template>
   <VueDatePicker
     class="mt-8 svg-size"
-    input-class-name="pl-11 py-3 border border-gray-600 rounded-lg dark:bg-gray-900 dark:text-gray-300"
+    input-class-name="pl-11 py-3 border placeholder-gray-300 border-gray-600 rounded-lg dark:bg-gray-900"
     v-model="custom.birth"
     :dark="true"
     :enable-time-picker="false"

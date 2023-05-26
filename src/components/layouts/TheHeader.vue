@@ -5,7 +5,7 @@
         <the-logo class="inline h-6 mr-3" />
         <h1 class="text-3 text-lg">KAKUKAKU</h1>
       </router-link>
-      <mols-header-configure class="dropdown"/>
+      <mols-header-configure class="dropdown" />
     </div>
   </header>
 </template>
@@ -16,7 +16,7 @@ import MolsHeaderConfigure from "../molecules/MolsHeaderConfigure.vue";
 </script>
 
 <style scoped>
-header{
+header {
   width: 100%;
   position: fixed;
   top: 0px;

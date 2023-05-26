@@ -4,7 +4,7 @@
       <atmos-input
         v-for="(item, key) in formInfo[formType]"
         :key="key"
-        :inputClass="'block w-full py-3 text-gray-700 bg-white border rounded-lg pl-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8'"
+        :inputClass="'block w-full py-3 bg-white border rounded-lg pl-11 dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8'"
         :inputTips="item.tips"
         :inputType="item.type"
         v-model="item.value"
@@ -13,24 +13,25 @@
       </atmos-input>
       <div v-if="formType === 'signup'">
         <atmos-date-picker />
-        <div class="flex justify-between items-center mt-8">
-          <p>性別</p>
+        <div class="relative mt-8">
+          <gender-icon class="absolute top-3"/>
           <select
             v-model="custom.gender"
-            class="w-1/3 border border-gray-600 rounded-lg text-center dark:bg-gray-900 dark:text-gray-300 py-3"
+            class="w-full border border-gray-600 rounded-lg dark:bg-gray-900 text-gray-300 py-3 pl-11"
           >
-            <option disabled value="">請選擇</option>
+            <option disabled value="">請選擇性別</option>
             <option>男性</option>
             <option>女性</option>
           </select>
         </div>
-        <div class="flex justify-between items-center mt-8">
-          <p>日本語能力(JLPT)</p>
+
+        <div class="relative mt-8">
+          <paper-icon class="absolute top-3"/>
           <select
             v-model="custom.level"
-            class="w-1/3 border border-gray-600 rounded-lg text-center dark:bg-gray-900 dark:text-gray-300 py-3"
+            class="w-full border border-gray-600 rounded-lg dark:bg-gray-900 py-3 pl-11 placeholder-gray-700"
           >
-            <option disabled value="">請選擇</option>
+            <option disabled value="">請選擇日本語能力(JLPT)</option>
             <option>無</option>
             <option>N1</option>
             <option>N2</option>
@@ -72,6 +73,8 @@ import AtmosDatePicker from "../atmos/AtmosDatePicker.vue";
 import UserIcon from "../svg/UserIcon.vue";
 import PasswordIcon from "../svg/PasswordIcon.vue";
 import EmailIcon from "../svg/EmailIcon.vue";
+import GenderIcon from '../svg/GenderIcon.vue';
+import PaperIcon from '../svg/PaperIcon.vue'
 
 const { formInfo } = useAuthStore();
 const {

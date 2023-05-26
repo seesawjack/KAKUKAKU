@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useRegexStore } from "../../stores/regex";
@@ -41,32 +41,46 @@ const route = useRoute();
 const { passwordRegex } = useRegexStore();
 const {
   formInfo: { signin, signup, custom },
+  supabase,
 } = useAuthStore();
+
 const isSigninClass = ref("border-b-2 border-blue-500 text-white");
 const isSigninpage = computed(() => {
   return route.path.indexOf("signin") !== -1;
 });
+
 const isError = ref(false);
 const errorMessage = ref("");
+
 function showDialog(value) {
   isError.value = value ? true : false;
 }
 
-function sendAuth() {
+async function sendAuth() {
   if (isSigninpage.value) {
     const signinInfo = {
       email: signin.email.value,
       password: signin.password.value,
     };
-    Object.values(signinInfo).map((input, index) => {
-      if (!input) {
+
+    for (const [key, value] of Object.entries(signinInfo)) {
+      if (!value) {
         isError.value = true;
-        errorMessage.value = "帳號或密碼為空";
+        errorMessage.value = "帳號或密碼未填寫";
+        return;
       }
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: signin.email.value,
+      password: signin.password.value,
     });
+
+    console.log("%c 結果(藍) ", "background: #009393; color: #ffffff", data);
+    console.log("%c 結果(紅) ", "background: #EA0000; color: #ffffff", error);
   } else {
     const signupInfo = {
-      name: signup.userName.value,
+      name: signup.name.value,
       email: signup.email.value,
       password: signup.password.value,
       checkPassword: signup.checkPassword.value,
@@ -74,9 +88,43 @@ function sendAuth() {
       gender: custom.gender,
       level: custom.level,
     };
-    Object.values(signupInfo).map((input, index) => {
-      console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',input);
+
+    for (const [key, value] of Object.entries(signupInfo)) {
+      if (!value) {
+        isError.value = true;
+        const inputName = {
+          ...signup,
+          birth: { tips: "生日" },
+          gender: { tips: "性別" },
+          level: { tips: "日本語能力" },
+        };
+        errorMessage.value = `「${inputName[key].tips}」欄位沒有填寫`;
+        return;
+      }
+
+      if (key === "checkPassword") {
+        if (signupInfo.password !== value) {
+          isError.value = true;
+          errorMessage.value = "兩次密碼不相符";
+          return;
+        }
+      }
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email: signup.email.value,
+      password: signup.password.value,
+      options: {
+        data: {
+          birth: custom.birth,
+          gender: custom.gender,
+          level: custom.level,
+          emailRedirectTo: "http://localhost:5173/",
+        },
+      },
     });
+    console.log("%c 結果(紅) ", "background: #EA0000; color: #ffffff", error);
+    console.log("%c 結果(藍) ", "background: #009393; color: #ffffff", data);
   }
 }
 </script>

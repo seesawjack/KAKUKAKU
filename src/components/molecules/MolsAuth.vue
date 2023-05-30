@@ -1,94 +1,197 @@
 <template>
-  <atmos-auth>
-    <template #input>
-      <atmos-input
-        v-for="(item, key) in formInfo[formType]"
-        :key="key"
-        :inputClass="'block w-full py-3 bg-white border rounded-lg pl-11 dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8'"
-        :inputTips="item.tips"
-        :inputType="item.type"
-        v-model="item.value"
-      >
-        <component :is="iconType[item.icon]" class="absolute top-3"></component>
-      </atmos-input>
-      <div v-if="formType === 'signup'">
-        <atmos-date-picker />
-        <div class="relative mt-8">
-          <gender-icon class="absolute top-3"/>
-          <select
-            v-model="custom.gender"
-            class="w-full border border-gray-600 rounded-lg dark:bg-gray-900 text-gray-300 py-3 pl-11"
-          >
-            <option disabled value="">請選擇性別</option>
-            <option>男性</option>
-            <option>女性</option>
-          </select>
-        </div>
-
-        <div class="relative mt-8">
-          <paper-icon class="absolute top-3"/>
-          <select
-            v-model="custom.level"
-            class="w-full border border-gray-600 rounded-lg dark:bg-gray-900 py-3 pl-11 placeholder-gray-700"
-          >
-            <option disabled value="">請選擇日本語能力(JLPT)</option>
-            <option>無</option>
-            <option>N1</option>
-            <option>N2</option>
-            <option>N3</option>
-            <option>N4</option>
-            <option>N5</option>
-          </select>
-        </div>
-      </div>
-    </template>
-    <template #button>
-      <div class="mt-6">
-        <button
-          class="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg hover:bg-sky-900/90 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+  <section>
+    <div class="container mx-auto">
+      <div class="flex items-center justify-center mt-6">
+        <a
+          href="/signin"
+          class="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b"
+          :class="[isSigninpage ? isSigninClass : '']"
         >
-          {{ formType === "signin" ? "登入" : "送出" }}
-        </button>
-
-        <div class="mt-6 text-center" v-if="formType === 'signin'">
-          <a
-            href="/signup"
-            class="text-sm text-blue-500 hover:underline dark:text-blue-400"
-          >
-            申請帳號
-          </a>
-        </div>
+          登入
+        </a>
+        <a
+          href="/signup"
+          class="w-1/3 pb-4 font-medium text-center text-gray-600 capitalize border-b"
+          :class="[!isSigninpage ? isSigninClass : '']"
+        >
+          註冊
+        </a>
       </div>
-    </template>
-  </atmos-auth>
+      <atmos-form
+        :schema="formSchema[formType]"
+        :validate="validate[formType]"
+        @submit="handleSubmit"
+      ></atmos-form>
+    </div>
+  </section>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
-import { useAuthStore } from "../../stores/auth";
-import AtmosAuth from "../atmos/AtmosAuth.vue";
-import AtmosInput from "../atmos/AtmosInput.vue";
-import AtmosDatePicker from "../atmos/AtmosDatePicker.vue";
+import { useRoute,useRouter } from "vue-router";
+import { useAuthStore } from '../../stores/auth';
+import AtmosForm from "../atmos/AtmosForm.vue";
+import * as Yup from "yup";
 import UserIcon from "../svg/UserIcon.vue";
 import PasswordIcon from "../svg/PasswordIcon.vue";
 import EmailIcon from "../svg/EmailIcon.vue";
-import GenderIcon from '../svg/GenderIcon.vue';
-import PaperIcon from '../svg/PaperIcon.vue'
+import GenderIcon from "../svg/GenderIcon.vue";
+import PaperIcon from "../svg/PaperIcon.vue";
+import CalenderIconVue from "../svg/CalenderIcon.vue";
 
-const { formInfo } = useAuthStore();
-const {
-  formInfo: { custom },
-} = useAuthStore();
-const route = useRoute();
+const isSigninClass = ref("border-b-2 border-[#46b0dd] text-white");
+const isSigninpage = computed(() => {
+  return route.path.indexOf("signin") !== -1;
+});
 
-const iconType = {
-  UserIcon,
-  PasswordIcon,
-  EmailIcon,
+const formSchema = {
+  signin: [
+    {
+      name: "email",
+      as: "input",
+      placeholder: "請輸入信箱",
+      icon: EmailIcon,
+    },
+    {
+      name: "password",
+      as: "input",
+      type: "password",
+      placeholder: "請輸入密碼",
+      icon: PasswordIcon,
+    },
+  ],
+  signup: [
+    {
+      name: "name",
+      as: "input",
+      placeholder: "請輸入使用者名稱",
+      icon: UserIcon,
+    },
+    {
+      name: "birth",
+      as: "input",
+      type: "date",
+      icon: CalenderIconVue,
+    },
+    {
+      name: "gender",
+      as: "select",
+      icon: GenderIcon,
+      children: [
+        {
+          tag: "option",
+          value: "",
+          text: "請選擇性別",
+          disabled: true,
+        },
+        {
+          tag: "option",
+          value: "male",
+          text: "男",
+        },
+        {
+          tag: "option",
+          value: "female",
+          text: "女",
+        },
+      ],
+    },
+    {
+      name: "level",
+      as: "select",
+      icon: PaperIcon,
+      children: [
+        {
+          tag: "option",
+          value: "",
+          text: "請選擇日本語能力",
+          disabled: true,
+        },
+        {
+          tag: "option",
+          value: "none",
+          text: "無",
+        },
+        {
+          tag: "option",
+          value: "N1",
+          text: "N1",
+        },
+        {
+          tag: "option",
+          value: "N2",
+          text: "N2",
+        },
+        {
+          tag: "option",
+          value: "N3",
+          text: "N3",
+        },
+        {
+          tag: "option",
+          value: "N4",
+          text: "N4",
+        },
+        {
+          tag: "option",
+          value: "N5",
+          text: "N5",
+        },
+      ],
+    },
+    {
+      name: "email",
+      as: "input",
+      placeholder: "請輸入信箱",
+      icon: EmailIcon,
+    },
+    {
+      name: "password",
+      as: "input",
+      type: "password",
+      placeholder: "請輸入密碼",
+      icon: PasswordIcon,
+    },
+    {
+      name: "confirmed",
+      as: "input",
+      type: "password",
+      placeholder: "請再次輸入密碼",
+      icon: PasswordIcon,
+    },
+  ],
 };
-const selected = ref();
+
+const validate = {
+  signin:Yup.object({
+  email: Yup.string().email("信箱格式錯誤").required("請輸入信箱"),
+  password: Yup.string().required("請輸入密碼").min(6,"至少輸入 6 個字").max(20,"最多輸入 20 個字")
+}),
+  signup:Yup.object({
+  name: Yup.string().min(2,"請輸入兩字以上名稱").required("請輸入使用者名稱"),
+  birth: Yup.string().required("請選擇出生年月日"),
+  gender: Yup.string().required("請選擇性別"),
+  level: Yup.string().required("請選擇日本語能力"),
+  email: Yup.string().email("信箱格式錯誤").required("請輸入信箱"),
+  password: Yup.string().required("請輸入密碼").min(6,"至少輸入 6 個字").max(20,"最多輸入 20 個字"),
+  confirmed: Yup.string()
+    .oneOf([Yup.ref("password"), null], "密碼不相符")
+    .required("請再次輸入密碼"),
+})
+}
+
+
+
+const route = useRoute();
+const router = useRouter();
+
 const formType = computed(() => {
   return route.path.replace("/", "");
 });
+
+const { handleSingup } = useAuthStore()
+async function handleSubmit(value){
+  // const result = await handleSingup(value.info);
+  // router.push('/onboarding');
+}
 </script>

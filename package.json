@@ -16,9 +16,11 @@
     "pinia": "^2.0.35",
     "sass": "^1.62.1",
     "sass-loader": "^13.2.2",
+    "vee-validate": "^4.9.5",
     "vue": "^3.2.47",
     "vue-router": "4",
-    "wanakana": "^5.1.0"
+    "wanakana": "^5.1.0",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",

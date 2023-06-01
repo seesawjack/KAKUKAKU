@@ -3,7 +3,7 @@
     <atmos-header-button @show-drop="showDropDown" />
     <atmos-drop-down :show="isShow">
       <!-- 歌詞編輯頁選項 -->
-      <div v-if="router.path === '/song'">
+      <div v-if="route.path === '/song'">
         <!-- ▼單選 文字大小 -->
         <div>
           <p class="text-left">文字大小</p>
@@ -118,28 +118,54 @@
           <span class="mx-1"> 關於網站 </span>
         </router-link>
         <a
-          href="/signin"
+          v-if="!loggedIn"
+          href="/login"
           class="flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
         >
           <signin-button class="h-5 mx-1" />
           <span class="mx-1"> 登入 </span>
         </a>
+        <div
+          v-else
+          @click="logout"
+          class="cursor-pointer flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
+        >
+          <logout-icon class="h-5 mx-1" />
+          <span class="mx-1">登出</span>
+        </div>
       </div>
     </atmos-drop-down>
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, toRefs, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { useGlobalStore } from "../../stores/index";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "../../stores/auth";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import AtmosHeaderButton from "../atmos/AtmosHeaderButton.vue";
 import TheLogo from "../svg/TheLogo.vue";
 import SigninButton from "../svg/SigninButton.vue";
+import LogoutIcon from "../svg/LogoutIcon.vue";
+const route = useRoute();
+const router = useRouter();
+const {
+  lyricConfiguration: { fontSize, labelType, selected },
+  selectedFontStyle,
+  selectedLabelStyle,
+} = useGlobalStore();
 
-const router = useRoute();
-const { lyricConfiguration: { fontSize,labelType,selected },selectedFontStyle,selectedLabelStyle } = useGlobalStore();
+const { handleLogout, isLoggedIn } = useAuthStore();
+
+async function logout() {
+  const result = await handleLogout();
+  window.location.reload(true);
+}
+
+const loggedIn = computed(() => {
+  return isLoggedIn();
+});
 
 const isShow = ref(false);
 function showDropDown() {

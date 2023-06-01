@@ -67,7 +67,7 @@ function onSubmit(values){
 
 const route = useRoute();
 const buttonName = computed(() => {
-  return route.path.replace("/", "") === "signin" ? "登入" : "下一步";
+  return route.path.replace("/", "") === "login" ? "登入" : "下一步";
 });
 </script>
 

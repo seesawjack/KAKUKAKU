@@ -42,6 +42,7 @@ export const useGlobalStore = defineStore('global', () => {
             fixedVideo: false
         }
     })
+    const isLoading = ref(false);
 
     function selectedSong(song) {
         localStorage.setItem('songHistory', JSON.stringify(song));
@@ -54,10 +55,11 @@ export const useGlobalStore = defineStore('global', () => {
         lyricConfiguration.selected.labelType = type; 
     }
     return {
+        isLoading,
         lyricConfiguration,
         selectedSongInfo,
         selectedSong,
         selectedFontStyle,
-        selectedLabelStyle
+        selectedLabelStyle,
     }
 })

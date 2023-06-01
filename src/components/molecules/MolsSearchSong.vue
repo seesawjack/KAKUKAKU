@@ -21,10 +21,11 @@
 </template>
 
 <script setup>
-import { ref,computed } from "vue";
+import { ref, computed, toRefs } from "vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
 import SearchGlasses from "../svg/SearchGlasses.vue";
 import { useSearchStore } from "../../stores/search/index";
+import { useGlobalStore } from "../../stores/index";
 
 const props = defineProps({
   className: {
@@ -32,21 +33,23 @@ const props = defineProps({
     required: true,
   },
 });
+let { isLoading } = toRefs(useGlobalStore());
 
-const songInfo = ref('')
+const songInfo = ref("");
 const emit = defineEmits(["search"]);
 const { youtubeSearch } = useSearchStore();
 
 async function searchSongs(value) {
   if (!songInfo.value) return;
+  isLoading.value = true;
   const data = await youtubeSearch(songInfo.value);
   emit("search", data);
+  isLoading.value = false;
 }
 
-const iconOpacity = computed(()=>{
-  return songInfo.value ? true : false
+const iconOpacity = computed(() => {
+  return songInfo.value ? true : false;
 });
-
 </script>
 
 <style scoped>

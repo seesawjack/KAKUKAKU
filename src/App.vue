@@ -1,5 +1,6 @@
 <template>
   <particle-bg />
+  <atmos-loading v-if="isLoading" />
   <the-header />
   <router-view class="pt-[56px]"></router-view>
   <the-footer />
@@ -9,10 +10,14 @@
 import TheHeader from "./components/layouts/TheHeader.vue";
 import ParticleBg from "./components/layouts/ParticleBg.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
+import AtmosLoading from "./components/atmos/AtmosLoading.vue";
 
+import { onMounted, toRefs } from "vue";
+import { useGlobalStore } from "./stores/index";
 import { useAuthStore } from "./stores/auth";
 import useSupabase from "./stores/supabase";
-import { onMounted } from "vue";
+
+let { isLoading } = toRefs(useGlobalStore());
 
 const { supabase } = useSupabase();
 

@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
 import useSupabase from "../supabase";
-import { ref } from 'vue';
+import { useGlobalStore } from "../index";
+import { ref, toRefs } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
     const { supabase } = useSupabase();
+    let { isLoading } = toRefs(useGlobalStore());
+
 
     const userInfo = ref('');
 
@@ -12,6 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
     const handleSingup = async (info) => {
         try {
+            isLoading.value = true;
             const { data, error } = await supabase.auth.signUp({
                 email: info.email,
                 password: info.password,
@@ -30,11 +34,15 @@ export const useAuthStore = defineStore('auth', () => {
             if (error instanceof Error) {
                 alert(error.message);
             }
+        } finally {
+            isLoading.value = false;
         }
     }
 
     const handleLogin = async (info) => {
         try {
+            isLoading.value = true;
+
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: info.email,
                 password: info.password,
@@ -45,12 +53,13 @@ export const useAuthStore = defineStore('auth', () => {
                 return error
             }
         } finally {
-
+            isLoading.value = false;
         }
     }
 
     const handleLogout = async () => {
         try {
+            isLoading.value = true;
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
             return { message: 'success' }
@@ -58,6 +67,8 @@ export const useAuthStore = defineStore('auth', () => {
             if (error instanceof Error) {
                 return error
             }
+        } finally {
+            isLoading.value = false;
         }
     }
 

@@ -28,9 +28,10 @@ window.onYouTubeIframeAPIReady = function () {
     playerVars: {
       playsinline: 1,
     },
-    events: {
-      onStateChange: onPlayerStateChange,
-    },
+    // events: {
+    //   onReady: onPlayerReady,
+    //   onStateChange: onPlayerStateChang
+    // },
   });
 };
 
@@ -40,12 +41,12 @@ function onPlayerReady(event) {
 
 let done = false;
 
-function onPlayerStateChange(event) {
-  if (event.data == YT.PlayerState.PLAYING && !done) {
-    setTimeout(stopVideo, 6000);
-    done = true;
-  }
-}
+// function onPlayerStateChange(event) {
+//   if (event.data == YT.PlayerState.PLAYING && !done) {
+//     setTimeout(stopVideo, 6000);
+//     done = true;
+//   }
+// }
 function stopVideo() {
   player.stopVideo();
 }

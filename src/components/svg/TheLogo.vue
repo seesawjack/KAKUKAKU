@@ -1,3 +1,25 @@
 <template>
-    <svg fill="#46b0dd" viewBox="0 0 22.00 22.00" xmlns="http://www.w3.org/2000/svg" id="memory-alpha-k-fill" stroke="#46b0dd" stroke-width="0.00022" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.22000000000000003"></g><g id="SVGRepo_iconCarrier"><path d="M15 1V2H17V3H18V4H19V5H20V7H21V15H20V17H19V18H18V19H17V20H15V21H7V20H5V19H4V18H3V17H2V15H1V7H2V5H3V4H4V3H5V2H7V1H15M8 6V16H10V13H11V14L12 14V16H14V13H13V12H12V11H11V10H12V9H13V8H14V6H12V7H11V8H10V6H8Z"></path></g></svg>
+  <svg
+    fill="#46b0dd"
+    viewBox="0 0 22.00 22.00"
+    xmlns="http://www.w3.org/2000/svg"
+    id="memory-alpha-k-fill"
+    stroke="#46b0dd"
+    stroke-width="0.00022"
+    transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"
+  >
+    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke="#CCCCCC"
+      stroke-width="0.22000000000000003"
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      <path
+        d="M15 1V2H17V3H18V4H19V5H20V7H21V15H20V17H19V18H18V19H17V20H15V21H7V20H5V19H4V18H3V17H2V15H1V7H2V5H3V4H4V3H5V2H7V1H15M8 6V16H10V13H11V14L12 14V16H14V13H13V12H12V11H11V10H12V9H13V8H14V6H12V7H11V8H10V6H8Z"
+      ></path>
+    </g>
+  </svg>
 </template>

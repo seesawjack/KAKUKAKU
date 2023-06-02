@@ -25,7 +25,9 @@ const authStore = useAuthStore();
 
 onMounted(() => {
   supabase.auth.onAuthStateChange((event, session) => {
-    authStore.userInfo = session?.user || null;
+    if (event == "SIGNED_IN") {
+      authStore.userInfo = session?.user.user_metadata || null;
+    }
   });
 });
 </script> 

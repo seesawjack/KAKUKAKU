@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
     function isLoggedIn() {
         return !!userInfo.value
     }
-    const handleSingup = async (info) => {
+    const handleSignup = async (info) => {
         try {
             isLoading.value = true;
             const { data, error } = await supabase.auth.signUp({
@@ -21,18 +21,19 @@ export const useAuthStore = defineStore('auth', () => {
                 password: info.password,
                 options: {
                     data: {
+                        name: info.name,
                         birth: info.birth,
                         gender: info.gender,
                         level: info.level,
-                        emailRedirectTo: "http://localhost:5173/",
+                        emailRedirectTo: "http://localhost:5173/login",
                     },
                 },
             });
             if (error) throw error;
-            return data
+            return { message: 'success', data: data }
         } catch (error) {
             if (error instanceof Error) {
-                alert(error.message);
+                return { message: 'error', data: error }
             }
         } finally {
             isLoading.value = false;
@@ -48,9 +49,10 @@ export const useAuthStore = defineStore('auth', () => {
                 password: info.password,
             })
             if (error) throw error;
+            return { message: 'success', data: data }
         } catch (error) {
             if (error instanceof Error) {
-                return error
+                return { message: 'error', data: error }
             }
         } finally {
             isLoading.value = false;
@@ -75,7 +77,7 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         userInfo,
         handleLogin,
-        handleSingup,
+        handleSignup,
         handleLogout,
         isLoggedIn
     }

@@ -1,10 +1,6 @@
 <template>
   <section>
-    <atmos-dialog
-    :show="isError"
-    :title="errorMsg"
-    @close="showDialog"
-  />
+    <atmos-dialog :show="isError" :title="errorMsg" @close="showDialog" />
     <div class="container mx-auto">
       <div class="flex items-center justify-center mt-6">
         <a
@@ -43,7 +39,7 @@ import EmailIcon from "../svg/EmailIcon.vue";
 import GenderIcon from "../svg/GenderIcon.vue";
 import PaperIcon from "../svg/PaperIcon.vue";
 import CalenderIconVue from "../svg/CalenderIcon.vue";
-import AtmosDialog from '../atmos/AtmosDialog.vue';
+import AtmosDialog from "../atmos/AtmosDialog.vue";
 
 const isLoginClass = ref("border-b-2 border-[#46b0dd] text-white");
 const isLoginPage = computed(() => {
@@ -179,6 +175,7 @@ const validate = {
   signup: Yup.object({
     name: Yup.string()
       .min(2, "請輸入兩字以上名稱")
+      .max(15, "最多輸入 15 個字")
       .required("請輸入使用者名稱"),
     birth: Yup.string().required("請選擇出生年月日"),
     gender: Yup.string().required("請選擇性別"),
@@ -201,21 +198,32 @@ const formType = computed(() => {
   return route.path.replace("/", "");
 });
 
-const { handleLogin,handleSignup } = useAuthStore();
+const { handleLogin, handleSignup } = useAuthStore();
 
 const isError = ref(false);
-const errorMsg = ref('');
+const errorMsg = ref("");
 
-function showDialog(value){
+function showDialog(value) {
   isError.value = value ? true : false;
 }
+
 async function handleSubmit(value) {
   if (formType.value === "login") {
-    await handleLogin(value.info);
-    router.push('/songlist');
+    const result = await handleLogin(value.info);
+    if (result.message === "success") {
+      router.push("/songlist");
+    }else{
+      isError.value = true;
+      errorMsg.value = result.data.toString();
+    }
   } else {
     const result = await handleSignup(value.info);
-
+    if (result.message === "success") {
+      router.push("/onboarding");
+    }else{
+      isError.value = true;
+      errorMsg.value = result.data.toString();
+    }
   }
 }
 </script>

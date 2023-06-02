@@ -27,7 +27,7 @@
               </component>
             </template>
           </Field>
-          <component :is="icon" class="absolute top-3" />
+          <component :is="icon" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
           <ErrorMessage
             :name="name"
             class="absolute left-0 top-15 text-sm text-red-500"

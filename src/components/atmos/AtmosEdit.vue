@@ -39,7 +39,7 @@ const emit = defineEmits(["getLyric", "showError"]);
 const lyric = ref(null);
 
 async function sendLyric() {
-  if (!lyric.value.length) {
+  if (!lyric.value) {
     emit("showError", true);
   } else {
     emit("getLyric", lyric.value);

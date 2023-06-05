@@ -1,6 +1,10 @@
 <template>
   <div>
-    <atmos-header-button @show-drop="showDropDown" />
+    <atmos-configure @show-drop="showDropDown">
+      <template #icon>
+        <atmos-collect/>
+      </template>
+    </atmos-configure>
     <atmos-drop-down :show="isShow">
       <!-- 歌詞編輯頁選項 -->
       <div v-if="route.path === '/song'">
@@ -144,7 +148,8 @@ import { useGlobalStore } from "../../stores/index";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
-import AtmosHeaderButton from "../atmos/AtmosHeaderButton.vue";
+import AtmosConfigure from "../atmos/AtmosConfigure.vue";
+import AtmosCollect from '../atmos/AtmosCollect.vue'
 import TheLogo from "../svg/TheLogo.vue";
 import SigninButton from "../svg/SigninButton.vue";
 import LogoutIcon from "../svg/LogoutIcon.vue";

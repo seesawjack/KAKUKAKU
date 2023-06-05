@@ -8,12 +8,14 @@ export const useLyricStore = defineStore('lyric', () => {
   const { request } = useRequestStore();
 
   const resultLyrics = ref([])
+  const initLyrics = ref([]);
   const hiraganaLyrics = ref([])
   const romajiLyrics = ref([])
 
   async function generateHiraganaLyrics(lyric) {
     resultLyrics.value.length = 0; //初始化
-  
+    initLyrics.value = lyric.replace(/\n/g, "||");
+
     const requsetData = ref({
       app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
       output_type: "hiragana",
@@ -68,6 +70,7 @@ export const useLyricStore = defineStore('lyric', () => {
 
   return {
     resultLyrics,
+    initLyrics,
     hiraganaLyrics,
     romajiLyrics,
     kanjiLabelHiragana,

@@ -1,65 +1,74 @@
 import { defineStore } from "pinia";
-import { ref,reactive } from 'vue';
+import { ref, reactive } from 'vue';
 
 export const useGlobalStore = defineStore('global', () => {
     const selectedSongInfo = ref(null);
     const lyricConfiguration = reactive({
         fontSize: {
             big: {
-                id:'big',
+                id: 'big',
                 name: "大",
                 class: ["text-2xl", "leading-9"],
             },
             middle: {
-                id:'middle',
+                id: 'middle',
                 name: "中",
                 class: ["text-xl", "leading-[2.4rem]"],
             },
             small: {
-                id:'small',
+                id: 'small',
                 name: "小",
                 class: ["text-base", "leading-[2.4rem]"],
             },
         },
         labelType: {
-            none:{
-                id:'none',
-                name:'無',
+            none: {
+                id: 'none',
+                name: '無',
             },
-            hiragana:{
-                id:'hiragana',
-                name:'平假名',
+            hiragana: {
+                id: 'hiragana',
+                name: '平假名',
             },
-            romaji:{
-                id:'romaji',
-                name:'羅馬字',
+            romaji: {
+                id: 'romaji',
+                name: '羅馬字',
             }
         },
-        selected:{
-            fontSize:'middle',
-            labelType:'hiragana',
+        selected: {
+            fontSize: 'middle',
+            labelType: 'hiragana',
             allHiragana: false,
             fixedVideo: false
         }
     })
     const isLoading = ref(false);
 
+    const errorMessage = reactive({ isError: false, message: '' });
+
+    function isError({ isError, message }) {
+        errorMessage.isError = isError;
+        errorMessage.message = message;
+        return;
+    }
     function selectedSong(song) {
         localStorage.setItem('songHistory', JSON.stringify(song));
         selectedSongInfo.value = song;
     }
-    function selectedFontStyle(style){
+    function selectedFontStyle(style) {
         lyricConfiguration.selected.fontSize = style;
     }
-    function selectedLabelStyle(type){
-        lyricConfiguration.selected.labelType = type; 
+    function selectedLabelStyle(type) {
+        lyricConfiguration.selected.labelType = type;
     }
     return {
         isLoading,
         lyricConfiguration,
         selectedSongInfo,
+        errorMessage,
+        isError,
         selectedSong,
         selectedFontStyle,
-        selectedLabelStyle,
+        selectedLabelStyle
     }
 })

@@ -5,14 +5,14 @@
         <the-logo class="inline h-6 mr-3" />
         <h1 class="text-3 text-lg">KAKUKAKU</h1>
       </router-link>
-      <mols-header-configure class="dropdown" />
+      <mols-configure class="dropdown" />
     </div>
   </header>
 </template>
 
 <script setup>
 import TheLogo from "../svg/TheLogo.vue";
-import MolsHeaderConfigure from "../molecules/MolsHeaderConfigure.vue";
+import MolsConfigure from "../molecules/MolsConfigure.vue";
 </script>
 
 <style scoped>

@@ -101,7 +101,9 @@ const path = computed(() => route.path.replace("/", ""));
 const addLyricBtn = ref("儲存建立");
 
 async function addLyric() {
-    if(addLyricBtn.value.length === 3){return;}
+  if (addLyricBtn.value.length === 3) {
+    return;
+  }
   if (!isLoggedIn()) {
     isError({ isError: true, message: "會員登入後方可使用收藏功能" });
     return;
@@ -120,7 +122,7 @@ async function addLyric() {
       lyrics_romaji: JSON.stringify(romajiLyrics),
     },
   ]);
-  addLyricBtn.value = '已新增'
+  addLyricBtn.value = "已新增";
   isLoading.value = false;
 }
 </script>

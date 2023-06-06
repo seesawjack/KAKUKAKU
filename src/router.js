@@ -6,6 +6,7 @@ import LyricsResult from './pages/Lyrics/LyricsResult.vue';
 import AboutPage from './pages/AboutPage.vue';
 import AuthPage from './pages/Auth/Index.vue';
 import OnboardingPage from './pages/Auth/OnboardingPage.vue';
+import LyricsList from './pages/Lyrics/LyricsList.vue';
 // import NotFound from './pages/NotFound.vue';
 
 import useSupabase  from './stores/supabase';
@@ -21,6 +22,7 @@ const router = createRouter({
         { path: '/login', component: AuthPage },
         { path: '/signup', component: AuthPage },
         { path: '/onboarding', component: OnboardingPage },
+        { path: '/lyricslist', component: LyricsList },
         { path: '/:notFound(.*)', redirect: '/songlist' }
     ],
 });

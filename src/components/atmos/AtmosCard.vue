@@ -1,7 +1,7 @@
 <template>
   <component
     :is="href ? 'a' : 'div'"
-    @click="selectedSong"
+    @click="selected"
     :href="href"
     class="flex justify-center text-left"
   >
@@ -30,7 +30,7 @@
         </picture>
       </div>
     </div>
-    <div class="w-full max-w-[390px] pl-5">
+    <div class="w-full max-w-[500px] pl-5">
       <p class="line-clamp">{{ songDetail.title }}</p>
       <div class="text-xs text-slate-500 leading-5">
         <p>{{ songDetail.subTitle }}</p>
@@ -43,7 +43,7 @@
 import { ref,reactive } from 'vue';
 import { useLyricStore } from "../../stores/lyric";
 
-const lyricStore = useLyricStore();
+const { selectedSong } = useLyricStore();
 
 const props = defineProps({
   data: Object,
@@ -65,9 +65,9 @@ const songDetail = reactive({
   subTitle: props.data?.channelTitle || props.subTitle,
 }); 
 
-function selectedSong() {
+function selected() {
   if (!props.href) return;
-  lyricStore.selectedSong(songDetail);
+  selectedSong(songDetail);
 }
 </script>
 

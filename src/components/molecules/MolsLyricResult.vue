@@ -38,8 +38,9 @@ const router = useRouter();
 const {
   lyricConfiguration: { selected },
 } = useLyricStore();
-const { resultLyrics, initLyrics, hiraganaLyrics, romajiLyrics } =
+const { resultLyrics, hiraganaLyrics, romajiLyrics, selectedSongInfo } =
   useLyricStore();
+const lyricStore = useLyricStore();
 
 const lyrics = ref(
   resultLyrics.map(
@@ -91,7 +92,7 @@ watch(
   }
 );
 
-const { isLoggedIn } = useAuthStore();
+const { isLoggedIn, userInfo } = useAuthStore();
 const { isError } = useGlobalStore();
 let { isLoading } = toRefs(useGlobalStore());
 const { supabase } = useSupabase();
@@ -113,18 +114,55 @@ async function addLyric() {
     return;
   }
   isLoading.value = true;
-  const { data, error } = await supabase.from("lyrics").insert([
-    {
-      lyric_name: "Red:birthMark",
-      user_id: "123",
-      lyrics: JSON.stringify(resultLyrics),
-      lyrics_hiragana: JSON.stringify(hiraganaLyrics),
-      lyrics_romaji: JSON.stringify(romajiLyrics),
-    },
-  ]);
+  const { id, title, url } =
+    selectedSongInfo || JSON.parse(localStorage.getItem("songHistory"));
+  const { data: lyricsListData, error: lyricsListError } = await supabase
+    .from("lyrics_list")
+    .insert([
+      {
+        user_id: userInfo.id,
+        video_id: id,
+        title: title,
+        video_img: url,
+      },
+    ]);
+
+  const { data: lyricsContentData, error: lyricsContentError } = await supabase
+    .from("lyrics_content")
+    .insert([
+      {
+        user_id: userInfo.id,
+        video_id: id,
+        hiragana: JSON.stringify(hiraganaLyrics),
+        romaji: JSON.stringify(romajiLyrics),
+        hanji: JSON.stringify(resultLyrics),
+      },
+    ]);
+
   addLyricBtn.value = "已新增";
   isLoading.value = false;
 }
+
+onMounted(async () => {
+  if (route.query.user) {
+    let { data, error } = await supabase
+      .from("lyrics_content")
+      .select()
+      .eq("video_id", route.query.video)
+      .eq("user_id", userInfo.id);
+
+    const hanji = JSON.parse(data[0].hanji);
+    const hiragana = JSON.parse(data[0].hiragana);
+    const romaji = JSON.parse(data[0].romaji);
+    lyrics.value = hanji.map(
+      (sentence, i) =>
+        sentence +
+        `<p class="hiragana">${hiragana[i]}</p>` +
+        `<span class="romaji">${romaji[i]}</span>`
+    );
+    addLyricBtn.value = "編輯修改";
+  }
+});
 </script>
 
 <style>

@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center">
-    <div v-if="userInfo.name" class="flex mr-3 border rounded py-1 px-2">
+    <div v-if="userInfo.user_metadata?.name" class="flex mr-3 border rounded py-1 px-2">
       <user-icon class="mx-0 mr-2" />
-      {{ userInfo.name }}
+      {{ userInfo.user_metadata?.name }}
     </div>
     <slot name="icon"></slot>
     <adjustment-button class="cursor-pointer" @click="showDropDown" />

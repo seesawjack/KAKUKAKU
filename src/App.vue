@@ -39,7 +39,7 @@ const authStore = useAuthStore();
 onMounted(() => {
   supabase.auth.onAuthStateChange((event, session) => {
     if (event == "SIGNED_IN") {
-      authStore.userInfo = session?.user.user_metadata || null;
+      authStore.userInfo = session?.user || null;
     }
   });
 });

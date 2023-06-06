@@ -41,9 +41,9 @@
 
 <script setup>
 import { ref,reactive } from 'vue';
-import { useGlobalStore } from "../../stores/index";
+import { useLyricStore } from "../../stores/lyric";
 
-const globalStore = useGlobalStore();
+const lyricStore = useLyricStore();
 
 const props = defineProps({
   data: Object,
@@ -67,7 +67,7 @@ const songDetail = reactive({
 
 function selectedSong() {
   if (!props.href) return;
-  globalStore.selectedSong(songDetail);
+  lyricStore.selectedSong(songDetail);
 }
 </script>
 

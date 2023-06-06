@@ -15,7 +15,7 @@
 
 <script setup>
 import { ref, watch,toRefs } from "vue";
-import { useGlobalStore } from "../../stores/index";
+import { useLyricStore } from "../../stores/lyric";
 
 const props = defineProps({
   lyrics: {
@@ -28,8 +28,8 @@ const props = defineProps({
   },
 });
 
-const globalStore = useGlobalStore();
-const { lyricConfiguration } = globalStore;
+const lyricStore = useLyricStore();
+const { lyricConfiguration } = lyricStore;
 const { fontSize, selected } = toRefs(lyricConfiguration);
 const font = ref("text-xl");
 

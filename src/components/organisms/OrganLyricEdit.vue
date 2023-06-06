@@ -19,18 +19,18 @@
 <script setup>
 import { ref,onMounted,computed } from "vue";
 import { useRoute } from "vue-router";
-import { useGlobalStore } from "../../stores/index";
+import { useLyricStore } from "../../stores/lyric";
 import AtmosCard from "../atmos/AtmosCard.vue";
 import AtmosKeywords from '../atmos/AtmosKeywords.vue';
 import MolsEdit from '../molecules/MolsEdit.vue'
 
 const route = useRoute();
-const globalStore = useGlobalStore();
+const lyricStore = useLyricStore();
 const showCard = ref(false);
 
 const songInfo = computed(() => {
   return (
-    globalStore.selectedSongInfo ||
+   lyricStore.selectedSongInfo ||
     JSON.parse(localStorage.getItem("songHistory"))
   );
 });

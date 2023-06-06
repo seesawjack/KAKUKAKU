@@ -144,7 +144,7 @@
 
 <script setup>
 import { ref, toRefs, computed, watch, onMounted, onBeforeUnmount } from "vue";
-import { useGlobalStore } from "../../stores/index";
+import { useLyricStore } from "../../stores/lyric";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
@@ -159,7 +159,7 @@ const {
   lyricConfiguration: { fontSize, labelType, selected },
   selectedFontStyle,
   selectedLabelStyle,
-} = useGlobalStore();
+} = useLyricStore();
 
 const { handleLogout, isLoggedIn } = useAuthStore();
 

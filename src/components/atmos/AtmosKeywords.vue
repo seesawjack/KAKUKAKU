@@ -18,10 +18,10 @@
 </template>
 
 <script setup>
-import { useGlobalStore } from "../../stores/index";
+import { useLyricStore } from "../../stores/lyric";
 
 const { title } =
-  useGlobalStore().selectedSongInfo ||
+  useLyricStore().selectedSongInfo ||
   JSON.parse(localStorage.getItem("songHistory"));
 
 

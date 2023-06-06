@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref,reactive } from "vue";
 import { diff_match_patch } from 'diff-match-patch';
 import { toRomaji } from 'wanakana';
 import { useRequestStore } from '../request';
@@ -21,7 +21,7 @@ export const useLyricStore = defineStore('lyric', () => {
       output_type: "hiragana",
       sentence: lyric.replace(/\n/g, "||")
     });
-    
+
     const requestLyrics = await request({
       url: "https://labs.goo.ne.jp/api/hiragana",
       method: "POST",
@@ -37,7 +37,7 @@ export const useLyricStore = defineStore('lyric', () => {
       furigana(sentence, apiData[i])
     })
     hiraganaLyrics.value = apiData;
-    romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i.split('').join(' '),{ customRomajiMapping: { は: 'wa' } }));
+    romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i.split('').join(' '), { customRomajiMapping: { は: 'wa' } }));
   }
 
   function furigana(lyrics, hiraganaLyrics) {
@@ -60,20 +60,75 @@ export const useLyricStore = defineStore('lyric', () => {
         return acc;
       };
     }, { kanji: null, hiragana: null });
-    if(lyrics === ''){
+    if (lyrics === '') {
       resultLyrics.value.push('<p class="text-center">*************************</p>');
-    }else{
+    } else {
       resultLyrics.value.push(`<p class="init">${html}</p>`);
     }
     return;
   }
 
+  const selectedSongInfo = ref(null);
+  const lyricConfiguration = reactive({
+    fontSize: {
+      big: {
+        id: 'big',
+        name: "大",
+        class: ["text-2xl", "leading-9"],
+      },
+      middle: {
+        id: 'middle',
+        name: "中",
+        class: ["text-xl", "leading-[2.4rem]"],
+      },
+      small: {
+        id: 'small',
+        name: "小",
+        class: ["text-base", "leading-[2.4rem]"],
+      },
+    },
+    labelType: {
+      none: {
+        id: 'none',
+        name: '無',
+      },
+      hiragana: {
+        id: 'hiragana',
+        name: '平假名',
+      },
+      romaji: {
+        id: 'romaji',
+        name: '羅馬字',
+      }
+    },
+    selected: {
+      fontSize: 'middle',
+      labelType: 'hiragana',
+      allHiragana: false,
+      fixedVideo: false
+    }
+  })
+  function selectedSong(song) {
+    localStorage.setItem('songHistory', JSON.stringify(song));
+    selectedSongInfo.value = song;
+  }
+  function selectedFontStyle(style) {
+    lyricConfiguration.selected.fontSize = style;
+  }
+  function selectedLabelStyle(type) {
+    lyricConfiguration.selected.labelType = type;
+  }
   return {
     resultLyrics,
     initLyrics,
     hiraganaLyrics,
     romajiLyrics,
+    selectedSongInfo,
+    lyricConfiguration,
     kanjiLabelHiragana,
-    generateHiraganaLyrics
+    generateHiraganaLyrics,
+    selectedSong,
+    selectedFontStyle,
+    selectedLabelStyle
   }
 })

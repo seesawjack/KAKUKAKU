@@ -37,7 +37,7 @@ const router = useRouter();
 
 const {
   lyricConfiguration: { selected },
-} = useGlobalStore();
+} = useLyricStore();
 const { resultLyrics, initLyrics, hiraganaLyrics, romajiLyrics } =
   useLyricStore();
 

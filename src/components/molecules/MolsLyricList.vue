@@ -99,24 +99,24 @@ onBeforeUnmount(() => clearTimeout(timer));
 
 <style scoped>
 .move {
-  animation: catmove 0.5s linear infinite;
+  animation: catmove 0.3s linear infinite;
 }
 
 @keyframes catmove {
   0% {
-    transform: translateX(-5px);
+    transform: translateX(0px);
   }
   25% {
-    transform: translateX(2px);
-  }
-  50% {
-    transform: translateX(5px);
-  }
-  75% {
     transform: translateX(-3px);
   }
-  100% {
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
     transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0px);
   }
 }
 </style>

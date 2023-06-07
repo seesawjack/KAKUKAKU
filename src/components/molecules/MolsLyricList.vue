@@ -8,7 +8,7 @@
         :id="item.video_id"
         :url="item.video_img"
         :title="item.title"
-        :href="`/song?video=${item.video_id}&user=${userInfo.user_metadata.name}`"
+        :href="`/song?video=${item.video_id}&user=${userInfo.user_metadata?.name}`"
       />
   </div>
 </template>

@@ -108,10 +108,10 @@ $time-4: 600s;
 
 @keyframes animParticle {
   from {
-    transform: translateY(0px);
+    transform: translateY($spacing * -1);
   }
   to {
-    transform: translateY($spacing * -1);
+    transform: translateY(0px);
   }
 }
 </style>

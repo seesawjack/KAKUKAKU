@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref,reactive } from "vue";
+import { ref, reactive,computed } from "vue";
 import { diff_match_patch } from 'diff-match-patch';
 import { toRomaji } from 'wanakana';
 import { useRequestStore } from '../request';
@@ -66,7 +66,9 @@ export const useLyricStore = defineStore('lyric', () => {
     return;
   }
 
-  const selectedSongInfo = ref(null);
+  let selectedSongInfo = reactive({});
+  const songInfo = computed(()=>selectedSongInfo)
+
   const lyricConfiguration = reactive({
     fontSize: {
       big: {
@@ -122,6 +124,7 @@ export const useLyricStore = defineStore('lyric', () => {
     romajiLyrics,
     selectedSongInfo,
     lyricConfiguration,
+    songInfo,
     kanjiLabelHiragana,
     generateHiraganaLyrics,
     selectedSong,

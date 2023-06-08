@@ -9,11 +9,11 @@
     <atmos-input
       :inputTips="'請輸入歌曲名稱'"
       :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full'"
-      v-model="songInfo"
+      v-model="searchResult"
     >
       <search-glasses
         class="absolute right-3 top-2"
-        :class="{ 'opacity-40': !iconOpacity, 'cursor-pointer': iconOpacity }"
+        :class="{ 'opacity-40': !isOpacity, 'cursor-pointer': isOpacity }"
         @click="searchSongs"
       />
     </atmos-input>
@@ -35,20 +35,20 @@ const props = defineProps({
 });
 let { isLoading } = toRefs(useGlobalStore());
 
-const songInfo = ref("");
+const searchResult = ref("");
 const emit = defineEmits(["search"]);
 const { youtubeSearch } = useSearchStore();
 
 async function searchSongs(value) {
-  if (!songInfo.value) return;
+  if (!searchResult.value) return;
   isLoading.value = true;
-  const data = await youtubeSearch(songInfo.value);
+  const data = await youtubeSearch(searchResult.value);
   emit("search", data);
   isLoading.value = false;
 }
 
-const iconOpacity = computed(() => {
-  return songInfo.value ? true : false;
+const isOpacity = computed(() => {
+  return searchResult.value ? true : false;
 });
 </script>
 

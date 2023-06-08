@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import useSupabase from "../supabase";
 import { useGlobalStore } from "../index";
-import { ref, toRefs } from 'vue';
+import { ref } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
     const { supabase } = useSupabase();
-    let { isLoading } = toRefs(useGlobalStore());
+    const { loadingState } = useGlobalStore();
 
 
     const userInfo = ref('');
@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
     const handleSignup = async (info) => {
         try {
-            isLoading.value = true;
+            loadingState(true);
             const { data, error } = await supabase.auth.signUp({
                 email: info.email,
                 password: info.password,
@@ -36,13 +36,13 @@ export const useAuthStore = defineStore('auth', () => {
                 return { message: 'error', data: error }
             }
         } finally {
-            isLoading.value = false;
+            loadingState(false);
         }
     }
 
     const handleLogin = async (info) => {
         try {
-            isLoading.value = true;
+            loadingState(true);
 
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: info.email,
@@ -55,13 +55,13 @@ export const useAuthStore = defineStore('auth', () => {
                 return { message: 'error', data: error }
             }
         } finally {
-            isLoading.value = false;
+            loadingState(false);
         }
     }
 
     const handleLogout = async () => {
         try {
-            isLoading.value = true;
+            loadingState(true);
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
             return { message: 'success' }
@@ -70,7 +70,7 @@ export const useAuthStore = defineStore('auth', () => {
                 return error
             }
         } finally {
-            isLoading.value = false;
+            loadingState(false);
         }
     }
 

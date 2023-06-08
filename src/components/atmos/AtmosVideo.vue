@@ -22,8 +22,8 @@ let player;
 
 window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player("player", {
-    height: "390",
     width: "640",
+    height: "390",
     videoId: props.id,
     playerVars: {
       playsinline: 1,

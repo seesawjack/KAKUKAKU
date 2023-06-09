@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col max-w-[640px] mx-auto">
-    <atmos-video :id="videoId" v-if="videoId" :class="isfixedVideo" />
+    <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
     <atmos-lyric
       :lyrics="lyrics"
       class="max-w-[640px]"
@@ -32,14 +32,15 @@ const route = useRoute();
 const router = useRouter();
 
 const path = computed(() => route.path.replace("/", ""));
-const videoId = computed(() => route.query.video);
+const songId = computed(() => route.query.song_id);
 
 const {
   lyricConfiguration: { selected },
   resultLyrics,
   hiraganaLyrics,
   romajiLyrics,
-  selectedSongInfo,
+  songInfo,
+  selectedSong
 } = useLyricStore();
 
 const lyrics = ref([]);
@@ -66,7 +67,6 @@ watch(
 );
 
 const allHiragana = computed(() => {
-  console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',selectedSongInfo);
   return { showHiragana: selected.allHiragana };
 });
 
@@ -101,17 +101,15 @@ async function addLyric() {
     return;
   }
   loadingState(true);
-  const { id, title, url } =
-    selectedSongInfo || JSON.parse(localStorage.getItem("songHistory"));
 
   const { data: lyricsListData, error: lyricsListError } = await supabase
     .from("lyrics_list")
     .insert([
       {
         user_id: userInfo.id,
-        video_id: id,
-        title: title,
-        video_img: url,
+        video_id: songInfo.id,
+        title: songInfo.title,
+        video_img: songInfo.url,
       },
     ]);
 
@@ -120,7 +118,7 @@ async function addLyric() {
     .insert([
       {
         user_id: userInfo.id,
-        video_id: id,
+        video_id: songInfo.id,
         hiragana: JSON.stringify(hiraganaLyrics),
         romaji: JSON.stringify(romajiLyrics),
         hanji: JSON.stringify(resultLyrics),
@@ -135,7 +133,7 @@ onMounted(async () => {
     let { data, error } = await supabase
       .from("lyrics_content")
       .select()
-      .eq("video_id", route.query.video)
+      .eq("video_id", route.query.song_id)
       .eq("user_id", userInfo.id);
 
     const hanji = JSON.parse(data[0].hanji);
@@ -159,7 +157,7 @@ onMounted(async () => {
     buttonState({ text: "登入後方可儲存歌曲", state: "", unclickable: true });
     return;
   }
-  if(!resultLyrics.length){
+  if (!resultLyrics.length) {
     buttonState({ text: "產生歌曲後方可儲存", state: "", unclickable: true });
     return;
   }

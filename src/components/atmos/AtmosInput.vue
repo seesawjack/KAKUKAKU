@@ -1,5 +1,5 @@
 <template>
-  <div class="relative max-w-xl mx-auto">
+  <div class="relative">
     <input
       :class="inputClass"
       :type="inputType || 'text'"

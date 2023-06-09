@@ -7,6 +7,7 @@
   </div>
   <form @submit.prevent="searchSongs">
     <atmos-input
+      class="max-w-xl mx-auto"
       :inputTips="'請輸入歌曲名稱'"
       :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full'"
       v-model="searchResult"

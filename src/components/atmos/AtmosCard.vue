@@ -54,6 +54,7 @@ const props = defineProps({
   title: String,
   subTitle: String,
   href: String,
+  isAdded: Boolean
 });
 
 const songDetail = reactive({
@@ -66,7 +67,7 @@ const songDetail = reactive({
 }); 
 
 function selected() {
-  if (!props.href) return;
+  if (!props.href || props.isAdded) return;
   selectedSong(songDetail);
 }
 </script>

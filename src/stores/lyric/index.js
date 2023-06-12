@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, reactive, computed } from "vue";
+import { ref, reactive,onMounted, computed,getCurrentInstance } from "vue";
 import { diff_match_patch } from 'diff-match-patch';
 import { toRomaji } from 'wanakana';
 import { useRequestStore } from '../request';
@@ -10,7 +10,8 @@ export const useLyricStore = defineStore('lyric', () => {
   const resultLyrics = ref([])
   const hiraganaLyrics = ref([])
   const romajiLyrics = ref([])
-
+  const songInfo = ref({});
+  
   async function generateHiraganaLyrics(lyric) {
     resultLyrics.value.length = 0; //初始化
 
@@ -108,10 +109,16 @@ export const useLyricStore = defineStore('lyric', () => {
     }
   })
 
-  function selectedSong(songInfo) {
-    localStorage.setItem('songInfo', JSON.stringify(songInfo));
+  function selectedSong(info) {
+    songInfo.value = info;
+    localStorage.setItem('songInfo', JSON.stringify(info));
   }
-  const songInfo = computed(() => JSON.parse(localStorage.getItem('songInfo')));
+  
+  if(getCurrentInstance()){
+    onMounted(()=>{
+      songInfo.value = JSON.parse(localStorage.getItem('songInfo'));
+    })
+  }
 
   function selectedFontStyle(style) {
     lyricConfiguration.selected.fontSize = style;

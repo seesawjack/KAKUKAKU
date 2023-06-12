@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed, toRefs,getCurrentInstance } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useLyricStore } from "../../stores/lyric";
 import { useGlobalStore } from "../../stores/index";
@@ -61,7 +61,8 @@ import AtmosInput from "../atmos/AtmosInput.vue";
 
 const router = useRouter();
 const route = useRoute();
-const { generateHiraganaLyrics, selectedSong, songInfo } = useLyricStore();
+const { generateHiraganaLyrics, selectedSong } = useLyricStore();
+const { songInfo } = toRefs(useLyricStore());
 const { isError } = useGlobalStore();
 const { songIdRegex } = useRegexStore();
 
@@ -107,9 +108,7 @@ function sendLyric() {
     }
   }
 
-  if (lyrics.value && songId.value) {
-    transformLyrics(lyrics.value, songId.value);
-  }
+  transformLyrics(lyrics.value, songId.value);
 }
 
 //上傳歌詞
@@ -131,8 +130,9 @@ async function uploadFile(e) {
 }
 
 onMounted(() => {
+  console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',songInfo.value);
   if (route.query.song_id) {
-    idInUrl.value = route.query.song_id === songInfo.id;
+    idInUrl.value = route.query.song_id === songInfo.value.id;
   }
 });
 </script>

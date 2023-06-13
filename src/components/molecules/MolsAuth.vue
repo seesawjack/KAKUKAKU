@@ -211,7 +211,7 @@ async function handleSubmit(value) {
   if (formType.value === "login") {
     const result = await handleLogin(value.info);
     if (result.message === "success") {
-      router.push("/song/search");
+      router.back();
     }else{
       isError.value = true;
       errorMsg.value = result.data.toString();

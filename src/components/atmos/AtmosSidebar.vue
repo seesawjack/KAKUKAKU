@@ -246,6 +246,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../../stores/auth";
 
@@ -258,9 +259,12 @@ import UserIcon from "../svg/UserIcon.vue";
 const { handleLogout, isLoggedIn } = useAuthStore();
 const { userInfo } = storeToRefs(useAuthStore());
 
+const router = useRouter();
 async function logout() {
   const result = await handleLogout();
-  window.location.reload(true);
+  router.push({ path: "/login" }).then(() => {
+    router.go();
+  });
 }
 
 const loggedIn = computed(() => {

@@ -7,13 +7,16 @@ import { useRequestStore } from '../request';
 export const useLyricStore = defineStore('lyric', () => {
   const { request } = useRequestStore();
 
-  const resultLyrics = ref([])
-  const hiraganaLyrics = ref([])
-  const romajiLyrics = ref([])
+  const initLyrics = ref([]);
+  const resultLyrics = ref([]);
+  const hiraganaLyrics = ref([]);
+  const romajiLyrics = ref([]);
   const songInfo = ref({});
   
   async function generateHiraganaLyrics(lyric) {
     resultLyrics.value.length = 0; //初始化
+    initLyrics.value = lyric;
+    localStorage.setItem('initLyrics',JSON.stringify(lyric));
 
     const requsetData = ref({
       app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
@@ -31,11 +34,12 @@ export const useLyricStore = defineStore('lyric', () => {
     kanjiLabelHiragana(allHiraganaLyrics, lyric);
   }
 
-  async function kanjiLabelHiragana(apiData, lyrics) {
+  async function kanjiLabelHiragana(hiragana, lyrics) {
     await lyrics.split('\n').map((sentence, i) => {
-      furigana(sentence, apiData[i])
+      furigana(sentence, hiragana[i])
     })
-    hiraganaLyrics.value = apiData;
+
+    hiraganaLyrics.value = hiragana;
     romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i.split('').join(' '), { customRomajiMapping: { は: 'wa' } }));
   }
 
@@ -59,6 +63,7 @@ export const useLyricStore = defineStore('lyric', () => {
         return acc;
       };
     }, { kanji: null, hiragana: null });
+
     if (lyrics === '') {
       resultLyrics.value.push('<p class="text-center">*************************</p>');
     } else {
@@ -117,7 +122,13 @@ export const useLyricStore = defineStore('lyric', () => {
   if(getCurrentInstance()){
     onMounted(()=>{
       songInfo.value = JSON.parse(localStorage.getItem('songInfo'));
+      initLyrics.value = JSON.parse(localStorage.getItem('initLyrics'));
     })
+  };
+
+  function removeLocal(){
+    localStorage.removeItem('songInfo');
+    localStorage.removeItem('initLyrics');
   }
 
   function selectedFontStyle(style) {
@@ -127,6 +138,7 @@ export const useLyricStore = defineStore('lyric', () => {
     lyricConfiguration.selected.labelType = type;
   }
   return {
+    initLyrics,
     resultLyrics,
     hiraganaLyrics,
     romajiLyrics,
@@ -136,6 +148,7 @@ export const useLyricStore = defineStore('lyric', () => {
     generateHiraganaLyrics,
     selectedSong,
     selectedFontStyle,
-    selectedLabelStyle
+    selectedLabelStyle,
+    removeLocal
   }
 })

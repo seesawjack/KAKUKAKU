@@ -40,14 +40,23 @@ const songId = computed(() => route.query.song_id);
 
 const {
   lyricConfiguration: { selected },
+  initLyrics,
   resultLyrics,
   hiraganaLyrics,
   romajiLyrics,
   songInfo,
   selectedSong,
+  generateHiraganaLyrics,
+  removeLocal
 } = useLyricStore();
 
 const lyrics = ref([]);
+lyrics.value = resultLyrics.map(
+  (sentence, i) =>
+    sentence +
+    `<p class="hiragana">${hiraganaLyrics[i]}</p>` +
+    `<span class="romaji">${romajiLyrics[i]}</span>`
+);
 
 const labelType = ref("");
 
@@ -132,12 +141,24 @@ async function addLyric() {
       },
     ]);
   buttonState({ text: "已新增", state: "isAdded", unclickable: true });
+  removeLocal();
   loadingState(false);
 }
 
-onMounted(async () => {
-  
+onMounted(async () => { 
+  if(!route.query.song_id){
+    isShow.value = true;
+    message.value = "無法查看此歌曲";
+    return;
+  }
+
   if (route.query.user) {
+    if (route.query.user !== userInfo.user_metadata.name) {
+      isShow.value = true;
+      message.value = "無法查看此歌曲";
+      return;
+    }
+
     let { data, error } = await supabase
       .from("lyrics_content")
       .select()
@@ -167,6 +188,16 @@ onMounted(async () => {
     return;
   }
 
+  if (route.query.song_id === songInfo?.id) {
+    await generateHiraganaLyrics(initLyrics);
+    lyrics.value = resultLyrics.map(
+      (sentence, i) =>
+        sentence +
+        `<p class="hiragana">${hiraganaLyrics[i]}</p>` +
+        `<span class="romaji">${romajiLyrics[i]}</span>`
+    );
+  }
+
   if (!resultLyrics.length) {
     isShow.value = true;
     message.value = "無法查看此歌曲";
@@ -181,13 +212,6 @@ onMounted(async () => {
     buttonState({ text: "產生歌曲後方可儲存", state: "", unclickable: true });
     return;
   }
-
-  lyrics.value = resultLyrics.map(
-    (sentence, i) =>
-      sentence +
-      `<p class="hiragana">${hiraganaLyrics[i]}</p>` +
-      `<span class="romaji">${romajiLyrics[i]}</span>`
-  );
 });
 </script>
 

@@ -1,18 +1,21 @@
 <template>
-  <div class="flex flex-col max-w-[640px] mx-auto">
-    <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
-    <atmos-lyric
-      :lyrics="lyrics"
-      class="max-w-[640px]"
-      :className="[labelType, allHiragana]"
-    />
-    <button
-      class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-      :class="{ unclickable: confirmButton.unclickable }"
-      @click="addLyric"
-    >
-      {{ confirmButton.text }}
-    </button>
+  <div>
+    <div v-if="!isShow" class="flex flex-col max-w-[640px] mx-auto">
+      <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
+      <atmos-lyric
+        :lyrics="lyrics"
+        class="max-w-[640px]"
+        :className="[labelType, allHiragana]"
+      />
+      <button
+        class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
+        :class="{ unclickable: confirmButton.unclickable }"
+        @click="addLyric"
+      >
+        {{ confirmButton.text }}
+      </button>
+    </div>
+    <atmos-not-found v-else :tips="message" />
   </div>
 </template>
 
@@ -27,7 +30,7 @@ import useSupabase from "../../stores/supabase";
 import AtmosVideo from "../../components/atmos/AtmosVideo.vue";
 import AtmosLyric from "../../components/atmos/AtmosLyric.vue";
 import AtmosDialog from "../atmos/AtmosDialog.vue";
-import AtmosNotFound from "../atmos/AtmosNotFound.vue"
+import AtmosNotFound from "../atmos/AtmosNotFound.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -41,12 +44,15 @@ const {
   hiraganaLyrics,
   romajiLyrics,
   songInfo,
-  selectedSong
+  selectedSong,
 } = useLyricStore();
 
 const lyrics = ref([]);
 
 const labelType = ref("");
+
+const isShow = ref(false);
+const message = ref("");
 
 watch(
   () => selected.labelType,
@@ -130,12 +136,25 @@ async function addLyric() {
 }
 
 onMounted(async () => {
+    if(userInfo?.user_metadata?.name
+  !== route.query.user){
+      isShow.value = true;
+      message.value = '無法查看此歌曲';
+      return;
+    }
+
   if (route.query.user) {
     let { data, error } = await supabase
       .from("lyrics_content")
       .select()
       .eq("video_id", route.query.song_id)
       .eq("user_id", userInfo.id);
+
+    if (!data.length) {
+      isShow.value = true;
+      message.value = "無法查看此歌曲";
+      return;
+    }
 
     const hanji = JSON.parse(data[0].hanji);
     const hiragana = JSON.parse(data[0].hiragana);

@@ -2,7 +2,7 @@
   <transition name="dropdown">
     <div 
       v-if="show"
-      class="absolute z-40 text-sm top-10 right-3 w-48 py-2 px-3 mt-2 origin-top-right rounded-md shadow-xl dark:bg-gray-700/80"
+      class="absolute z-40 text-sm w-48 py-2 px-3 mt-2 origin-top-right rounded-md shadow-xl dark:bg-gray-700/80"
     >
       <slot></slot>
     </div>
@@ -22,7 +22,7 @@ const props = defineProps({
 .dropdown-enter-from,
 .dropdown-leave-to {
   opacity: 0;
-  top: 1rem;
+  transform: translateY(-20%);
 }
 .dropdown-enter-active,
 .dropdown-leave-active {
@@ -31,6 +31,6 @@ const props = defineProps({
 .dropdown-enter-to,
 .dropdown-leave-from {
   opacity: 1;
-  top: 2.5rem;
+  transform: translateY(0);
 }
 </style>

@@ -153,7 +153,7 @@ onMounted(async () => {
   }
 
   if (route.query.user) {
-    if (route.query.user !== userInfo.user_metadata.name) {
+    if (route.query.user !== userInfo.user_metadata?.name) {
       isShow.value = true;
       message.value = "無法查看此歌曲";
       return;

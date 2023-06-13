@@ -136,13 +136,7 @@ async function addLyric() {
 }
 
 onMounted(async () => {
-    if(userInfo?.user_metadata?.name
-  !== route.query.user){
-      isShow.value = true;
-      message.value = '無法查看此歌曲';
-      return;
-    }
-
+  
   if (route.query.user) {
     let { data, error } = await supabase
       .from("lyrics_content")
@@ -170,6 +164,12 @@ onMounted(async () => {
       state: "Update",
       unclickable: true,
     });
+    return;
+  }
+
+  if (!resultLyrics.length) {
+    isShow.value = true;
+    message.value = "無法查看此歌曲";
     return;
   }
 

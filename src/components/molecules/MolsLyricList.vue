@@ -4,7 +4,7 @@
       <div v-if="songList.length" class="w-full">
         <p class="text-left mb-5">已建立歌曲 {{ songList.length }} 首</p>
         <atmos-card
-          class="transition-all ml-2 mb-5 group cursor-pointer hover:bg-slate-300/[0.2]"
+          class="ml-2 mb-5 group cursor-pointer"
           v-for="item in songList"
           :key="item.id"
           :id="item.video_id"

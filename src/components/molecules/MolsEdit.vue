@@ -104,7 +104,8 @@ function sendLyric() {
         url: `https://i.ytimg.com/vi/${songId.value}/mqdefault.jpg`,
       });
     } catch (error) {
-      isError({ isError: true, message: "Youtube 連結有誤，請再次確認" });
+      isError({ isError: true, message: "連結有誤，請再次確認" });
+      return;
     }
   }
 

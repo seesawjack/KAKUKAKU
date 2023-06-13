@@ -5,7 +5,7 @@
     :href="href"
     class="flex justify-center text-left"
   >
-    <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
+    <div class="w-full max-w-[120px] relative mx-auto md:mx-0 ">
       <p
         v-if="!href"
         class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1"
@@ -30,7 +30,7 @@
         </picture>
       </div>
     </div>
-    <div class="w-full max-w-[500px] pl-5">
+    <div class="w-full max-w-[500px] pl-5 transition-all hover:bg-slate-300/[0.2]">
       <p class="line-clamp">{{ songDetail.title }}</p>
       <div class="text-xs text-slate-500 leading-5">
         <p>{{ songDetail.subTitle }}</p>
@@ -42,6 +42,7 @@
 <script setup>
 import { ref,reactive } from 'vue';
 import { useLyricStore } from "../../stores/lyric";
+import MoreIcon from "../svg/MoreIcon.vue";
 
 const { selectedSong } = useLyricStore();
 

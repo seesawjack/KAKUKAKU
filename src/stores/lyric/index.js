@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, reactive,onMounted, computed,getCurrentInstance } from "vue";
+import { ref, reactive,onMounted,getCurrentInstance } from "vue";
 import { diff_match_patch } from 'diff-match-patch';
 import { toRomaji } from 'wanakana';
 import { useRequestStore } from '../request';

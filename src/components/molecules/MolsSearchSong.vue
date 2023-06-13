@@ -8,7 +8,7 @@
   <form @submit.prevent="searchSongs">
     <atmos-input
       class="max-w-xl mx-auto"
-      :inputTips="'請輸入歌曲名稱'"
+      :inputTips="'請輸入想搜尋的歌曲名稱'"
       :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full'"
       v-model="searchResult"
     >
@@ -34,18 +34,21 @@ const props = defineProps({
     required: true,
   },
 });
-let { isLoading } = toRefs(useGlobalStore());
+const { isError,loadingState } = useGlobalStore(); 
 
 const searchResult = ref("");
 const emit = defineEmits(["search"]);
 const { youtubeSearch } = useSearchStore();
 
 async function searchSongs(value) {
-  if (!searchResult.value) return;
-  isLoading.value = true;
+  if (!searchResult.value){
+    isError({isError:true,message:'請輸入歌曲名稱'});
+    return;
+  }
+  loadingState(true);
   const data = await youtubeSearch(searchResult.value);
   emit("search", data);
-  isLoading.value = false;
+  loadingState(false);
 }
 
 const isOpacity = computed(() => {

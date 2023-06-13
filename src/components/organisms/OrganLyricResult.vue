@@ -4,4 +4,5 @@
 
 <script setup>
 import MolsLyricResult from "../molecules/MolsLyricResult.vue";
+
 </script>

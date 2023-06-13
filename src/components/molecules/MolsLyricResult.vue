@@ -27,6 +27,7 @@ import useSupabase from "../../stores/supabase";
 import AtmosVideo from "../../components/atmos/AtmosVideo.vue";
 import AtmosLyric from "../../components/atmos/AtmosLyric.vue";
 import AtmosDialog from "../atmos/AtmosDialog.vue";
+import AtmosNotFound from "../atmos/AtmosNotFound.vue"
 
 const route = useRoute();
 const router = useRouter();

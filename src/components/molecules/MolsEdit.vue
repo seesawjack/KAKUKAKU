@@ -130,7 +130,6 @@ async function uploadFile(e) {
 }
 
 onMounted(() => {
-  console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',songInfo.value);
   if (route.query.song_id) {
     idInUrl.value = route.query.song_id === songInfo.value.id;
   }

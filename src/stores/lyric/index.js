@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, reactive,onMounted,getCurrentInstance } from "vue";
+import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 import { diff_match_patch } from 'diff-match-patch';
 import { toRomaji } from 'wanakana';
 import { useRequestStore } from '../request';
@@ -12,11 +12,12 @@ export const useLyricStore = defineStore('lyric', () => {
   const hiraganaLyrics = ref([]);
   const romajiLyrics = ref([]);
   const songInfo = ref({});
-  
+
   async function generateHiraganaLyrics(lyric) {
+    console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff','有產生頻假名');
     resultLyrics.value.length = 0; //初始化
     initLyrics.value = lyric;
-    localStorage.setItem('initLyrics',JSON.stringify(lyric));
+    localStorage.setItem('initLyrics', JSON.stringify(lyric));
 
     const requsetData = ref({
       app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
@@ -35,15 +36,17 @@ export const useLyricStore = defineStore('lyric', () => {
   }
 
   async function kanjiLabelHiragana(hiragana, lyrics) {
+    console.log('%c 結果(藍) ', 'background: #009393; color: #ffffff','有近到標注階段');
+    hiraganaLyrics.value = hiragana;
+    romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i.split('').join(' '), { customRomajiMapping: { は: 'wa' } }));
+
     await lyrics.split('\n').map((sentence, i) => {
       furigana(sentence, hiragana[i])
     })
-
-    hiraganaLyrics.value = hiragana;
-    romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i.split('').join(' '), { customRomajiMapping: { は: 'wa' } }));
   }
 
   function furigana(lyrics, hiraganaLyrics) {
+    console.log('%c 結果(綠) ', 'background: #006400; color: #ffffff','產生正式歌詞階段');
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, '']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
@@ -118,15 +121,15 @@ export const useLyricStore = defineStore('lyric', () => {
     songInfo.value = info;
     localStorage.setItem('songInfo', JSON.stringify(info));
   }
-  
-  if(getCurrentInstance()){
-    onMounted(()=>{
+
+  if (getCurrentInstance()) {
+    onMounted(() => {
       songInfo.value = JSON.parse(localStorage.getItem('songInfo'));
       initLyrics.value = JSON.parse(localStorage.getItem('initLyrics'));
     })
   };
 
-  function removeLocal(){
+  function removeLocal() {
     localStorage.removeItem('songInfo');
     localStorage.removeItem('initLyrics');
   }

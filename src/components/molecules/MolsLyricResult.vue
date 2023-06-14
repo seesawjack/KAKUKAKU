@@ -42,21 +42,15 @@ const {
   lyricConfiguration: { selected },
   initLyrics,
   resultLyrics,
-  hiraganaLyrics,
-  romajiLyrics,
   songInfo,
   selectedSong,
   generateHiraganaLyrics,
-  removeLocal
+  removeLocal,
 } = useLyricStore();
 
+const { hiraganaLyrics, romajiLyrics } = toRefs(useLyricStore());
+
 const lyrics = ref([]);
-lyrics.value = resultLyrics.map(
-  (sentence, i) =>
-    sentence +
-    `<p class="hiragana">${hiraganaLyrics[i]}</p>` +
-    `<span class="romaji">${romajiLyrics[i]}</span>`
-);
 
 const labelType = ref("");
 
@@ -135,8 +129,8 @@ async function addLyric() {
       {
         user_id: userInfo.id,
         video_id: songInfo.id,
-        hiragana: JSON.stringify(hiraganaLyrics),
-        romaji: JSON.stringify(romajiLyrics),
+        hiragana: JSON.stringify(hiraganaLyrics.value),
+        romaji: JSON.stringify(romajiLyrics.value),
         hanji: JSON.stringify(resultLyrics),
       },
     ]);
@@ -145,8 +139,8 @@ async function addLyric() {
   loadingState(false);
 }
 
-onMounted(async () => { 
-  if(!route.query.song_id){
+onMounted(async () => {
+  if (!route.query.song_id) {
     isShow.value = true;
     message.value = "無法查看此歌曲";
     return;
@@ -193,8 +187,8 @@ onMounted(async () => {
     lyrics.value = resultLyrics.map(
       (sentence, i) =>
         sentence +
-        `<p class="hiragana">${hiraganaLyrics[i]}</p>` +
-        `<span class="romaji">${romajiLyrics[i]}</span>`
+        `<p class="hiragana">${hiraganaLyrics.value[i]}</p>` +
+        `<span class="romaji">${romajiLyrics.value[i]}</span>`
     );
   }
 

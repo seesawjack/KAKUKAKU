@@ -1,5 +1,5 @@
 <template>
-  <div class="group flex items-center">
+  <div class="flex items-center" :class="{'disappear':disappear}">
     <component
       :is="href ? 'a' : 'div'"
       @click="selected"
@@ -42,16 +42,7 @@
         </div>
       </div>
     </component>
-    <div v-if="isAdded" class="w-[22.5px] relative">
-      <more-icon
-        @click="showDropDown(songDetail.id)"
-        class="hidden group-hover:block cursor-pointer"
-        :class="{ isShow: isShow }"
-      />
-      <atmos-drop-down class="top-4 right-3" :show="isShow">
-        <p>刪除</p>
-      </atmos-drop-down>
-    </div>
+    <slot name="configure"></slot>
   </div>
 </template>
 
@@ -73,6 +64,7 @@ const props = defineProps({
   subTitle: String,
   href: String,
   isAdded: Boolean,
+  disappear: Boolean
 });
 
 const songDetail = reactive({
@@ -87,16 +79,6 @@ const songDetail = reactive({
 function selected() {
   if (!props.href || props.isAdded) return;
   selectedSong(songDetail);
-}
-
-function deleteSong(value) {}
-
-const isShow = ref(false);
-const clickClassName = ref("");
-
-function showDropDown(value) {
-  isShow.value = !isShow.value;
-  clickClassName.value = value;
 }
 </script>
 
@@ -120,8 +102,7 @@ function showDropDown(value) {
   display: -webkit-box;
   overflow: hidden;
 }
-
-.isShow {
-  display: block !important;
+.disappear{
+  display: none;
 }
 </style>

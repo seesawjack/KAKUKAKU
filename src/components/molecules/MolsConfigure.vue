@@ -5,7 +5,7 @@
         <atmos-collect/>
       </template>
     </atmos-configure>
-    <atmos-drop-down class="top-10 right-3" :show="isShow">
+    <atmos-drop-down class="top-10 right-3 py-2 px-3" :show="isShow">
       <!-- 歌詞編輯頁選項 -->
       <div v-if="route.path === '/song'">
         <!-- ▼單選 文字大小 -->

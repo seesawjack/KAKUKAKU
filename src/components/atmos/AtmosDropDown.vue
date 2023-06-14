@@ -2,7 +2,7 @@
   <transition name="dropdown">
     <div 
       v-if="show"
-      class="absolute z-40 text-sm w-48 py-2 px-3 mt-2 origin-top-right rounded-md shadow-xl dark:bg-gray-700/80"
+      class="absolute z-40 text-sm w-48 mt-2 origin-top-right rounded-md shadow-xl dark:bg-gray-700/80"
     >
       <slot></slot>
     </div>

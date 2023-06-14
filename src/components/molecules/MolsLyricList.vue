@@ -13,7 +13,32 @@
           :title="item.title"
           :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`"
           :isAdded="true"
-        />
+          :disappear="disappear.indexOf(item.video_id) > -1"
+        >
+          <template #configure>
+            <div class="w-[22.5px] relative">
+              <more-icon
+                @click="showDropDown(item.video_id)"
+                class="hidden group-hover:block cursor-pointer"
+                :class="[
+                  { isShow: clickClassName === item.video_id },
+                  { 'group-hover': !disappear },
+                ]"
+              />
+              <atmos-drop-down
+                class="top-4 right-3 py-1 px-2"
+                :show="clickClassName === item.video_id"
+              >
+                <button
+                  class="w-full py-1 rounded-md hover:bg-slate-800"
+                  @click="deleteSong(item.video_id)"
+                >
+                  刪除此歌曲
+                </button>
+              </atmos-drop-down>
+            </div>
+          </template>
+        </atmos-card>
       </div>
       <atmos-not-found v-else tips="您尚未新增歌曲" />
     </div>
@@ -22,13 +47,15 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted} from "vue";
+import { ref, computed, reactive, onMounted, onBeforeUnmount } from "vue";
 import { useGlobalStore } from "../../stores/index";
 import { useAuthStore } from "../../stores/auth";
 import useSupabase from "../../stores/supabase";
 
 import AtmosCard from "../atmos/AtmosCard.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
+import MoreIcon from "../svg/MoreIcon.vue";
+import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 
 const { userInfo, isLoggedIn } = useAuthStore();
 const { loadingState } = useGlobalStore();
@@ -50,6 +77,54 @@ onMounted(async () => {
   songList.value = data;
   loadingState(false);
 });
+
+const disappear = ref([]);
+async function deleteSong(id) {
+  loadingState(true);
+  disappear.value.push(id);
+  songList.value = songList.value.filter((song) => song.video_id !== id);
+  
+  const { data, error } = await supabase
+    .from("lyrics_list")
+    .delete()
+    .eq("video_id", id);
+
+  const { data: contentData, error: contentError } = await supabase
+    .from("lyrics_content")
+    .delete()
+    .eq("video_id", id);
+
+  loadingState(false);
+}
+
+const clickClassName = ref("");
+
+function showDropDown(id) {
+  clickClassName.value = clickClassName.value === id ? "" : id;
+}
+onMounted(() => {
+  document.addEventListener("click", () => {
+    if (!event.target.closest(`.dropdown-${clickClassName.value}`)) {
+      clickClassName.value = "";
+    }
+  });
+});
+
+onBeforeUnmount(() => {
+  document.body.removeEventListener("click", () => {
+    if (!event.target.closest(`.dropdown-${clickClassName.value}`)) {
+      clickClassName.value = "";
+    }
+  });
+});
 </script>
 
+<style scoped>
+.isShow {
+  display: block !important;
+}
+.disappear {
+  opacity: 0;
+}
+</style>
 

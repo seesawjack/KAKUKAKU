@@ -1,11 +1,11 @@
 <template>
   <div class="flex items-center">
-    <adjustment-button class="cursor-pointer" @click="showDropDown" />
+    <tooth-icon class="cursor-pointer" @click="showDropDown" />
   </div>
 </template>
 
 <script setup>
-import AdjustmentButton from "../svg/AdjustmentButton.vue";
+import ToothIcon from "../svg/ToothIcon.vue";
 
 const emit = defineEmits(["showDrop"]);
 

@@ -1,14 +1,11 @@
 <template>
   <header class="relative z-50">
-    <div class="logo flex items-center justify-between py-2 px-5">
-      <div class="flex items-center">
-        <bars-icon class="sidebar mr-3 cursor-pointer" @click="showSidebar" />
-        <router-link to="/song/search" class="flex items-center">
-          <the-logo class="inline h-6 mr-1" />
-          <h1 class="text-3 text-lg">KAKUKAKU</h1>
-        </router-link>
-      </div>
-      <mols-configure class="dropdown" />
+    <div class="logo flex items-center py-2 px-5">
+      <bars-icon class="sidebar mr-3 cursor-pointer" @click="showSidebar" />
+      <router-link to="/song/search" class="flex items-center">
+        <the-logo class="inline h-6 mr-1" />
+        <h1 class="text-3 text-lg">KAKUKAKU</h1>
+      </router-link>
     </div>
   </header>
   <atmos-sidebar
@@ -20,7 +17,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import TheLogo from "../svg/TheLogo.vue";
-import MolsConfigure from "../molecules/MolsConfigure.vue";
 import BarsIcon from "../svg/BarsIcon.vue";
 import AtmosSidebar from "../atmos/AtmosSidebar.vue";
 

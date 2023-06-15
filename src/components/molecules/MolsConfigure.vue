@@ -1,11 +1,7 @@
 <template>
   <div>
-    <atmos-configure @show-drop="showDropDown">
-      <template #icon>
-        <atmos-collect/>
-      </template>
-    </atmos-configure>
-    <atmos-drop-down class="top-10 right-3 py-2 px-3" :show="isShow">
+    <atmos-configure class="dropdown" @show-drop="showDropDown"/>
+    <atmos-drop-down class="dropdown top-8 left-1 py-2 px-3" :show="isShow">
       <!-- 歌詞編輯頁選項 -->
       <div v-if="route.path === '/song'">
         <!-- ▼單選 文字大小 -->
@@ -110,33 +106,6 @@
             >
           </label>
         </div>
-        <hr class="border-gray-200 dark:border-gray-500 my-3" />
-      </div>
-      <!-- 基本選項 -->
-      <div>
-        <router-link
-          to="/about"
-          class="flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          <the-logo class="h-5 mx-1" />
-          <span class="mx-1"> 關於網站 </span>
-        </router-link>
-        <a
-          v-if="!loggedIn"
-          href="/login"
-          class="flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          <signin-button class="h-5 mx-1" />
-          <span class="mx-1"> 登入 </span>
-        </a>
-        <div
-          v-else
-          @click="logout"
-          class="cursor-pointer flex items-center py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          <logout-icon class="h-5 mx-1" />
-          <span class="mx-1">登出</span>
-        </div>
       </div>
     </atmos-drop-down>
   </div>
@@ -149,8 +118,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import AtmosConfigure from "../atmos/AtmosConfigure.vue";
-import AtmosCollect from '../atmos/AtmosCollect.vue'
-import TheLogo from "../svg/TheLogo.vue";
 import SigninButton from "../svg/SigninButton.vue";
 import LogoutIcon from "../svg/LogoutIcon.vue";
 const route = useRoute();

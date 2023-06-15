@@ -14,15 +14,25 @@ export const useLyricStore = defineStore('lyric', () => {
   const songInfo = ref({});
 
   async function generateHiraganaLyrics(lyric) {
-    console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff','有產生頻假名');
     resultLyrics.value.length = 0; //初始化
+
     initLyrics.value = lyric;
     localStorage.setItem('initLyrics', JSON.stringify(lyric));
+
+    const onlyJapanese = ref(/\w/g.test(lyric));
+    let requestLyric, onlyEnglish, result
+
+    if (onlyJapanese.value) {
+      requestLyric = lyric.replace(/\n/g, "||").replace(/[\w']/g, "※");
+      onlyEnglish = lyric.replace(/[^\w']/g, "||").replace(/\|{2,}/g, ',').split(',');
+    } else {
+      requestLyric = lyric.replace(/\n/g, "||");
+    }
 
     const requsetData = ref({
       app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
       output_type: "hiragana",
-      sentence: lyric.replace(/\n/g, "||")
+      sentence: requestLyric
     });
 
     const requestLyrics = await request({
@@ -31,14 +41,37 @@ export const useLyricStore = defineStore('lyric', () => {
       sendData: requsetData.value,
     });
 
-    const allHiraganaLyrics = requestLyrics.converted.split('||').map(i => i.trim().replace(/[\s](?!\s)/mg, ''))
-    kanjiLabelHiragana(allHiraganaLyrics, lyric);
+    if (onlyJapanese.value) {
+      let index = 0;
+      result = requestLyrics.converted
+        .replace(/\※{2,}/g, '※')
+        .replace(/\※/g, () => '@' + onlyEnglish[index++] + '@')
+        .replace(/\s+/g, '')
+        .replace(/@/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .replace(/ , /g,',')
+        .split('||')
+        .map(i => i.trim());
+    }else{
+        result = requestLyrics.converted
+        .replace(/[\s](?!\s)/mg, '')
+        .replace(/\s{2,}/g, ' ')
+        .split('||')
+        .map(i => i.trim());
+    }
+    kanjiLabelHiragana(result, lyric);
   }
 
   async function kanjiLabelHiragana(hiragana, lyrics) {
-    console.log('%c 結果(藍) ', 'background: #009393; color: #ffffff','有近到標注階段');
     hiraganaLyrics.value = hiragana;
-    romajiLyrics.value = hiraganaLyrics.value.map(i => toRomaji(i.split('').join(' '), { customRomajiMapping: { は: 'wa' } }));
+    romajiLyrics.value = hiraganaLyrics.value.map(i => {
+      return i.split(' ').map(k => {
+        if(k.match(/\W/)){
+          return toRomaji(k.split('').join(' '), { customRomajiMapping: { は: 'wa' } })
+        }
+        return k;
+      }).join(' ')
+    });
 
     await lyrics.split('\n').map((sentence, i) => {
       furigana(sentence, hiragana[i])
@@ -46,7 +79,6 @@ export const useLyricStore = defineStore('lyric', () => {
   }
 
   function furigana(lyrics, hiraganaLyrics) {
-    console.log('%c 結果(綠) ', 'background: #006400; color: #ffffff','產生正式歌詞階段');
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, '']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況

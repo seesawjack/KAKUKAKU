@@ -49,11 +49,11 @@ export const useLyricStore = defineStore('lyric', () => {
         .replace(/\s+/g, '')
         .replace(/@/g, ' ')
         .replace(/\s{2,}/g, ' ')
-        .replace(/ , /g,',')
+        .replace(/ , /g, ',')
         .split('||')
         .map(i => i.trim());
-    }else{
-        result = requestLyrics.converted
+    } else {
+      result = requestLyrics.converted
         .replace(/[\s](?!\s)/mg, '')
         .replace(/\s{2,}/g, ' ')
         .split('||')
@@ -65,12 +65,13 @@ export const useLyricStore = defineStore('lyric', () => {
   async function kanjiLabelHiragana(hiragana, lyrics) {
     hiraganaLyrics.value = hiragana;
     romajiLyrics.value = hiraganaLyrics.value.map(i => {
+      if (/^[A-Za-z\s',]+$/.test(i)) return ''
       return i.split(' ').map(k => {
-        if(k.match(/\W/)){
+        if (k.match(/[^\w',]/)) {
           return toRomaji(k.split('').join(' '), { customRomajiMapping: { は: 'wa' } })
         }
         return k;
-      }).join(' ')
+      }).join(' ');
     });
 
     await lyrics.split('\n').map((sentence, i) => {

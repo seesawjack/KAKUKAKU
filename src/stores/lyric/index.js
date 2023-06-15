@@ -24,7 +24,7 @@ export const useLyricStore = defineStore('lyric', () => {
 
     if (onlyJapanese.value) {
       requestLyric = lyric.replace(/\n/g, "||").replace(/[\w']/g, "※");
-      onlyEnglish = lyric.replace(/[^\w']/g, "||").replace(/\|{2,}/g, ',').split(',');
+      onlyEnglish = lyric.replace(/[^\w']/g, "#").replace(/\#{1,}/g, ',').replace(/^,/, '').split(',');
     } else {
       requestLyric = lyric.replace(/\n/g, "||");
     }

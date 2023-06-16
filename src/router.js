@@ -16,7 +16,7 @@ const router = createRouter({
     routes: [
         { path: '/', redirect: '/song/search' },
         { path: '/song/search', component: HomePage },
-        { path: '/song/edit', component: LyricsEdit },
+        { path: '/song/upload', component: LyricsEdit },
         { path: '/song', component: LyricsResult },
         { path: '/about', component: AboutPage },
         { path: '/login', component: AuthPage },

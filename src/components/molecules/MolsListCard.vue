@@ -8,7 +8,7 @@
       <atmos-card
         :data="item.snippet"
         :id="item.id.videoId || item.id.channelId"
-        :href="`/song/edit?song_id=${item.id.videoId || item.id.channelId}`"
+        :href="`/song/upload?song_id=${item.id.videoId || item.id.channelId}`"
       />
     </div>
   </div>

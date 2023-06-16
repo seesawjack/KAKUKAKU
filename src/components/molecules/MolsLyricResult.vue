@@ -40,15 +40,13 @@ const songId = computed(() => route.query.song_id);
 
 const {
   lyricConfiguration: { selected },
-  initLyrics,
   resultLyrics,
-  songInfo,
   selectedSong,
   generateHiraganaLyrics,
   removeLocal,
 } = useLyricStore();
 
-const { hiraganaLyrics, romajiLyrics } = toRefs(useLyricStore());
+const { hiraganaLyrics, romajiLyrics,songInfo,initLyrics} = toRefs(useLyricStore());
 
 const lyrics = ref([]);
 
@@ -117,9 +115,9 @@ async function addLyric() {
     .insert([
       {
         user_id: userInfo.id,
-        video_id: songInfo.id,
-        title: songInfo.title,
-        video_img: songInfo.url,
+        video_id: songInfo.value.id,
+        title: songInfo.value.title,
+        video_img: songInfo.value.url,
       },
     ]);
 
@@ -128,7 +126,7 @@ async function addLyric() {
     .insert([
       {
         user_id: userInfo.id,
-        video_id: songInfo.id,
+        video_id: songInfo.value.id,
         hiragana: JSON.stringify(hiraganaLyrics.value),
         romaji: JSON.stringify(romajiLyrics.value),
         hanji: JSON.stringify(resultLyrics),
@@ -142,7 +140,7 @@ async function addLyric() {
 onMounted(async () => {
   if (!route.query.song_id) {
     isShow.value = true;
-    message.value = "無法查看此歌曲";
+    message.value = "此歌曲尚未建立";
     return;
   }
 
@@ -182,8 +180,8 @@ onMounted(async () => {
     return;
   }
 
-  if (route.query.song_id === songInfo?.id) {
-    await generateHiraganaLyrics(initLyrics);
+  if (route.query.song_id === songInfo.value?.id) {
+    await generateHiraganaLyrics(initLyrics.value);
     lyrics.value = resultLyrics.map(
       (sentence, i) =>
         sentence +
@@ -194,7 +192,7 @@ onMounted(async () => {
 
   if (!resultLyrics.length) {
     isShow.value = true;
-    message.value = "無法查看此歌曲";
+    message.value = "無法讀取歌詞，請稍後再嘗試";
     return;
   }
 

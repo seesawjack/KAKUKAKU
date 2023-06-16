@@ -88,7 +88,7 @@ export const useLyricStore = defineStore('lyric', () => {
     diff.reduce((acc, [kind, text]) => {
       if (kind === 0) {
         if (acc.kanji) {
-          html += !acc.kanji?.match(/[a-zA-Z]+/gm) ? `<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana || ''}</rt><rp>)</rp></ruby>` : acc.kanji;
+          html += acc.kanji?.match(/[a-zA-Z]+/gm) ? acc.kanji : `<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana || ''}</rt><rp>)</rp></ruby>`;
           acc.kanji = null;
           acc.hiragana = null;
         };
@@ -109,7 +109,7 @@ export const useLyricStore = defineStore('lyric', () => {
   }
 
 
-
+  //▾歌詞結果頁功能
   const lyricConfiguration = reactive({
     fontSize: {
       big: {
@@ -166,13 +166,13 @@ export const useLyricStore = defineStore('lyric', () => {
     localStorage.removeItem('songInfo');
     localStorage.removeItem('initLyrics');
   }
-
   function selectedFontStyle(style) {
     lyricConfiguration.selected.fontSize = style;
   }
   function selectedLabelStyle(type) {
     lyricConfiguration.selected.labelType = type;
   }
+
   return {
     initLyrics,
     resultLyrics,

@@ -88,7 +88,7 @@ export const useLyricStore = defineStore('lyric', () => {
     diff.reduce((acc, [kind, text]) => {
       if (kind === 0) {
         if (acc.kanji) {
-          html += acc.kanji?.match(/[a-zA-Z]+/gm) ? acc.kanji : `<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana || ''}</rt><rp>)</rp></ruby>`;
+          html += acc.kanji?.match(/[a-zA-Z]+/gm) ? acc.kanji : `<ruby class="kanji" @click="editHiragana">${acc.kanji}<rp>(</rp><rt>${acc.hiragana || ''}</rt><rp>)</rp></ruby>`;
           acc.kanji = null;
           acc.hiragana = null;
         };

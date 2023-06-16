@@ -205,6 +205,10 @@ onMounted(async () => {
     return;
   }
 });
+
+function editHiragana(){
+  console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff','觸發');
+}
 </script>
 
 <style>

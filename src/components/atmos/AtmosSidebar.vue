@@ -67,7 +67,7 @@
             />
           </svg>
 
-          <span class="mx-2 text-sm font-medium">已建立清單</span>
+          <span class="mx-2 text-sm font-medium">已建立歌曲清單</span>
         </a>
          <router-link
           to="/about"

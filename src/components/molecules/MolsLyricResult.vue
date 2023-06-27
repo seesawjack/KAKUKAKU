@@ -2,16 +2,10 @@
   <div>
     <div v-if="!isShow" class="flex flex-col max-w-[640px] mx-auto">
       <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
-      <atmos-lyric
-        :lyrics="lyrics"
-        class="max-w-[640px]"
-        :className="[labelType, allHiragana]"
-      />
-      <button
-        class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-        :class="{ unclickable: confirmButton.unclickable }"
-        @click="addLyric"
-      >
+      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraganaLyrics" :romajiLyrics="romajiLyrics" class="max-w-[640px]"
+        :className="[labelType, allHiragana]"/>
+      <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
+        :class="{ unclickable: confirmButton.unclickable }" @click="addLyric">
         {{ confirmButton.text }}
       </button>
     </div>
@@ -40,13 +34,13 @@ const songId = computed(() => route.query.song_id);
 
 const {
   lyricConfiguration: { selected },
-  resultLyrics,
-  selectedSong,
-  generateHiraganaLyrics,
+  tolyrics,
   removeLocal,
 } = useLyricStore();
 
-const { hiraganaLyrics, romajiLyrics,songInfo,initLyrics} = toRefs(useLyricStore());
+const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics } = toRefs(
+  useLyricStore()
+);
 
 const lyrics = ref([]);
 
@@ -105,7 +99,7 @@ async function addLyric() {
   if (confirmButton.state === "Update") {
     return;
   }
-  if (!isLoggedIn() || !resultLyrics.length) {
+  if (!isLoggedIn() || !resultLyrics.value.length) {
     return;
   }
   loadingState(true);
@@ -129,7 +123,7 @@ async function addLyric() {
         video_id: songInfo.value.id,
         hiragana: JSON.stringify(hiraganaLyrics.value),
         romaji: JSON.stringify(romajiLyrics.value),
-        hanji: JSON.stringify(resultLyrics),
+        hanji: JSON.stringify(resultLyrics.value),
       },
     ]);
   buttonState({ text: "已新增", state: "isAdded", unclickable: true });
@@ -181,16 +175,11 @@ onMounted(async () => {
   }
 
   if (route.query.song_id === songInfo.value?.id) {
-    await generateHiraganaLyrics(initLyrics.value);
-    lyrics.value = resultLyrics.map(
-      (sentence, i) =>
-        sentence +
-        `<p class="hiragana">${hiraganaLyrics.value[i]}</p>` +
-        `<span class="romaji">${romajiLyrics.value[i]}</span>`
-    );
+    await tolyrics(initLyrics.value);
+    lyrics.value = resultLyrics.value
   }
 
-  if (!resultLyrics.length) {
+  if (!resultLyrics.value.length) {
     isShow.value = true;
     message.value = "無法讀取歌詞，請稍後再嘗試";
     return;
@@ -200,35 +189,36 @@ onMounted(async () => {
     buttonState({ text: "登入後方可儲存歌曲", state: "", unclickable: true });
     return;
   }
-  if (!resultLyrics.length) {
+  if (!resultLyrics.value.length) {
     buttonState({ text: "產生歌曲後方可儲存", state: "", unclickable: true });
     return;
   }
 });
-
-function editHiragana(){
-  console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff','觸發');
-}
 </script>
 
 <style>
 .hiddenHiragana rt {
   display: none;
 }
+
 .hiragana,
 .romaji {
   display: none;
 }
+
 .showRomaji .romaji {
   display: block;
 }
+
 .showHiragana .hiragana {
   display: block;
 }
+
 .showHiragana .init,
 .showHiragana .romaji {
   display: none;
 }
+
 .fixedVideo {
   position: sticky;
   top: 0px;

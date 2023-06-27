@@ -63,7 +63,7 @@ import AtmosInput from "../atmos/AtmosInput.vue";
 
 const router = useRouter();
 const route = useRoute();
-const { generateHiraganaLyrics, selectedSong } = useLyricStore();
+const { tolyrics, selectedSong } = useLyricStore();
 const { isError } = useGlobalStore();
 const { songIdRegex } = useRegexStore();
 
@@ -75,7 +75,7 @@ const props = defineProps({
 });
 
 async function transformLyrics(lyric, id) {
-  await generateHiraganaLyrics(lyric);
+  await tolyrics(lyric);
   router.push(`/song?song_id=${id}`);
 }
 

@@ -54,7 +54,9 @@ button {
   justify-content: space-between;
   align-items: center;
 }
-
+svg{
+  cursor: pointer;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

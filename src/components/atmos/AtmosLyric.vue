@@ -2,12 +2,17 @@
   <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
     <template v-for="(lyric, index) in lyrics" :key="index">
       <div class="group relative lyric">
-        <p class="init tracking-[2px] test-ly" ref="initLyric" :contenteditable="index === +nowId" v-html="lyric"></p>
+        <p class="init tracking-[2px] test-ly" ref="initLyric" :contenteditable="index === +editId" v-html="lyric"></p>
         <p class="hiragana" v-html="hiraganaLyrics[index]"></p>
         <p class="romaji" v-html="romajiLyrics[index]"></p>
         <div class="cursor-pointer absolute h-5  top-3 right-0 ">
           <edit-icon class="hidden group-hover:block" @click="editHiragana(index)"
-            :class="{ 'isShow': index === +nowId }" />
+            :class="{ 'pen-shadow': index === +editId }" />
+        </div>
+        <div class="cursor-pointer absolute h-5 top-3 -left-12 ">
+          <clock-icon
+            :class="{ 'hidden': !selected.timeStamp, 'clock-shadow': timeStampId.indexOf(index) > -1}"
+            @click="selectTimeStamp(index)" />
         </div>
       </div>
       <div v-if="index !== lyrics.length - 1" class="line border-t h-px my-4"></div>
@@ -19,6 +24,8 @@
 import { ref, watch, toRefs } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import EditIcon from "../svg/EditIcon.vue";
+import ClockIcon from "../svg/ClockIcon.vue";
+
 const props = defineProps({
   lyrics: {
     type: Array,
@@ -42,7 +49,7 @@ const lyricStore = useLyricStore();
 const { lyricConfiguration, editLyric } = lyricStore;
 const { fontSize, selected } = toRefs(lyricConfiguration);
 
-const nowId = ref(-1);
+const editId = ref(-1);
 const editedLyric = ref([]);
 const initLyric = ref([]);
 
@@ -50,8 +57,8 @@ function editHiragana(index) {
   if (editedLyric.value.indexOf(index) < 0) {
     editedLyric.value.push(index);
   }
-  nowId.value = nowId.value === index ? -1 : index;
-  if (nowId.value === -1) {
+  editId.value = editId.value === index ? -1 : index;
+  if (editId.value === -1) {
     editedLyric.value.map(editIndex => {
       editLyric({
         lyric: {
@@ -62,8 +69,15 @@ function editHiragana(index) {
       })
     })
   }
-  // emits('edit', e);
 }
+
+const timeStampId = ref([]);
+function selectTimeStamp(index) {
+  if (timeStampId.value.indexOf(index) < 0) {
+    timeStampId.value.push(index);
+  }
+}
+
 const font = ref("text-xl");
 watch(
   () => selected.value.fontSize,
@@ -82,8 +96,14 @@ rt {
   display: none;
 }
 
-.isShow {
+.pen-shadow{
   display: block !important;
-  color: rgb(129, 177, 255);
+  color: rgb(75, 150, 241);
+  filter: drop-shadow(0px 0px 3px rgba(120, 192, 255, 1));
+}
+
+.clock-shadow {
+  color: rgb(255, 168, 114);
+  filter: drop-shadow(0px 0px 3px rgb(248,255,170,0.8));
 }
 </style>

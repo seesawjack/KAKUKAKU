@@ -25,36 +25,38 @@ window.onYouTubeIframeAPIReady = function () {
     width: "640",
     height: "390",
     videoId: props.id,
+    modestbranding: 1,
+    rel: 0,
     playerVars: {
       playsinline: 1,
     },
-    // events: {
-    //   onReady: onPlayerReady,
-    //   onStateChange: onPlayerStateChang
-    // },
+    events: {
+      // onReady: onPlayerReady,
+      onStateChange: onPlayerStateChange
+    },
   });
 };
 
-function onPlayerReady(event) {
-  event.target.playVideo();
-}
-
-let done = false;
-
-// function onPlayerStateChange(event) {
-//   if (event.data == YT.PlayerState.PLAYING && !done) {
-//     setTimeout(stopVideo, 6000);
-//     done = true;
-//   }
+// function onPlayerReady(event) {
+//   event.target.playVideo();
 // }
-function stopVideo() {
-  player.stopVideo();
+
+let timer;
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.PLAYING) {
+    timer = setInterval(timestamp, 500);
+  } else {
+    clearInterval(timer);
+    timer = null;
+  }
 }
 
-// onMounted(()=>{
-//   onPlayerReady();
-// })
+function timestamp() {
+  const HhMmSs = new Date(player.getCurrentTime() * 1000).toISOString().slice(11,23);
+
+
+}
+
 </script>
 
-<style>
-</style>
+<style></style>

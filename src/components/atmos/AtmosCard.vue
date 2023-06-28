@@ -49,8 +49,6 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useLyricStore } from "../../stores/lyric";
-import MoreIcon from "../svg/MoreIcon.vue";
-import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 
 const { selectedSong } = useLyricStore();
 

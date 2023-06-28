@@ -29,10 +29,10 @@ export const useLyricStore = defineStore('lyric', () => {
   }
   //轉換成全羅馬字
   function toRomajiLyrics(hiragana) {
-    if(Array.isArray(hiragana)){
+    if (Array.isArray(hiragana)) {
       return hiragana.map(i => {
         if (/^[A-Za-z\s',]+$/.test(i)) return '';
-  
+
         return i.split(' ').map(k => {
           if (k.match(/[^\w',]/)) {
             return toRomaji(k.split('').join(' '), { customRomajiMapping: { は: 'wa' } })
@@ -40,7 +40,7 @@ export const useLyricStore = defineStore('lyric', () => {
           return k;
         }).join(' ');
       });
-    }else{
+    } else {
       return hiragana.split(' ').map(k => {
         if (k.match(/[^\w',]/)) {
           return toRomaji(k.split('').join(' '), { customRomajiMapping: { は: 'wa' } })
@@ -48,7 +48,7 @@ export const useLyricStore = defineStore('lyric', () => {
         return k;
       }).join(' ');
     }
-    
+
   }
 
   async function tolyrics(lyric) {
@@ -108,7 +108,7 @@ export const useLyricStore = defineStore('lyric', () => {
     diff.reduce((acc, [kind, text]) => {
       if (kind === 0) {
         if (acc.kanji) {
-          html += acc.kanji?.match(/[a-zA-Z\s?]+/gm) ? acc.kanji : `<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana || '?'}</rt><rp>)</rp></ruby>`;
+          html += acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm) ? acc.kanji : `<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana || '?'}</rt><rp>)</rp></ruby>`;
           acc.kanji = null;
           acc.hiragana = null;
         };
@@ -166,7 +166,8 @@ export const useLyricStore = defineStore('lyric', () => {
       fontSize: 'middle',
       labelType: 'hiragana',
       allHiragana: false,
-      fixedVideo: false
+      fixedVideo: false,
+      timeStamp: false
     }
   })
 
@@ -194,7 +195,7 @@ export const useLyricStore = defineStore('lyric', () => {
   }
 
   //編輯功能
-  function editLyric({lyric,index}) {
+  function editLyric({ lyric, index }) {
     //修改平假名跑位
     resultLyrics.value[index] = lyric.mix;
     //平假名錯誤調整

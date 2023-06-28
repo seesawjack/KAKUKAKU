@@ -53,7 +53,6 @@ function editHiragana(index) {
   nowId.value = nowId.value === index ? -1 : index;
   if (nowId.value === -1) {
     editedLyric.value.map(editIndex => {
-      // editLyric(initLyric.value[editIndex].innerHTML, editIndex)
       editLyric({
         lyric: {
           mix: initLyric.value[editIndex].innerHTML,

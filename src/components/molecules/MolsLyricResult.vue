@@ -222,6 +222,7 @@ onMounted(async () => {
 .fixedVideo {
   position: sticky;
   top: 0px;
+  z-index: 50;
 }
 
 .unclickable {

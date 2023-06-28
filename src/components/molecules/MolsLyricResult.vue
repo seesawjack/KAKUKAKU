@@ -2,8 +2,8 @@
   <div>
     <div v-if="!isShow" class="flex flex-col max-w-[640px] mx-auto">
       <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
-      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraganaLyrics" :romajiLyrics="romajiLyrics" class="max-w-[640px]"
-        :className="[labelType, allHiragana]"/>
+      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="max-w-[640px]"
+        :className="[labelType, allHiragana]" />
       <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
         :class="{ unclickable: confirmButton.unclickable }" @click="addLyric">
         {{ confirmButton.text }}
@@ -42,7 +42,10 @@ const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics } = toR
   useLyricStore()
 );
 
+
 const lyrics = ref([]);
+const hiraLyrics = ref([]);
+const romaLyrics = ref([]);
 
 const labelType = ref("");
 
@@ -157,15 +160,10 @@ onMounted(async () => {
       return;
     }
 
-    const hanji = JSON.parse(data[0].hanji);
-    const hiragana = JSON.parse(data[0].hiragana);
-    const romaji = JSON.parse(data[0].romaji);
-    lyrics.value = hanji.map(
-      (sentence, i) =>
-        sentence +
-        `<p class="hiragana">${hiragana[i]}</p>` +
-        `<span class="romaji">${romaji[i]}</span>`
-    );
+    lyrics.value = JSON.parse(data[0].hanji);
+    hiraLyrics.value = JSON.parse(data[0].hiragana);
+    romaLyrics.value = JSON.parse(data[0].romaji);
+
     buttonState({
       text: "修改功能日後開放，敬請期待",
       state: "Update",
@@ -193,6 +191,10 @@ onMounted(async () => {
     buttonState({ text: "產生歌曲後方可儲存", state: "", unclickable: true });
     return;
   }
+
+  lyrics.value = resultLyrics.value;
+  hiraLyrics.value = hiraganaLyrics.value;
+  romaLyrics.value = romajiLyrics.value;
 });
 </script>
 

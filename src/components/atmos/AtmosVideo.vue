@@ -5,12 +5,16 @@
 </template>
 
 <script setup>
+import { toRefs } from 'vue';
+import { useLyricStore } from '../../stores/lyric';
+
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
 });
+const { timeStampState } = toRefs(useLyricStore());
 
 const tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
@@ -52,8 +56,8 @@ function onPlayerStateChange(event) {
 }
 
 function timestamp() {
-  const HhMmSs = new Date(player.getCurrentTime() * 1000).toISOString().slice(11,23);
-
+  const HhMmSs = new Date(player.getCurrentTime() * 1000).toISOString().slice(11, 23);
+  timeStampState.value.push(HhMmSs)
 
 }
 

@@ -12,6 +12,7 @@ export const useLyricStore = defineStore('lyric', () => {
   const hiraganaLyrics = ref([]);
   const romajiLyrics = ref([]);
   const songInfo = ref({});
+  const timeStampState = ref([]);
 
   //轉換成全平假名
   async function toHiraganaLyrics(lyric) {
@@ -211,6 +212,7 @@ export const useLyricStore = defineStore('lyric', () => {
     romajiLyrics,
     lyricConfiguration,
     songInfo,
+    timeStampState,
     kanjiLabelHiragana,
     tolyrics,
     selectedSong,

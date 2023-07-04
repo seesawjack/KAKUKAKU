@@ -38,7 +38,7 @@ const {
   removeLocal,
 } = useLyricStore();
 
-const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics } = toRefs(
+const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics,lyricTimeStamp } = toRefs(
   useLyricStore()
 );
 
@@ -127,6 +127,7 @@ async function addLyric() {
         hiragana: JSON.stringify(hiraganaLyrics.value),
         romaji: JSON.stringify(romajiLyrics.value),
         hanji: JSON.stringify(resultLyrics.value),
+        timestamp: JSON.stringify(lyricTimeStamp.value)
       },
     ]);
   buttonState({ text: "已新增", state: "isAdded", unclickable: true });
@@ -163,6 +164,7 @@ onMounted(async () => {
     lyrics.value = JSON.parse(data[0].hanji);
     hiraLyrics.value = JSON.parse(data[0].hiragana);
     romaLyrics.value = JSON.parse(data[0].romaji);
+    lyricTimeStamp.value = JSON.parse(data[0].timestamp);
 
     buttonState({
       text: "修改功能日後開放，敬請期待",

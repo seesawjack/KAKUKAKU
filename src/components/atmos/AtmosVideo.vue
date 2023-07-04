@@ -48,7 +48,7 @@ window.onYouTubeIframeAPIReady = function () {
 let timer;
 function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.PLAYING) {
-    timer = setInterval(timestamp, 500);
+    timer = setInterval(timestamp, 100);
   } else {
     clearInterval(timer);
     timer = null;

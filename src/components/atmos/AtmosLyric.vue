@@ -2,11 +2,11 @@
   <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
     <template v-for="(lyric, index) in lyrics" :key="index">
       <div class="group relative lyric">
-        <p class="init tracking-[2px] test-ly" :class="{ 'lyric-display': lyricDisplay(index) }" ref="initLyric"
-          :contenteditable="index === +editId" v-html="lyric" :data-time="lyricTimeStamp[index]"></p>
-        <p class="hiragana" v-html="hiraganaLyrics[index]" :data-time="lyricTimeStamp[index]"></p>
-        <p class="romaji" v-html="romajiLyrics[index]" :data-time="lyricTimeStamp[index]"></p>
-        <div class="cursor-pointer absolute h-5  top-3 right-0 ">
+        <p class="init tracking-[2px] test-ly" :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }" ref="initLyric"
+          :contenteditable="index === +editId" v-html="lyric"></p>
+        <p class="hiragana" v-html="hiraganaLyrics[index]"></p>
+        <p class="romaji" v-html="romajiLyrics[index]"></p>
+        <div class="cursor-pointer absolute h-5 top-3 right-0 ">
           <edit-icon class="hidden group-hover:block" @click="editHiragana(index)"
             :class="{ 'pen-shadow': index === +editId }" />
         </div>
@@ -120,12 +120,7 @@ rt {
 }
 
 .clock-selected {
-  color: rgb(255, 168, 114);
-  filter: drop-shadow(0px 0px 3px rgb(248, 255, 170, 0.8));
-}
-
-.lyric-display {
-  color: rgb(255, 168, 114);
-  text-shadow: #FC0 1px 0 10px;
+  color: rgb(147,197,253);
+  filter: drop-shadow(0px 0px 3px rgb(147,197,253, 0.8));
 }
 </style>

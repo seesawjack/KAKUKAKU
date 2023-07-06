@@ -101,7 +101,7 @@ export const useLyricStore = defineStore('lyric', () => {
     })
   }
 
-  function furigana(lyrics, hiraganaLyrics) {
+  function furigana(lyrics, hiraganaLyrics,index) {
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, '']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
@@ -110,7 +110,7 @@ export const useLyricStore = defineStore('lyric', () => {
     diff.reduce((acc, [kind, text]) => {
       if (kind === 0) {
         if (acc.kanji) {
-          html += acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm) ? acc.kanji : `<ruby>${acc.kanji}<rp>(</rp><rt>${acc.hiragana || '?'}</rt><rp>)</rp></ruby>`;
+          html += acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm) ? acc.kanji : `<ruby class="hanji-word hover:underline hover:cursor-pointer" data-index="${index}">${acc.kanji}<rp>(</rp><rt>${acc.hiragana || '?'}</rt><rp>)</rp></ruby>`;
           acc.kanji = null;
           acc.hiragana = null;
         };
@@ -129,7 +129,6 @@ export const useLyricStore = defineStore('lyric', () => {
     }
     return;
   }
-
 
   //▾歌詞結果頁功能
   const lyricConfiguration = reactive({
@@ -197,13 +196,13 @@ export const useLyricStore = defineStore('lyric', () => {
   }
 
   //編輯功能
-  function editLyric({ lyric, index }) {
+  function editLyric({init,edit,index}) {
     //修改平假名跑位
-    resultLyrics.value[index] = lyric.mix;
+    resultLyrics.value[index] = resultLyrics.value[index].replace(init,edit);
     //平假名錯誤調整
-    hiraganaLyrics.value[index] = lyric.pure;
+    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init,edit);
     //羅馬字錯誤調整
-    romajiLyrics.value[index] = toRomajiLyrics(lyric.pure);
+    romajiLyrics.value[index] = toRomajiLyrics(hiraganaLyrics.value[index].replace(init,edit));
   }
 
   return {

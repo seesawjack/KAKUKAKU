@@ -2,8 +2,8 @@
   <div>
     <div v-if="!isShow" class="flex flex-col max-w-[640px] mx-auto">
       <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
-      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="max-w-[640px]"
-        :className="[labelType, allHiragana]" />
+      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="max-w-[640px] relative"
+        :className="[labelType, allHiragana]"/>
       <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
         :class="{ unclickable: confirmButton.unclickable }" @click="addLyric">
         {{ confirmButton.text }}
@@ -23,8 +23,8 @@ import { useGlobalStore } from "../../stores/index";
 import useSupabase from "../../stores/supabase";
 import AtmosVideo from "../../components/atmos/AtmosVideo.vue";
 import AtmosLyric from "../../components/atmos/AtmosLyric.vue";
-import AtmosDialog from "../atmos/AtmosDialog.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
+import AtmosPopup from "../atmos/AtmosPopup.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -38,7 +38,7 @@ const {
   removeLocal,
 } = useLyricStore();
 
-const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics,lyricTimeStamp } = toRefs(
+const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricTimeStamp } = toRefs(
   useLyricStore()
 );
 

@@ -1,6 +1,6 @@
 <template>
   <particle-bg />
-  <atmos-loading v-if="isLoading" />
+  <atmos-loading v-if="isLoading"/>
   <atmos-dialog
     :show="errorMessage?.isError"
     :title="errorMessage?.message"

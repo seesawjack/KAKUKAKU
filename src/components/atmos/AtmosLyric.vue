@@ -8,14 +8,19 @@
         </p>
         <p class="hiragana" v-html="hiraganaLyrics[index]"></p>
         <p class="romaji" v-html="romajiLyrics[index]"></p>
-        <!-- <div class="cursor-pointer absolute h-5 top-3 right-0 ">
-          <edit-icon class="hidden group-hover:block" @click="editHiragana(index)"
-            :class="{ 'pen-shadow': index === +editId }" />
-        </div> -->
         <div class="cursor-pointer absolute h-5 top-3 -left-12 "
           :class="{ 'hidden': !selected.timeStamp, 'clock-selected': lyricTimeStamp[index] }">
           <clock-icon @click="selectTimeStamp(index)" />
           <span class="text-xs block translate-x-[-5px] translate-y-0">{{ lyricTimeStamp[index]?.slice(3, 8) }}</span>
+        </div>
+        <div class="flex">
+          <play-video-icon v-if="!isPlay" @click="stopVideo"/>
+          <pause-video-icon v-else @click="stopVideo"/>
+          <div
+            class="relative after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem] after:text-white cursor-pointer"
+            @click="seekTo(index)">
+            <loop-icon />
+          </div>
         </div>
         <div class="bg-slate-800 border border-slate-50/10 rounded-lg py-3 px-2 mt-2"
           :class="{ 'hidden': index !== +editId }">
@@ -38,9 +43,13 @@
 <script setup>
 import { ref, watch, toRefs, onMounted } from "vue";
 import { useLyricStore } from "../../stores/lyric";
-import EditIcon from "../svg/EditIcon.vue";
+import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";
+import PlayVideoIcon from "../svg/PlayVideoIcon.vue";
+import PauseVideoIcon from "../svg/PauseVideoIcon.vue";
+import LoopIcon from "../svg/LoopIcon.vue";
 
+const icon = ref([PlayVideoIcon, PauseVideoIcon])
 const props = defineProps({
   lyrics: {
     type: Array,
@@ -64,27 +73,6 @@ const lyricStore = useLyricStore();
 const { lyricConfiguration, editLyric } = lyricStore;
 const { timeStampState, lyricTimeStamp } = toRefs(useLyricStore());
 const { fontSize, selected } = toRefs(lyricConfiguration);
-
-// const editedLyric = ref([]);
-// const initLyric = ref([]);
-
-// function editHiragana(index) {
-//   if (editedLyric.value.indexOf(index) < 0) {
-//     editedLyric.value.push(index);
-//   }
-//   editId.value = editId.value === index ? -1 : index;
-//   if (editId.value === -1) {
-//     editedLyric.value.map(editIndex => {
-//       editLyric({
-//         lyric: {
-//           mix: initLyric.value[editIndex].innerHTML,
-//           pure: initLyric.value[editIndex].innerText.replace(/[^\u3040-\u309F]/g, '')
-//         },
-//         index: editIndex
-//       })
-//     })
-//   }
-// }
 
 function selectTimeStamp(index) {
   if (!timeStampState.value) return;
@@ -120,6 +108,19 @@ const initHiragana = ref('')
 const clickHanji = ref('')
 const editId = ref(-1);
 
+const { controlVideoPlay, controlSeekTo } = useYoutubeStore();
+const isPlay = ref(false);
+
+function seekTo(index) {
+  controlSeekTo(lyricTimeStamp.value[index]);
+  isPlay.value = true;
+  controlVideoPlay(isPlay.value)
+}
+
+function stopVideo() {
+  isPlay.value = !isPlay.value;
+  controlVideoPlay(isPlay.value)
+}
 function editHiragana() {
   editLyric({ init: initHiragana.value, edit: clickHiragana.value, index: editId.value })
   editId.value = -1

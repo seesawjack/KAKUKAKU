@@ -14,7 +14,8 @@ export const useLyricStore = defineStore('lyric', () => {
   const songInfo = ref({});
   const timeStampState = ref([]);
   const lyricTimeStamp = ref({});
-
+  const videoControl = ref(false)
+  const seekToSecond = ref([])
   //轉換成全平假名
   async function toHiraganaLyrics(lyric) {
     const requsetData = ref({
@@ -214,6 +215,8 @@ export const useLyricStore = defineStore('lyric', () => {
     songInfo,
     timeStampState,
     lyricTimeStamp,
+    videoControl,
+    seekToSecond,
     kanjiLabelHiragana,
     tolyrics,
     selectedSong,

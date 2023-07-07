@@ -6,21 +6,19 @@
           :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
           ref="initLyric" v-html="lyric">
         </p>
-        <p class="hiragana" v-html="hiraganaLyrics[index]"></p>
+        <p class="hiragana" v-html="hiraganaLyrics[index]"
+          :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }">
+        </p>
         <p class="romaji" v-html="romajiLyrics[index]"></p>
         <div class="cursor-pointer absolute h-5 top-3 -left-12 "
           :class="{ 'hidden': !selected.timeStamp, 'clock-selected': lyricTimeStamp[index] }">
           <clock-icon @click="selectTimeStamp(index)" />
           <span class="text-xs block translate-x-[-5px] translate-y-0">{{ lyricTimeStamp[index]?.slice(3, 8) }}</span>
         </div>
-        <div class="flex">
-          <play-video-icon v-if="!isPlay" @click="stopVideo"/>
-          <pause-video-icon v-else @click="stopVideo"/>
-          <div
-            class="relative after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem] after:text-white cursor-pointer"
-            @click="seekTo(index)">
-            <loop-icon />
-          </div>
+        <div
+          class="absolute top-1/2 -translate-y-[50%] right-0 inline-block bg-slate-500/50 rounded-lg after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem] after:text-white cursor-pointer"
+          :class="{ 'hidden': !selected.loopLyric }" @click="seekTo(index)">
+          <loop-icon />
         </div>
         <div class="bg-slate-800 border border-slate-50/10 rounded-lg py-3 px-2 mt-2"
           :class="{ 'hidden': index !== +editId }">
@@ -45,11 +43,9 @@ import { ref, watch, toRefs, onMounted } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";
-import PlayVideoIcon from "../svg/PlayVideoIcon.vue";
-import PauseVideoIcon from "../svg/PauseVideoIcon.vue";
 import LoopIcon from "../svg/LoopIcon.vue";
 
-const icon = ref([PlayVideoIcon, PauseVideoIcon])
+
 const props = defineProps({
   lyrics: {
     type: Array,
@@ -110,17 +106,12 @@ const editId = ref(-1);
 
 const { controlVideoPlay, controlSeekTo } = useYoutubeStore();
 const isPlay = ref(false);
-
 function seekTo(index) {
   controlSeekTo(lyricTimeStamp.value[index]);
   isPlay.value = true;
   controlVideoPlay(isPlay.value)
 }
 
-function stopVideo() {
-  isPlay.value = !isPlay.value;
-  controlVideoPlay(isPlay.value)
-}
 function editHiragana() {
   editLyric({ init: initHiragana.value, edit: clickHiragana.value, index: editId.value })
   editId.value = -1
@@ -135,7 +126,6 @@ onMounted(() => {
       clickHiragana.value = text[1];
       initHiragana.value = text[1];
       editId.value = index;
-
     }
     return;
   });

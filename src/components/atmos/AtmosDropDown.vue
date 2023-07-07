@@ -22,7 +22,7 @@ const props = defineProps({
 .dropdown-enter-from,
 .dropdown-leave-to {
   opacity: 0;
-  transform: translateY(-20%);
+  transform: translateX(-20%);
 }
 .dropdown-enter-active,
 .dropdown-leave-active {
@@ -31,6 +31,6 @@ const props = defineProps({
 .dropdown-enter-to,
 .dropdown-leave-from {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0);
 }
 </style>

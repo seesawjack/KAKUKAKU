@@ -1,6 +1,7 @@
 <template>
-  <div class="flex items-center">
+  <div class="flex-col items-center">
     <tooth-icon class="cursor-pointer" @click="showDropDown" />
+    <slot name="otherConfigure"></slot>
   </div>
 </template>
 

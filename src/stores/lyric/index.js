@@ -14,8 +14,7 @@ export const useLyricStore = defineStore('lyric', () => {
   const songInfo = ref({});
   const timeStampState = ref([]);
   const lyricTimeStamp = ref({});
-  const videoControl = ref(false)
-  const seekToSecond = ref([])
+
   //轉換成全平假名
   async function toHiraganaLyrics(lyric) {
     const requsetData = ref({
@@ -102,7 +101,7 @@ export const useLyricStore = defineStore('lyric', () => {
     })
   }
 
-  function furigana(lyrics, hiraganaLyrics,index) {
+  function furigana(lyrics, hiraganaLyrics, index) {
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, '']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
@@ -169,7 +168,8 @@ export const useLyricStore = defineStore('lyric', () => {
       labelType: 'hiragana',
       allHiragana: false,
       fixedVideo: false,
-      timeStamp: false
+      timeStamp: false,
+      loopLyric: false
     }
   })
 
@@ -197,13 +197,13 @@ export const useLyricStore = defineStore('lyric', () => {
   }
 
   //編輯功能
-  function editLyric({init,edit,index}) {
+  function editLyric({ init, edit, index }) {
     //修改平假名跑位
-    resultLyrics.value[index] = resultLyrics.value[index].replace(init,edit);
+    resultLyrics.value[index] = resultLyrics.value[index].replace(init, edit);
     //平假名錯誤調整
-    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init,edit);
+    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init, edit);
     //羅馬字錯誤調整
-    romajiLyrics.value[index] = toRomajiLyrics(hiraganaLyrics.value[index].replace(init,edit));
+    romajiLyrics.value[index] = toRomajiLyrics(hiraganaLyrics.value[index].replace(init, edit));
   }
 
   return {
@@ -215,8 +215,6 @@ export const useLyricStore = defineStore('lyric', () => {
     songInfo,
     timeStampState,
     lyricTimeStamp,
-    videoControl,
-    seekToSecond,
     kanjiLabelHiragana,
     tolyrics,
     selectedSong,

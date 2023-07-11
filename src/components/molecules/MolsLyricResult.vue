@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="!isShow" class="flex flex-col max-w-[640px] mx-auto">
+    <div v-if="!isShow" class="flex flex-col mx-auto">
       <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
-      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="max-w-[640px] relative"
+      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="relative"
         :className="[labelType, allHiragana]"/>
       <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
         :class="{ 'unclickable': confirmButton.unclickable }" @click="addLyric">
@@ -16,10 +16,10 @@
 <script setup>
 import { ref, reactive, computed, onMounted, watch, toRefs } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/lyric";
 import { useGlobalStore } from "../../stores/index";
+import { useYoutubeStore } from "../../stores/youtube";
 import useSupabase from "../../stores/supabase";
 import AtmosVideo from "../../components/atmos/AtmosVideo.vue";
 import AtmosLyric from "../../components/atmos/AtmosLyric.vue";
@@ -40,6 +40,8 @@ const {
 const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricTimeStamp } = toRefs(
   useLyricStore()
 );
+
+const { changeScreen } = useYoutubeStore();
 
 
 const lyrics = ref([]);
@@ -69,6 +71,10 @@ watch(
     }
   }
 );
+
+watch(()=>selected.dramaMode,()=>{
+  changeScreen(selected.dramaMode);
+})
 
 const allHiragana = computed(() => {
   return { showHiragana: selected.allHiragana };
@@ -225,7 +231,7 @@ onMounted(async () => {
 .fixedVideo {
   position: sticky;
   top: 0px;
-  z-index: 50;
+  z-index: 20;
 }
 
 .unclickable {

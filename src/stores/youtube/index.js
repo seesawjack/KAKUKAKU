@@ -4,7 +4,7 @@ import { useLyricStore } from '../lyric/index.js';
 
 export const useYoutubeStore = defineStore('youtube', () => {
 
-    const { timeStampState, videoControl, seekToSecond } = toRefs(useLyricStore());
+    const { timeStampState } = toRefs(useLyricStore());
 
     const videoId = ref('');
     const tag = document.createElement("script");
@@ -17,8 +17,8 @@ export const useYoutubeStore = defineStore('youtube', () => {
 
     window.onYouTubeIframeAPIReady = function () {
         player = new YT.Player("player", {
-            width: "640",
-            height: "390",
+            width: '640',
+            height: '390',
             videoId: videoId.value,
             modestbranding: 1,
             rel: 0,
@@ -64,12 +64,23 @@ export const useYoutubeStore = defineStore('youtube', () => {
     function controlSeekTo(hhmmss) {
         const hms = hhmmss.split(':');
         const seconds = (+hms[0]) * 60 * 60 + (+hms[1]) * 60 + (+hms[2]);
-        player.seekTo(seconds,true);
+        player.seekTo(seconds, true);
     }
+
+    function changeScreen(isChange) {
+        if (isChange) {
+            player.setSize('994','560')
+        } else {
+            player.setSize('640','390')
+
+        }
+    }
+
 
     return {
         getVideoId,
         controlVideoPlay,
-        controlSeekTo
+        controlSeekTo,
+        changeScreen
     }
 })

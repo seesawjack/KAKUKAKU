@@ -123,7 +123,7 @@ export const useLyricStore = defineStore('lyric', () => {
     }, { kanji: null, hiragana: null });
 
     if (lyrics === '') {
-      resultLyrics.value.push('<p class="text-center">*************************</p>');
+      resultLyrics.value.push('<p  class="text-center ">*************************</p>');
     } else {
       resultLyrics.value.push(html);
     }
@@ -169,7 +169,8 @@ export const useLyricStore = defineStore('lyric', () => {
       allHiragana: false,
       fixedVideo: false,
       timeStamp: false,
-      loopLyric: false
+      loopLyric: false,
+      dramaMode: false
     }
   })
 

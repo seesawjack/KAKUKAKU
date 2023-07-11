@@ -1,50 +1,62 @@
 <template>
-  <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
-    <template v-for="(lyric, index) in lyrics" :key="index">
-      <div class="group relative lyric">
-        <p class="init tracking-[2px] test-ly"
-          :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
-          ref="initLyric" v-html="lyric">
-        </p>
-        <p class="hiragana" v-html="hiraganaLyrics[index]"
-          :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }">
-        </p>
-        <p class="romaji" v-html="romajiLyrics[index]"></p>
-        <div class="cursor-pointer absolute h-5 top-3 -left-12 "
-          :class="{ 'hidden': !selected.timeStamp, 'clock-selected': lyricTimeStamp[index] }">
-          <clock-icon @click="selectTimeStamp(index)" />
-          <span class="text-xs block translate-x-[-5px] translate-y-0">{{ lyricTimeStamp[index]?.slice(3, 8) }}</span>
+  <div>
+    <div class="bg-black pt-1 pb-3 min-h-[62.5px]" :class="[font, className]">
+      <template v-for="(lyric, index) in lyrics" :key="index">
+        <div class="relative lyric">
+          <p class="init tracking-[2px] test-ly hidden !cursor-default leading-[2.75rem]"
+            :class="{ '!block': lyricDisplay(index) || lyricDisplay(index - 1), 'text-slate-400': lyricDisplay(index - 1) }"
+            v-html="lyric">
+          </p>
         </div>
-        <div
-          class="absolute top-1/2 -translate-y-[50%] right-0 inline-block bg-slate-500/50 rounded-lg after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem] after:text-white cursor-pointer"
-          :class="{ 'hidden': !selected.loopLyric }" @click="seekTo(index)">
-          <loop-icon />
-        </div>
-        <div class="bg-slate-800 border border-slate-50/10 rounded-lg py-3 px-2 mt-2"
-          :class="{ 'hidden': index !== +editId }">
-          <input type="text" class="w-full bg-slate-900 caret-white outline-none" v-model="clickHiragana">
-          <p>{{ clickHanji }}</p>
-          <div class="flex">
-            <button class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-slate-600 mr-3"
-              @click="editId = -1">取消</button>
-            <button class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-sky-400/50"
-              @click="editHiragana">修改</button>
+      </template>
+    </div>
+    <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
+      <template v-for="(lyric, index) in lyrics" :key="index">
+        <div class="group relative lyric">
+          <p class="init tracking-[2px] test-ly"
+            :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
+            ref="initLyric" v-html="lyric">
+          </p>
+          <p class="hiragana" v-html="hiraganaLyrics[index]"
+            :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }">
+          </p>
+          <p class="romaji" v-html="romajiLyrics[index]"></p>
+          <div class="cursor-pointer absolute h-5 top-3 -left-12 "
+            :class="{ 'hidden': !selected.timeStamp, 'clock-selected': lyricTimeStamp[index] }">
+            <clock-icon @click="selectTimeStamp(index)" />
+            <span class="text-xs block translate-x-[-5px] translate-y-0">{{ lyricTimeStamp[index]?.slice(3, 8) }}</span>
           </div>
+          <div
+            class="absolute top-1/2 -translate-y-[50%] right-0 bg-slate-500/50 rounded-lg after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem] after:text-white cursor-pointer hidden"
+            :class="{ '!block': selected.loopLyric && Object.keys(lyricTimeStamp).indexOf(index.toString()) > -1 }"
+            @click="seekTo(index)">
+            <loop-icon />
+          </div>
+          <div class="bg-slate-800 border border-slate-50/10 rounded-lg py-3 px-2 mt-2"
+            :class="{ 'hidden': index !== +editId }">
+            <input type="text" class="w-full bg-slate-900 caret-white outline-none" v-model="clickHiragana">
+            <p>{{ clickHanji }}</p>
+            <div class="flex">
+              <button class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-slate-600 mr-3"
+                @click="editId = -1">取消</button>
+              <button class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-sky-400/50"
+                @click="editHiragana">修改</button>
+            </div>
 
+          </div>
         </div>
-      </div>
-      <div v-if="index !== lyrics.length - 1" class="line border-t h-px my-4"></div>
-    </template>
+        <div class="my-4" :class="{ 'line border-t h-px': index !== lyrics.length - 1 }"></div>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, toRefs, onMounted } from "vue";
+import { ref, watch, toRefs, onMounted, computed } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";
 import LoopIcon from "../svg/LoopIcon.vue";
-
 
 const props = defineProps({
   lyrics: {
@@ -73,9 +85,7 @@ const { fontSize, selected } = toRefs(lyricConfiguration);
 function selectTimeStamp(index) {
   if (!timeStampState.value) return;
 
-  if (Object.keys(lyricTimeStamp.value).indexOf(index) < 0) {
-    lyricTimeStamp.value[index] = timeStampState.value.slice(-1)[0];
-  }
+  lyricTimeStamp.value[index] = timeStampState.value.slice(-1)[0];
 }
 
 function lyricDisplay(index) {
@@ -85,7 +95,6 @@ function lyricDisplay(index) {
   const nextLyricTime = lyricTimeStamp.value[Object.keys(lyricTimeStamp.value)[nextIndex]];
 
   const lastLyric = +Object.keys(lyricTimeStamp.value).slice(-1)[0];
-
   return theMoment >= nowLyricTime
     && (theMoment <= nextLyricTime
       || index === lastLyric)
@@ -116,6 +125,7 @@ function editHiragana() {
   editLyric({ init: initHiragana.value, edit: clickHiragana.value, index: editId.value })
   editId.value = -1
 }
+
 
 onMounted(() => {
   document.addEventListener("click", () => {

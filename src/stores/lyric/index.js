@@ -95,13 +95,16 @@ export const useLyricStore = defineStore('lyric', () => {
   async function kanjiLabelHiragana(hiragana, lyrics) {
     hiraganaLyrics.value = hiragana;
     romajiLyrics.value = toRomajiLyrics(hiragana)
-
     await lyrics.split('\n').map((sentence, i) => {
       furigana(sentence, hiragana[i], i)
     })
   }
 
   function furigana(lyrics, hiraganaLyrics, index) {
+    if (lyrics === '') {
+      resultLyrics.value.push('');
+      return;
+    }
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, '']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
@@ -122,11 +125,7 @@ export const useLyricStore = defineStore('lyric', () => {
       };
     }, { kanji: null, hiragana: null });
 
-    if (lyrics === '') {
-      resultLyrics.value.push('<p  class="text-center ">*************************</p>');
-    } else {
-      resultLyrics.value.push(html);
-    }
+    resultLyrics.value.push(html);
     return;
   }
 

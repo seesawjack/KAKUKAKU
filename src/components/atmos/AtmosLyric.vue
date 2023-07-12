@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-black pt-1 pb-3 min-h-[62.5px]" :class="[font, className]">
+    <div class="flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
         <div class="relative lyric">
           <p class="init tracking-[2px] test-ly hidden !cursor-default leading-[2.75rem]"
@@ -12,7 +12,7 @@
     </div>
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
-        <div class="group relative lyric">
+        <div class="group relative lyric" v-if="lyric !== ''">
           <p class="init tracking-[2px] test-ly"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
             ref="initLyric" v-html="lyric">
@@ -45,7 +45,8 @@
 
           </div>
         </div>
-        <div class="my-4" :class="{ 'line border-t h-px': index !== lyrics.length - 1 }"></div>
+        <br v-if="lyric == ''">
+        <div v-if="lyric !== ''" class="my-4" :class="{ 'line': index !== lyrics.length - 1 }"></div>
       </template>
     </div>
   </div>
@@ -145,6 +146,8 @@ onMounted(() => {
 <style scoped>
 .line {
   border-style: inset;
+  border-top-width: 1px;
+  height: 1px;
 }
 
 rt {

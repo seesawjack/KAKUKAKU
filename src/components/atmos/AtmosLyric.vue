@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]" :class="[font, className]">
-      <template v-for="(lyric, index) in lyrics" :key="index">
-        <div class="relative lyric">
-          <p class="init tracking-[2px] test-ly hidden !cursor-default leading-[2.75rem]"
-            :class="{ '!block': lyricDisplay(index) || lyricDisplay(index - 1), 'text-slate-400': lyricDisplay(index - 1) }"
-            v-html="lyric">
+    <div class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
+      :class="[font, className]">
+      <div class="absolute w-full left-1/2 translate-x-[-50%]">
+        <template v-for="(lyric, index) in lyrics" :key="index">
+          <p v-if="lyricDisplay(index) || lyricDisplay(index - 1)" class="init tracking-[2px] test-ly leading-[2.75rem]"
+            :class="{ 'text-slate-400': lyricDisplay(index - 1) }" v-html="lyric">
           </p>
-        </div>
-      </template>
+        </template>
+      </div>
     </div>
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">

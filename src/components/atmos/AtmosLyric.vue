@@ -12,7 +12,7 @@
     </div>
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
-        <div class="group relative lyric" v-if="lyric !== ''">
+        <div class="group relative lyric" :class="{'mt-10':spaceIndex.indexOf(index)>-1}" v-if="lyric !== ''">
           <p class="init tracking-[2px] test-ly"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
             ref="initLyric" v-html="lyric">
@@ -46,7 +46,7 @@
           </div>
         </div>
         <br v-if="lyric == ''">
-        <div v-if="lyric !== ''" class="my-4" :class="{ 'line': index !== lyrics.length - 1 }"></div>
+        <div v-if="lyric !== ''" class="my-3" :class="{ 'line': index !== lyrics.length - 1 }"></div>
       </template>
     </div>
   </div>
@@ -80,7 +80,7 @@ const props = defineProps({
 
 const lyricStore = useLyricStore();
 const { lyricConfiguration, editLyric } = lyricStore;
-const { timeStampState, lyricTimeStamp } = toRefs(useLyricStore());
+const { timeStampState, lyricTimeStamp,spaceIndex } = toRefs(useLyricStore());
 const { fontSize, selected } = toRefs(lyricConfiguration);
 
 function selectTimeStamp(index) {

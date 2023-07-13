@@ -53,16 +53,19 @@ export const useLyricStore = defineStore('lyric', () => {
 
   }
 
+  const spaceIndex = ref([]);
   async function tolyrics(lyric) {
     resultLyrics.value.length = 0; //初始化
 
-    initLyrics.value = lyric;
-    localStorage.setItem('initLyrics', JSON.stringify(lyric));
+    if (!JSON.parse(localStorage.getItem('initLyrics'))?.length) {
+      initLyrics.value = lyric
+      localStorage.setItem('initLyrics', JSON.stringify(lyric));
+    }
 
-    const onlyJapanese = ref(/\w/g.test(lyric));
+    const haveEnglishLyric = ref(/\w/g.test(lyric));
     let requestLyric, onlyEnglish, result
 
-    if (onlyJapanese.value) {
+    if (haveEnglishLyric.value) {
       requestLyric = lyric.replace(/\n/g, "||").replace(/[\w']/g, "※");
       onlyEnglish = lyric.replace(/[^\w']/g, "#").replace(/\#{1,}/g, ',').replace(/^,/, '').split(',');
     } else {
@@ -71,7 +74,7 @@ export const useLyricStore = defineStore('lyric', () => {
 
     const requestLyrics = await toHiraganaLyrics(requestLyric);
 
-    if (onlyJapanese.value) {
+    if (haveEnglishLyric.value) {
       let index = 0;
       result = requestLyrics.converted
         .replace(/\※{2,}/g, '※')
@@ -89,22 +92,29 @@ export const useLyricStore = defineStore('lyric', () => {
         .split('||')
         .map(i => i.trim());
     }
-    kanjiLabelHiragana(result, lyric);
+
+    result = result.filter((lyric, index) => {
+      if (lyric === '') {
+        spaceIndex.value.push(index-spaceIndex.value.length);
+      }
+      return lyric !== '';
+    })
+    
+    const filtetLyric = lyric.split('\n').filter(i => i !== '');
+    kanjiLabelHiragana(result, filtetLyric);
   }
 
   async function kanjiLabelHiragana(hiragana, lyrics) {
+    spaceIndex.value = spaceIndex.value.filter((spaceIndex, i, arr) => spaceIndex - 1 !== arr[i - 1]);
     hiraganaLyrics.value = hiragana;
     romajiLyrics.value = toRomajiLyrics(hiragana)
-    await lyrics.split('\n').map((sentence, i) => {
+    await lyrics.map((sentence, i) => {
       furigana(sentence, hiragana[i], i)
     })
   }
 
   function furigana(lyrics, hiraganaLyrics, index) {
-    if (lyrics === '') {
-      resultLyrics.value.push('');
-      return;
-    }
+    
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, '']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
@@ -215,6 +225,7 @@ export const useLyricStore = defineStore('lyric', () => {
     songInfo,
     timeStampState,
     lyricTimeStamp,
+    spaceIndex,
     kanjiLabelHiragana,
     tolyrics,
     selectedSong,

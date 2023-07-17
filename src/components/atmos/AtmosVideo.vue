@@ -19,5 +19,3 @@ const { getVideoId } = useYoutubeStore();
 useYoutubeStore();
 getVideoId(props.id);
 </script>
-
-<style></style>

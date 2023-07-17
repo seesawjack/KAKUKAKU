@@ -113,13 +113,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../../stores/auth";
 
-import BarsIcon from "../svg/BarsIcon.vue";
-import TheLogo from "../svg/TheLogo.vue";
 import InfoIcon from "../svg/InfoIcon.vue";
 import LogoutIcon from "../svg/LogoutIcon.vue";
 import SigninButton from "../svg/SigninButton.vue";

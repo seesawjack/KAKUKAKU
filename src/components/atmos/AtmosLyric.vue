@@ -12,15 +12,15 @@
     </div>
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
-        <div class="group relative lyric" :class="{ 'mt-10': spaceIndex.indexOf(index) > -1 }" v-if="lyric !== ''">
-          <p class="init tracking-[2px] test-ly"
+        <div class="group relative lyric" :class="{ 'mt-10': spaceIndex.indexOf(index) > -1,'max-w-[830px]':!selected.dramaMode,'max-w-[1270px]':selected.dramaMode }" v-if="lyric !== ''">
+          <p class="init tracking-[2px] test-ly flex-wrap pr-6"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
             ref="initLyric" v-html="lyric">
           </p>
-          <p class="hiragana" v-html="hiraganaLyrics[index]"
+          <p class="hiragana flex-wrap  pr-6" v-html="hiraganaLyrics[index]"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }">
           </p>
-          <p class="romaji" v-html="romajiLyrics[index]"></p>
+          <p class="romaji flex-wrap  pr-6" v-html="romajiLyrics[index]"></p>
           <div class="cursor-pointer absolute h-5 top-3 -left-12 "
             :class="{ 'hidden': !selected.timeStamp, 'clock-selected': lyricTimeStamp[index] }">
             <clock-icon @click="selectTimeStamp(index)" />
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, watch, toRefs, onMounted, computed } from "vue";
+import { ref, watch, toRefs, onMounted} from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";

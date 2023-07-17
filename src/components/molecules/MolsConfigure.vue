@@ -2,21 +2,21 @@
   <div>
     <atmos-configure class="dropdown" @show-drop="showDropDown">
       <template #otherConfigure>
-        <div class="my-3" @click="stopVideo">
+        <div class="my-3 cursor-pointer" @click="stopVideo">
           <play-video-icon v-if="!isPlayVideo" />
           <pause-video-icon v-else />
         </div>
-        <div class="my-3" @click="lockVideo">
+        <div class="my-3 cursor-pointer" @click="lockVideo">
           <lock-open-icon class="translate-x-[2px]  w-[22px]" v-if="!isLock" />
           <lock-close-icon class="is-lock w-[22px]"  v-else />
         </div>
-        <div class="flex items-center my-3 h-6" @click="changeScreen">
-          <div class="border-2 h-4 round-sm w-[20px]" :class="{'is-dramaMode':dramaMode}"></div>
+        <div class="flex items-center my-3 h-6 cursor-pointer" @click="screenToChange">
+          <div class="border-2 h-4 round-sm w-[20px]" :class="{'is-dramaMode':selected.dramaMode}"></div>
         </div>
       </template>
     </atmos-configure>
     <atmos-drop-down class="dropdown -top-2 left-8 py-2 px-3" :show="isShow">
-      <!-- 歌詞編輯頁選項 -->
+      <!-- 歌詞選項 -->
       <div v-if="route.path === '/song'">
         <!-- ▼單選 文字大小 -->
         <div>
@@ -38,7 +38,7 @@
           </div>
         </div>
         <hr class="border-gray-200 dark:border-gray-500 my-3" />
-        <!-- ▼單選 標註形式 -->
+        <!-- ▼下拉式選單 標註形式 -->
         <div>
           <p class="text-left">標註形式</p>
           <select v-model="selectedLabelType" class="w-full mt-2 p-1 bg-slate-500 rounded-md">
@@ -76,10 +76,11 @@
 </template>
 
 <script setup>
-import { ref, toRefs, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, toRefs, watch, onMounted, onBeforeUnmount } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useRoute } from "vue-router";
 import { useYoutubeStore } from "../../stores/youtube";
+
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import AtmosConfigure from "../atmos/AtmosConfigure.vue";
 import PlayVideoIcon from "../svg/PlayVideoIcon.vue";
@@ -89,11 +90,11 @@ import LockOpenIcon from "../svg/LockOpenIcon.vue";
 
 const route = useRoute();
 const {
-  lyricConfiguration: { fontSize, labelType, selected },
+  lyricConfiguration: { fontSize, selected },
   selectedFontStyle,
 } = useLyricStore();
 
-const { controlVideoPlay } = useYoutubeStore();
+const { controlVideoPlay,changeScreen } = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
 
 const selectedLabelType = ref('hanji-rubi')
@@ -114,15 +115,12 @@ function showDropDown() {
   isShow.value = !isShow.value;
 }
 const fontSelect = ref("middle");
-const labelSelect = ref("hiragana");
-const allHiragana = ref(false);
 const timeStamp = ref(false);
 const loopLyric = ref(false);
-const dramaMode = ref(false);
 
-function changeScreen(){
-  dramaMode.value = !dramaMode.value
-  selected.dramaMode = dramaMode.value
+function screenToChange(){
+  selected.dramaMode = !selected.dramaMode
+  changeScreen(selected.dramaMode)
 }
 
 watch(fontSelect, () => {

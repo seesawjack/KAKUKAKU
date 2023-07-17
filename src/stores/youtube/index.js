@@ -17,8 +17,8 @@ export const useYoutubeStore = defineStore('youtube', () => {
 
     window.onYouTubeIframeAPIReady = function () {
         player = new YT.Player("player", {
-            width: '640',
-            height: '390',
+            width: '854',
+            height: '480',
             videoId: videoId.value,
             modestbranding: 1,
             rel: 0,
@@ -73,9 +73,9 @@ export const useYoutubeStore = defineStore('youtube', () => {
 
     function changeScreen(isChange) {
         if (isChange) {
-            player.setSize('994','560')
+            player.setSize('1280','720')
         } else {
-            player.setSize('640','390')
+            player.setSize('854','480')
 
         }
     }

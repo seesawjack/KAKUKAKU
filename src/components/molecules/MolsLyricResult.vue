@@ -15,20 +15,18 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch, toRefs } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/lyric";
 import { useGlobalStore } from "../../stores/index";
-import { useYoutubeStore } from "../../stores/youtube";
+
 import useSupabase from "../../stores/supabase";
 import AtmosVideo from "../../components/atmos/AtmosVideo.vue";
 import AtmosLyric from "../../components/atmos/AtmosLyric.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
 
 const route = useRoute();
-const router = useRouter();
 
-const path = computed(() => route.path.replace("/", ""));
 const songId = computed(() => route.query.song_id);
 
 const {
@@ -40,8 +38,6 @@ const {
 const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricTimeStamp,spaceIndex } = toRefs(
   useLyricStore()
 );
-
-const { changeScreen } = useYoutubeStore();
 
 
 const lyrics = ref([]);
@@ -59,10 +55,6 @@ watch(
     labelType.value = selected.labelType;
   }
 );
-
-watch(()=>selected.dramaMode,()=>{
-  changeScreen(selected.dramaMode);
-})
 
 
 const isfixedVideo = computed(() => {

@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed, toRefs } from "vue";
+import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useLyricStore } from "../../stores/lyric";
 import { useGlobalStore } from "../../stores/index";

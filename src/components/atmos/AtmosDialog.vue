@@ -42,7 +42,6 @@
 </template>
 
 <script setup>
-import CloseButton from "../svg/CloseButton.vue";
 const props = defineProps({
   show: {
     type: Boolean,

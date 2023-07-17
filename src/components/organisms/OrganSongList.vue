@@ -11,8 +11,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import { useSearchStore } from "../../stores/search";
+import { ref } from "vue";
 import MolsListCard from "../molecules/MolsListCard.vue";
 import MolsSearchSong from '../molecules/MolsSearchSong.vue';
 

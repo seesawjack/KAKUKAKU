@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed,toRefs } from "vue";
+import { ref, onMounted,toRefs } from "vue";
 import { useRoute } from "vue-router";
 import { useLyricStore } from "../../stores/lyric";
 import AtmosCard from "../atmos/AtmosCard.vue";

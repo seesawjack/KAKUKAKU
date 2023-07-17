@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import { ref, reactive, onMounted, getCurrentInstance } from "vue";
-import { diff_match_patch } from 'diff-match-patch';
-import { toRomaji } from 'wanakana';
-import { useRequestStore } from '../request';
+import { diff_match_patch } from "diff-match-patch";
+import { toRomaji } from "wanakana";
+import { useRequestStore } from "../request";
 
-export const useLyricStore = defineStore('lyric', () => {
+export const useLyricStore = defineStore("lyric", () => {
   const { request } = useRequestStore();
 
   const initLyrics = ref([]);
@@ -20,7 +20,7 @@ export const useLyricStore = defineStore('lyric', () => {
     const requsetData = ref({
       app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
       output_type: "hiragana",
-      sentence: lyric
+      sentence: lyric,
     });
 
     return await request({
@@ -32,42 +32,53 @@ export const useLyricStore = defineStore('lyric', () => {
   //轉換成全羅馬字
   function toRomajiLyrics(hiragana) {
     if (Array.isArray(hiragana)) {
-      return hiragana.map(i => {
-        if (/^[A-Za-z\s',]+$/.test(i)) return '';
+      return hiragana.map((i) => {
+        if (/^[A-Za-z\s',]+$/.test(i)) return "";
 
-        return i.split(' ').map(k => {
-          if (k.match(/[^\w',]/)) {
-            return toRomaji(k.split('').join(' '), { customRomajiMapping: { は: 'wa' } })
-          }
-          return k;
-        }).join(' ');
+        return i
+          .split(" ")
+          .map((k) => {
+            if (k.match(/[^\w',]/)) {
+              return toRomaji(k.split("").join(" "), {
+                customRomajiMapping: { は: "wa" },
+              });
+            }
+            return k;
+          })
+          .join(" ");
       });
     } else {
-      return hiragana.split(' ').map(k => {
-        if (k.match(/[^\w',]/)) {
-          return toRomaji(k.split('').join(' '), { customRomajiMapping: { は: 'wa' } })
-        }
-        return k;
-      }).join(' ');
+      return hiragana
+        .split(" ")
+        .map((k) => {
+          if (k.match(/[^\w',]/)) {
+            return toRomaji(k.split("").join(" "), {
+              customRomajiMapping: { は: "wa" },
+            });
+          }
+          return k;
+        })
+        .join(" ");
     }
-
   }
 
   const spaceIndex = ref([]);
   async function tolyrics(lyric) {
     resultLyrics.value.length = 0; //初始化
 
-    if (!JSON.parse(localStorage.getItem('initLyrics'))?.length) {
-      initLyrics.value = lyric
-      localStorage.setItem('initLyrics', JSON.stringify(lyric));
-    }
-
+    initLyrics.value = lyric;
+    localStorage.setItem("initLyrics", JSON.stringify(lyric));
+    
     const haveEnglishLyric = ref(/\w/g.test(lyric));
-    let requestLyric, onlyEnglish, result
+    let requestLyric, onlyEnglish, result;
 
     if (haveEnglishLyric.value) {
       requestLyric = lyric.replace(/\n/g, "||").replace(/[\w']/g, "※");
-      onlyEnglish = lyric.replace(/[^\w']/g, "#").replace(/\#{1,}/g, ',').replace(/^,/, '').split(',');
+      onlyEnglish = lyric
+        .replace(/[^\w']/g, "#")
+        .replace(/\#{1,}/g, ",")
+        .replace(/^,/, "")
+        .split(",");
     } else {
       requestLyric = lyric.replace(/\n/g, "||");
     }
@@ -77,63 +88,72 @@ export const useLyricStore = defineStore('lyric', () => {
     if (haveEnglishLyric.value) {
       let index = 0;
       result = requestLyrics.converted
-        .replace(/\※{2,}/g, '※')
-        .replace(/\※/g, () => '@' + onlyEnglish[index++] + '@')
-        .replace(/\s+/g, '')
-        .replace(/@/g, ' ')
-        .replace(/\s{2,}/g, ' ')
-        .replace(/ , /g, ',')
-        .split('||')
-        .map(i => i.trim());
+        .replace(/\※{2,}/g, "※")
+        .replace(/\※/g, () => "@" + onlyEnglish[index++] + "@")
+        .replace(/\s+/g, "")
+        .replace(/@/g, " ")
+        .replace(/\s{2,}/g, " ")
+        .replace(/ , /g, ",")
+        .split("||")
+        .map((i) => i.trim());
     } else {
       result = requestLyrics.converted
-        .replace(/[\s](?!\s)/mg, '')
-        .replace(/\s{2,}/g, ' ')
-        .split('||')
-        .map(i => i.trim());
+        .replace(/[\s](?!\s)/gm, "")
+        .replace(/\s{2,}/g, " ")
+        .split("||")
+        .map((i) => i.trim());
     }
 
     result = result.filter((lyric, index) => {
-      if (lyric === '') {
-        spaceIndex.value.push(index-spaceIndex.value.length);
+      if (lyric === "") {
+        spaceIndex.value.push(index - spaceIndex.value.length);
       }
-      return lyric !== '';
-    })
-    
-    const filtetLyric = lyric.split('\n').filter(i => i !== '');
+      return lyric !== "";
+    });
+
+    const filtetLyric = lyric.split("\n").filter((i) => i !== "");
     kanjiLabelHiragana(result, filtetLyric);
   }
 
   async function kanjiLabelHiragana(hiragana, lyrics) {
-    spaceIndex.value = spaceIndex.value.filter((spaceIndex, i, arr) => spaceIndex - 1 !== arr[i - 1]);
+    spaceIndex.value = spaceIndex.value.filter(
+      (spaceIndex, i, arr) => spaceIndex - 1 !== arr[i - 1]
+    );
     hiraganaLyrics.value = hiragana;
-    romajiLyrics.value = toRomajiLyrics(hiragana)
+    romajiLyrics.value = toRomajiLyrics(hiragana);
     await lyrics.map((sentence, i) => {
-      furigana(sentence, hiragana[i], i)
-    })
+      furigana(sentence, hiragana[i], i);
+    });
   }
 
   function furigana(lyrics, hiraganaLyrics, index) {
-    
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
-    diff.push([0, '']) //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
+    diff.push([0, ""]); //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
 
-    let html = '';
-    diff.reduce((acc, [kind, text]) => {
-      if (kind === 0) {
-        if (acc.kanji) {
-          html += acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm) ? acc.kanji : `<ruby class="hanji-word hover:underline hover:cursor-pointer" data-index="${index}">${acc.kanji}<rp>(</rp><rt>${acc.hiragana || '?'}</rt><rp>)</rp></ruby>`;
-          acc.kanji = null;
-          acc.hiragana = null;
-        };
-        html += text;
-        return acc
-      } else {
-        acc[kind === 1 ? 'hiragana' : 'kanji'] = text;
-        return acc;
-      };
-    }, { kanji: null, hiragana: null });
+    let html = "";
+    diff.reduce(
+      (acc, [kind, text]) => {
+        if (kind === 0) {
+          if (acc.kanji) {
+            html +=
+              acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm)
+                ? acc.kanji
+                : `<ruby class="hanji-word hover:underline hover:cursor-pointer" data-index="${index}">${
+                    acc.kanji
+                  }<rp>(</rp><rt>${acc.hiragana || "?"}</rt><rp>)</rp></ruby>`;
+            acc.kanji = null;
+            acc.hiragana = null;
+          }
+          html += text;
+          return acc;
+        } else {
+          acc[kind === 1 ? "hiragana" : "kanji"] = text;
+          return acc;
+        }
+      },
+      { kanji: null, hiragana: null }
+    );
 
     resultLyrics.value.push(html);
     return;
@@ -143,52 +163,49 @@ export const useLyricStore = defineStore('lyric', () => {
   const lyricConfiguration = reactive({
     fontSize: {
       big: {
-        id: 'big',
+        id: "big",
         name: "大",
         class: ["text-2xl", "leading-9"],
       },
       middle: {
-        id: 'middle',
+        id: "middle",
         name: "中",
         class: ["text-xl", "leading-[2.4rem]"],
       },
       small: {
-        id: 'small',
+        id: "small",
         name: "小",
         class: ["text-base", "leading-[2.4rem]"],
       },
     },
     selected: {
-      fontSize: 'middle',
-      labelType: 'rubi',
+      fontSize: "middle",
+      labelType: "rubi",
       fixedVideo: false,
       timeStamp: false,
       loopLyric: false,
-      dramaMode: false
-    }
-  })
+      dramaMode: false,
+    },
+  });
 
   function selectedSong(info) {
     songInfo.value = info;
-    localStorage.setItem('songInfo', JSON.stringify(info));
+    localStorage.setItem("songInfo", JSON.stringify(info));
   }
 
   if (getCurrentInstance()) {
     onMounted(() => {
-      songInfo.value = JSON.parse(localStorage.getItem('songInfo'));
-      initLyrics.value = JSON.parse(localStorage.getItem('initLyrics'));
-    })
-  };
+      songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
+      initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
+    });
+  }
 
   function removeLocal() {
-    localStorage.removeItem('songInfo');
-    localStorage.removeItem('initLyrics');
+    localStorage.removeItem("songInfo");
+    localStorage.removeItem("initLyrics");
   }
   function selectedFontStyle(style) {
     lyricConfiguration.selected.fontSize = style;
-  }
-  function selectedLabelStyle(type) {
-    lyricConfiguration.selected.labelType = type;
   }
 
   //編輯功能
@@ -196,9 +213,14 @@ export const useLyricStore = defineStore('lyric', () => {
     //修改平假名跑位
     resultLyrics.value[index] = resultLyrics.value[index].replace(init, edit);
     //平假名錯誤調整
-    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init, edit);
+    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(
+      init,
+      edit
+    );
     //羅馬字錯誤調整
-    romajiLyrics.value[index] = toRomajiLyrics(hiraganaLyrics.value[index].replace(init, edit));
+    romajiLyrics.value[index] = toRomajiLyrics(
+      hiraganaLyrics.value[index].replace(init, edit)
+    );
   }
 
   return {
@@ -215,8 +237,7 @@ export const useLyricStore = defineStore('lyric', () => {
     tolyrics,
     selectedSong,
     selectedFontStyle,
-    selectedLabelStyle,
     removeLocal,
-    editLyric
-  }
-})
+    editLyric,
+  };
+});

@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRefs } from "vue";
+import { ref, computed } from "vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
 import SearchGlasses from "../svg/SearchGlasses.vue";
 import { useSearchStore } from "../../stores/search/index";

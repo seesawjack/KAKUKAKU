@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-[600px] mx-auto mt-5">
+  <div class="max-w-[600px] w-full mx-auto mt-5">
     <div v-if="loggedIn">
       <div v-if="songList.length" class="w-full">
         <p class="text-left mb-5">已建立歌曲 {{ songList.length }} 首</p>
@@ -21,7 +21,7 @@
                 @click="showDropDown(item.video_id)"
                 class="hidden group-hover:block cursor-pointer"
                 :class="[
-                  { isShow: clickClassName === item.video_id },
+                  { '!block': clickClassName === item.video_id },
                   { 'group-hover': !disappear },
                 ]"
               />
@@ -42,12 +42,12 @@
       </div>
       <atmos-not-found v-else tips="您尚未新增歌曲" />
     </div>
-    <atmos-not-found v-else tips="登入後才能看到已建立歌詞頁" />
+    <atmos-not-found v-else tips="登入後才能看到已建立歌詞清單" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useGlobalStore } from "../../stores/index";
 import { useAuthStore } from "../../stores/auth";
 import useSupabase from "../../stores/supabase";
@@ -120,9 +120,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.isShow {
-  display: block !important;
-}
 .disappear {
   opacity: 0;
 }

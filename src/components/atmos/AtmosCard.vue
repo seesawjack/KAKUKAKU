@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 
 const { selectedSong } = useLyricStore();

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, toRefs } from 'vue';
+import { ref, toRefs,computed } from 'vue';
 import { useLyricStore } from '../lyric/index.js';
 
 export const useYoutubeStore = defineStore('youtube', () => {
@@ -42,9 +42,11 @@ export const useYoutubeStore = defineStore('youtube', () => {
     function onPlayerStateChange(event) {
         if (event.data === YT.PlayerState.PLAYING) {
             timer = setInterval(timestamp, 100);
+            isPlayVideo.value = true;
         } else {
             clearInterval(timer);
             timer = null;
+            isPlayVideo.value = false;
         }
     }
 
@@ -52,6 +54,8 @@ export const useYoutubeStore = defineStore('youtube', () => {
         const HhMmSs = new Date(player.getCurrentTime() * 1000).toISOString().slice(11, 23);
         timeStampState.value.push(HhMmSs)
     }
+
+    const isPlayVideo = ref(false);
 
     function controlVideoPlay(isPlay) {
         if (isPlay) {
@@ -78,6 +82,7 @@ export const useYoutubeStore = defineStore('youtube', () => {
 
 
     return {
+        isPlayVideo,
         getVideoId,
         controlVideoPlay,
         controlSeekTo,

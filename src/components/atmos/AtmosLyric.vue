@@ -12,7 +12,7 @@
     </div>
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
-        <div class="group relative lyric" :class="{'mt-10':spaceIndex.indexOf(index)>-1}" v-if="lyric !== ''">
+        <div class="group relative lyric" :class="{ 'mt-10': spaceIndex.indexOf(index) > -1 }" v-if="lyric !== ''">
           <p class="init tracking-[2px] test-ly"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
             ref="initLyric" v-html="lyric">
@@ -27,8 +27,8 @@
             <span class="text-xs block translate-x-[-5px] translate-y-0">{{ lyricTimeStamp[index]?.slice(3, 8) }}</span>
           </div>
           <div
-            class="absolute top-1/2 -translate-y-[50%] right-0 bg-slate-500/50 rounded-lg after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem] after:text-white cursor-pointer hidden"
-            :class="{ '!block': selected.loopLyric && Object.keys(lyricTimeStamp).indexOf(index.toString()) > -1 }"
+            class="absolute top-1/2 -translate-y-[50%] right-0 bg-slate-500/50 rounded-lg after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem]  hidden"
+            :class="[{ '!block': selected.loopLyric},loopIconStyle(index)]"
             @click="seekTo(index)">
             <loop-icon />
           </div>
@@ -80,9 +80,17 @@ const props = defineProps({
 
 const lyricStore = useLyricStore();
 const { lyricConfiguration, editLyric } = lyricStore;
-const { timeStampState, lyricTimeStamp,spaceIndex } = toRefs(useLyricStore());
+const { timeStampState, lyricTimeStamp, spaceIndex } = toRefs(useLyricStore());
 const { fontSize, selected } = toRefs(lyricConfiguration);
 
+
+function loopIconStyle(index){
+  if(Object.keys(lyricTimeStamp.value).indexOf(index.toString()) > -1){
+    return 'text-white after:text-white cursor-pointer'
+  }else{
+    return 'after:text-slate-500 cursor-not-allowed text-slate-500'
+  }
+}
 function selectTimeStamp(index) {
   if (!timeStampState.value) return;
 
@@ -115,11 +123,12 @@ const clickHanji = ref('')
 const editId = ref(-1);
 
 const { controlVideoPlay, controlSeekTo } = useYoutubeStore();
-const isPlay = ref(false);
+const { isPlayVideo } = toRefs(useYoutubeStore());
+
 function seekTo(index) {
   controlSeekTo(lyricTimeStamp.value[index]);
-  isPlay.value = true;
-  controlVideoPlay(isPlay.value)
+  isPlayVideo.value = true;
+  controlVideoPlay(isPlayVideo.value)
 }
 
 function editHiragana() {

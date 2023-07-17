@@ -159,6 +159,10 @@ export const useLyricStore = defineStore('lyric', () => {
       },
     },
     labelType: {
+      all:{
+        id: 'allHiragana',
+        name:'全平假名'
+      },
       none: {
         id: 'none',
         name: '無',
@@ -174,8 +178,6 @@ export const useLyricStore = defineStore('lyric', () => {
     },
     selected: {
       fontSize: 'middle',
-      labelType: 'hiragana',
-      allHiragana: false,
       fixedVideo: false,
       timeStamp: false,
       loopLyric: false,

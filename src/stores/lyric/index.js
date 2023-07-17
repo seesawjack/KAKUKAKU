@@ -158,26 +158,9 @@ export const useLyricStore = defineStore('lyric', () => {
         class: ["text-base", "leading-[2.4rem]"],
       },
     },
-    labelType: {
-      all:{
-        id: 'allHiragana',
-        name:'全平假名'
-      },
-      none: {
-        id: 'none',
-        name: '無',
-      },
-      hiragana: {
-        id: 'hiragana',
-        name: '平假名',
-      },
-      romaji: {
-        id: 'romaji',
-        name: '羅馬字',
-      }
-    },
     selected: {
       fontSize: 'middle',
+      labelType: 'rubi',
       fixedVideo: false,
       timeStamp: false,
       loopLyric: false,

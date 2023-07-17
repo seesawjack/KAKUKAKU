@@ -3,7 +3,7 @@
     <div v-if="!isShow" class="flex flex-col mx-auto">
       <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
       <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="relative"
-        :className="[labelType, allHiragana]"/>
+        :className="[labelType]"/>
       <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
         :class="{ 'unclickable': confirmButton.unclickable }" @click="addLyric">
         {{ confirmButton.text }}
@@ -48,27 +48,15 @@ const lyrics = ref([]);
 const hiraLyrics = ref([]);
 const romaLyrics = ref([]);
 
-const labelType = ref("");
+const labelType = ref('');
 
 const isShow = ref(false);
 const message = ref("");
 
 watch(
   () => selected.labelType,
-  () => {
-    switch (selected.labelType) {
-      case "none":
-        labelType.value = "hiddenHiragana";
-        break;
-      case "hiragana":
-        labelType.value = "";
-        break;
-      case "romaji":
-        labelType.value = "showRomaji";
-        break;
-      default:
-        break;
-    }
+  () => {    
+    labelType.value = selected.labelType;
   }
 );
 
@@ -76,9 +64,6 @@ watch(()=>selected.dramaMode,()=>{
   changeScreen(selected.dramaMode);
 })
 
-const allHiragana = computed(() => {
-  return { showHiragana: selected.allHiragana };
-});
 
 const isfixedVideo = computed(() => {
   return { fixedVideo: selected.fixedVideo };
@@ -207,7 +192,7 @@ onMounted(async () => {
 </script>
 
 <style>
-.hiddenHiragana rt {
+.only-hanji rt {
   display: none;
 }
 
@@ -216,16 +201,16 @@ onMounted(async () => {
   display: none;
 }
 
-.showRomaji .romaji {
+.plus-romaji .romaji {
   display: block;
 }
 
-.showHiragana .hiragana {
+.all-hiragana .hiragana {
   display: block;
 }
 
-.showHiragana .init,
-.showHiragana .romaji {
+.all-hiragana .init,
+.all-hiragana .romaji {
   display: none;
 }
 

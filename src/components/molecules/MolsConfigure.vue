@@ -7,8 +7,11 @@
           <pause-video-icon v-else />
         </div>
         <div class="my-3" @click="lockVideo">
-          <lock-open-icon class="translate-x-[3px]" v-if="!isLock" />
-          <lock-close-icon class="is-lock" v-else />
+          <lock-open-icon class="translate-x-[2px]  w-[22px]" v-if="!isLock" />
+          <lock-close-icon class="is-lock w-[22px]"  v-else />
+        </div>
+        <div class="flex items-center my-3 h-6" @click="changeScreen">
+          <div class="border-2 h-4 round-sm w-[20px]" :class="{'is-dramaMode':dramaMode}"></div>
         </div>
       </template>
     </atmos-configure>
@@ -38,35 +41,12 @@
         <!-- ▼單選 標註形式 -->
         <div>
           <p class="text-left">標註形式</p>
-          <!-- <div class="flex justify-between items-end mt-3">
-            <label :for="font.id" v-for="(font, index) in labelType" :key="index"
-              class="border cursor-pointer hover:bg-slate-500 px-2 py-1 rounded-lg" :class="{
-                'bg-slate-900': font.id === labelSelect,
-                'text-blue-400': font.id === labelSelect,
-              }">
-              <input type="radio" hidden :id="font.id" :value="font.id" v-model="labelSelect" />
-              <p>
-                {{ font.name }}
-              </p>
-            </label>
-          </div> -->
-          <select v-model="selectedLabelType">
-            <option value="hiragana">全平假名</option>
-            <option value="hanji">漢字</option>
-            <option value="hanjiRubi">漢字+ルビ</option>
-            <option value="romaji">羅馬字</option>
+          <select v-model="selectedLabelType" class="w-full mt-2 p-1 bg-slate-500 rounded-md">
+            <option value="all-hiragana">全平假名</option>
+            <option value="only-hanji">漢字(無標註發音)</option>
+            <option value="hanji-rubi" selected>漢字(有標註發音)</option>
+            <option value="plus-romaji">羅馬字</option>
           </select>
-        </div>
-        <hr class="border-gray-200 dark:border-gray-500 my-3" />
-        <!-- ▼開關 全平假名 -->
-        <div>
-          <label for="allHiragana" class="w-full relative inline-flex justify-between items-center cursor-pointer">
-            <input type="checkbox" id="allHiragana" v-model="allHiragana" class="sr-only peer" />
-            <div
-              class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-300">
-            </div>
-            <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">全平假名</span>
-          </label>
         </div>
         <hr class="border-gray-200 dark:border-gray-500 my-3" />
         <!-- ▼開關 時間戳記 -->
@@ -88,17 +68,6 @@
               class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-300">
             </div>
             <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">單句循環</span>
-          </label>
-        </div>
-        <hr class="border-gray-200 dark:border-gray-500 my-3" />
-        <!-- ▼開關 劇院模式 -->
-        <div>
-          <label for="dramaMode" class="w-full relative inline-flex justify-between items-center cursor-pointer">
-            <input type="checkbox" id="dramaMode" v-model="dramaMode" class="sr-only peer" />
-            <div
-              class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-300">
-            </div>
-            <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">劇院模式</span>
           </label>
         </div>
       </div>
@@ -127,7 +96,7 @@ const {
 const { controlVideoPlay } = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
 
-const selectedLabelType = ref('')
+const selectedLabelType = ref('hanji-rubi')
 
 function stopVideo() {
   isPlayVideo.value = !isPlayVideo.value
@@ -151,13 +120,18 @@ const timeStamp = ref(false);
 const loopLyric = ref(false);
 const dramaMode = ref(false);
 
+function changeScreen(){
+  dramaMode.value = !dramaMode.value
+  selected.dramaMode = dramaMode.value
+}
+
 watch(fontSelect, () => {
   selectedFontStyle(fontSelect.value);
 });
 
 
 watch(selectedLabelType, () => {
-  selected.allHiragana = allHiragana.value;
+  selected.labelType = selectedLabelType.value;
 });
 
 
@@ -167,10 +141,6 @@ watch(timeStamp, () => {
 
 watch(loopLyric, () => {
   selected.loopLyric = loopLyric.value
-})
-
-watch(dramaMode, () => {
-  selected.dramaMode = dramaMode.value
 })
 
 onMounted(() => {
@@ -193,6 +163,11 @@ onBeforeUnmount(() => {
 <style scoped>
 .is-lock {
   color: rgb(147, 197, 253);
+  filter: drop-shadow(0px 0px 3px rgb(147, 197, 253, 0.8));
+}
+
+.is-dramaMode{
+  border-color: rgb(147, 197, 253);
   filter: drop-shadow(0px 0px 3px rgb(147, 197, 253, 0.8));
 }
 </style>

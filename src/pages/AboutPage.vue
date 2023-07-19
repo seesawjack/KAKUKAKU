@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-start mt-48 max-w-lg">
+  <div class="flex flex-col items-start mt-48 max-w-lg px-5">
     <h1 class="t text-2xl">關於 KAKUKAKU</h1>
     <p class="s  text-justify">
       歡迎來到我們的網站！這是專為日文歌迷打造的學習平台，讓您輕鬆掌握日文歌曲的魅力！我們利用

@@ -2,50 +2,28 @@
   <div>
     <template v-if="!isIdinUrl">
       <label for="songName" class="flex items-center mb-3">
-        <span class="flex-none w-36 text-left">歌曲名稱</span>
-        <atmos-input
-          id="songName"
-          class="ml-3 flex-initial w-10/12"
-          :inputTips="'請輸入歌曲名稱'"
+        <span class="flex-none w-full max-w-[9rem] text-left">歌曲名稱</span>
+        <atmos-input id="songName" class="max-sm:text-sm ml-3 flex-initial w-10/12" :inputTips="'請輸入歌曲名稱'"
           :inputClass="'block w-full py-3 pl-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40'"
-          v-model.trim="songName"
-        />
+          v-model.trim="songName" />
       </label>
       <label for="songUrl" class="flex items-center mb-3">
-        <span class="flex-none w-36 text-left">Youtube 影片連結</span>
-        <atmos-input
-          id="songUrl"
-          class="ml-3 flex-initial w-10/12"
-          :inputTips="'請輸入 Youtube 影片連結'"
+        <span class="flex-none w-full  max-w-[9rem] text-left">Youtube 影片連結</span>
+        <atmos-input id="songUrl" class="max-sm:text-sm ml-3 flex-initial w-10/12" :inputTips="'請輸入 Youtube 影片連結'"
           :inputClass="'block w-full py-3 pl-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40'"
-          v-model.trim="songUrl"
-        />
+          v-model.trim="songUrl" />
       </label>
     </template>
 
-    <atmos-edit
-      :placeholder="'請輸入 / 貼上 / 上傳歌詞'"
-      v-model.trim="lyrics"
-    />
+    <atmos-edit :placeholder="'請輸入 / 貼上 / 上傳歌詞'" v-model.trim="lyrics" />
     <div class="flex">
-      <button
-        class="flex-1 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-        @click="sendLyric"
-      >
+      <button class="w-full border border-solid rounded-xl mr-2 hover:bg-slate-600" @click="sendLyric">
         確定
       </button>
-      <label
-        class="flex-1 border border-solid rounded-xl leading-10 hover:bg-slate-600 cursor-pointer"
-        for="file-uploader"
-      >
-        <input
-          type="file"
-          id="file-uploader"
-          data-target="file-uploader"
-          accept=".txt,.doc,.docx"
-          class="hidden"
-          @change="uploadFile"
-        />
+      <label class="w-full border border-solid rounded-xl leading-10 hover:bg-slate-600 cursor-pointer"
+        for="file-uploader">
+        <input type="file" id="file-uploader" data-target="file-uploader" accept=".txt,.doc,.docx" class="hidden"
+          @change="uploadFile" />
         上傳歌詞
       </label>
     </div>

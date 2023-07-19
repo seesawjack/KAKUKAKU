@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col max-w-[510px] mx-auto mt-10">
+  <div class="flex flex-col max-sm:px-5 max-w-[510px] mx-auto mt-10">
     <div v-if="idInUrl" class="relative">
       <atmos-card
         :id="songInfo.id"

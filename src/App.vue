@@ -7,7 +7,7 @@
     @close="showDialog"
   />
   <the-header />
-  <router-view class="pt-[56px]"></router-view>
+  <router-view class="max-sm:pt-8 pt-14"></router-view>
   <the-footer />
 </template>
 

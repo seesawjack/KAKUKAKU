@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
+    <div class="max-md:hidden relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
       :class="[font, className]">
       <div class="absolute w-full left-1/2 translate-x-[-50%]">
         <template v-for="(lyric, index) in lyrics" :key="index">

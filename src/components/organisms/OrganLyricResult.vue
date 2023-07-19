@@ -1,7 +1,7 @@
 <template>
-  <div class="flex max-md:!w-full max-md:px-5" :class="{ 'w-[72.5%]': selected.dramaMode, 'w-1/2': !selected.dramaMode }">
+  <div class="flex max-md:!w-full max-md:px-5 mt-5" :class="{ 'w-[72.5%]': selected.dramaMode, 'w-1/2': !selected.dramaMode }">
     <mols-lyric-result />
-    <mols-configure v-if="screen >768" class="sticky top-12 z-50 h-[24px] translate-x-4 transition-all" />
+    <mols-configure class="max-md:fixed sticky max-md:top-0 top-12 max-md:right-5 z-50 h-[24px] translate-x-4 transition-all" />
   </div>
 </template>
 

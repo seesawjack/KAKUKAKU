@@ -2,20 +2,20 @@
   <div>
     <atmos-configure class="dropdown" @show-drop="showDropDown">
       <template #otherConfigure>
-        <div class="my-3 cursor-pointer" @click="stopVideo">
+        <div class="max-md:mx-2 my-2 cursor-pointer" @click="stopVideo">
           <play-video-icon v-if="!isPlayVideo" />
           <pause-video-icon class="is-click" v-else />
         </div>
-        <div class="my-3 cursor-pointer" @click="lockVideo">
+        <div class="max-md:mx-2 my-2 cursor-pointer" @click="lockVideo">
           <lock-open-icon class="translate-x-[2px]  w-[22px]" v-if="!isLock" />
           <lock-close-icon class="is-click w-[22px]"  v-else />
         </div>
-        <div class="flex items-center my-3 h-6 cursor-pointer" @click="chagneScreen">
+        <div class="max-md:hidden flex items-center max-md:mx-2 my-2 h-6 cursor-pointer" @click="changeScreen">
           <div class="border-2 h-4 round-sm w-[20px]" :class="{'is-dramaMode':selected.dramaMode}"></div>
         </div>
       </template>
     </atmos-configure>
-    <atmos-drop-down class="dropdown -top-2 left-8 py-2 px-3" :show="isShow">
+    <atmos-drop-down class="dropdown max-md:top-11 -top-2 max-md:-left-24 left-8 py-2 px-3" :show="isShow">
       <!-- 歌詞選項 -->
       <div v-if="route.path === '/song'">
         <!-- ▼單選 文字大小 -->
@@ -48,9 +48,9 @@
             <option value="plus-romaji">羅馬字</option>
           </select>
         </div>
-        <hr class="border-gray-200 dark:border-gray-500 my-3" />
+        <hr class="max-md:hidden border-gray-200 dark:border-gray-500 my-3" />
         <!-- ▼開關 時間戳記 -->
-        <div>
+        <div class="max-md:hidden">
           <label for="timeStamp" class="w-full relative inline-flex justify-between items-center cursor-pointer">
             <input type="checkbox" id="timeStamp" v-model="timeStamp" class="sr-only peer" />
             <div
@@ -59,9 +59,9 @@
             <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">時間戳記</span>
           </label>
         </div>
-        <hr class="border-gray-200 dark:border-gray-500 my-3" />
+        <hr class="max-md:hidden border-gray-200 dark:border-gray-500 my-3" />
         <!-- ▼開關 單句循環 -->
-        <div>
+        <div class="max-md:hidden">
           <label for="loopLyric" class="w-full relative inline-flex justify-between items-center cursor-pointer">
             <input type="checkbox" id="loopLyric" v-model="loopLyric" class="sr-only peer" />
             <div
@@ -118,9 +118,8 @@ const fontSelect = ref("middle");
 const timeStamp = ref(false);
 const loopLyric = ref(false);
 
-function chagneScreen(){
+function changeScreen(){
   selected.dramaMode = !selected.dramaMode;
-  console.log('%c 結果(藍) ', 'background: #009393; color: #ffffff',selected.dramaMode);
 }
 
 watch(fontSelect, () => {

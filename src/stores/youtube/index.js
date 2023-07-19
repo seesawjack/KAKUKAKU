@@ -71,8 +71,6 @@ export const useYoutubeStore = defineStore('youtube', () => {
         player.seekTo(seconds, true);
     }
 
-
-
     return {
         isPlayVideo,
         getVideoId,

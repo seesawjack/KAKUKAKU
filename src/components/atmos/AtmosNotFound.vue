@@ -1,5 +1,5 @@
 <template>
-  <div class="left-50 top-60 mt-32 px-16 pt-9 pb-14 rounded-lg bg-gray-600/40">
+  <div class="left-50 top-60 mt-32 max-sm:px-8 px-16 pt-9 pb-14 rounded-lg bg-gray-600/40">
     <img
       src="/src/assets/images/forbidden.png"
       :alt="tips"

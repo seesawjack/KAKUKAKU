@@ -8,10 +8,8 @@
       </router-link>
     </div>
   </header>
-  <atmos-sidebar
-    class="sidebar fixed -left-64 transition-all z-30"
-    :class="{ show: isShow }"
-  />
+  <atmos-sidebar class="sidebar fixed -left-[100%] transition-all z-30"
+    :class="{ 'show': isShow }" />
 </template>
 
 <script setup>

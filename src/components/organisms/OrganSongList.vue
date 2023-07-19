@@ -1,14 +1,14 @@
 <template>
   <div class="w-full ease-in-out duration-700" :class="[isActive ? '' : 'mt-56']">
     <mols-search-song :className="disappear" @search="searchResult">
-      <h1 class="max-sm:text-2xl text-5xl" :class="{ 'move-down': isActive }">{{ showOnPage }}</h1>
+      <h1 class="max-sm:text-2xl max-sm:h-8 text-5xl h-12" :class="{ 'move-down': isActive }">{{ showOnPage }}</h1>
     </mols-search-song>
-    <mols-list-card class="max-w-[512px] mx-auto mt-5" :resultData="resultData" />
+    <mols-list-card class="max-sm:px-3 max-w-[512px] mx-auto mt-5" :resultData="resultData" />
   </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch} from "vue";
 import MolsListCard from "../molecules/MolsListCard.vue";
 import MolsSearchSong from '../molecules/MolsSearchSong.vue';
 

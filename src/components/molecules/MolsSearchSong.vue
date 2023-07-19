@@ -1,15 +1,15 @@
 <template>
   <div
-    class="w-full max-sm:mb-2 mb-3 mx-auto"
+    class="w-full overflow-hidden max-sm:mb-2 mb-3 mx-auto"
     :class="className"
   >
     <slot></slot>
   </div>
   <form @submit.prevent="searchSongs">
     <atmos-input
-      class="max-sm:max-w-xs max-w-xl mx-auto"
+      class="max-sm:max-w-xs max-sm:text-sm max-w-xl mx-auto"
       :inputTips="'請輸入想搜尋的歌曲名稱'"
-      :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full'"
+      :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
       v-model="searchResult"
     >
       <search-glasses

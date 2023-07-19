@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-[600px] w-full mx-auto mt-5">
+  <div class="max-sm:px-5 max-w-[600px] w-full mx-auto mt-5">
     <div v-if="loggedIn">
       <div v-if="songList.length" class="w-full">
         <p class="text-left mb-5">已建立歌曲 {{ songList.length }} 首</p>

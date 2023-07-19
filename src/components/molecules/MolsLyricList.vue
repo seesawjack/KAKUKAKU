@@ -4,7 +4,7 @@
       <div v-if="songList.length" class="w-full">
         <p class="text-left mb-5">已建立歌曲 {{ songList.length }} 首</p>
         <atmos-card
-          class="ml-2 mb-5 group"
+          class="max-sm:ml-0 ml-2 mb-5 group"
           :class="`dropdown-${item.video_id}`"
           v-for="item in songList"
           :key="item.id"

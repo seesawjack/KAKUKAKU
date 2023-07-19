@@ -1,12 +1,12 @@
 <template>
-  <div class="flex items-center" :class="{'disappear':disappear}">
+  <div class="flex items-center max-sm:items-start" :class="{'disappear':disappear}">
     <component
       :is="href ? 'a' : 'div'"
       @click="selected"
       :href="href"
-      class="flex justify-center text-left w-full"
+      class="flex max-md:justify-normal justify-center text-left w-full"
     >
-      <div class="w-full max-w-[120px] relative mx-auto md:mx-0">
+      <div class="w-full max-w-[120px] relative">
         <p
           v-if="!href"
           class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1"
@@ -34,7 +34,7 @@
         </div>
       </div>
       <div
-        class="w-full max-w-[500px] pl-5 transition-all hover:bg-slate-300/[0.2]"
+        class="w-full max-sm:max-w-[165px] max-w-[500px] max-sm:pl-2 pl-5 transition-all hover:bg-slate-300/[0.2]"
       >
         <p class="line-clamp">{{ songDetail.title }}</p>
         <div class="text-xs text-slate-500 leading-5">

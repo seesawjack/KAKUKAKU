@@ -71,21 +71,12 @@ export const useYoutubeStore = defineStore('youtube', () => {
         player.seekTo(seconds, true);
     }
 
-    function changeScreen(isChange) {
-        if (isChange) {
-            player.setSize('1280','720')
-        } else {
-            player.setSize('854','480')
-
-        }
-    }
 
 
     return {
         isPlayVideo,
         getVideoId,
         controlVideoPlay,
-        controlSeekTo,
-        changeScreen
+        controlSeekTo
     }
 })

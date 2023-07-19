@@ -4,13 +4,13 @@
       <template #otherConfigure>
         <div class="my-3 cursor-pointer" @click="stopVideo">
           <play-video-icon v-if="!isPlayVideo" />
-          <pause-video-icon v-else />
+          <pause-video-icon class="is-click" v-else />
         </div>
         <div class="my-3 cursor-pointer" @click="lockVideo">
           <lock-open-icon class="translate-x-[2px]  w-[22px]" v-if="!isLock" />
-          <lock-close-icon class="is-lock w-[22px]"  v-else />
+          <lock-close-icon class="is-click w-[22px]"  v-else />
         </div>
-        <div class="flex items-center my-3 h-6 cursor-pointer" @click="screenToChange">
+        <div class="flex items-center my-3 h-6 cursor-pointer" @click="chagneScreen">
           <div class="border-2 h-4 round-sm w-[20px]" :class="{'is-dramaMode':selected.dramaMode}"></div>
         </div>
       </template>
@@ -94,7 +94,7 @@ const {
   selectedFontStyle,
 } = useLyricStore();
 
-const { controlVideoPlay,changeScreen } = useYoutubeStore();
+const { controlVideoPlay} = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
 
 const selectedLabelType = ref('hanji-rubi')
@@ -118,9 +118,9 @@ const fontSelect = ref("middle");
 const timeStamp = ref(false);
 const loopLyric = ref(false);
 
-function screenToChange(){
-  selected.dramaMode = !selected.dramaMode
-  changeScreen(selected.dramaMode)
+function chagneScreen(){
+  selected.dramaMode = !selected.dramaMode;
+  console.log('%c 結果(藍) ', 'background: #009393; color: #ffffff',selected.dramaMode);
 }
 
 watch(fontSelect, () => {
@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.is-lock {
+.is-click {
   color: rgb(147, 197, 253);
   filter: drop-shadow(0px 0px 3px rgb(147, 197, 253, 0.8));
 }

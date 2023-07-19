@@ -1,16 +1,14 @@
 <template>
-  <div>
-    <div v-if="!isShow" class="flex flex-col mx-auto">
-      <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
-      <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="relative"
-        :className="[labelType]"/>
-      <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-        :class="{ 'unclickable': confirmButton.unclickable }" @click="addLyric">
-        {{ confirmButton.text }}
-      </button>
-    </div>
-    <atmos-not-found v-else :tips="message" />
+  <div v-if="!isShow" class="w-full flex flex-col mx-auto">
+    <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
+    <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="relative"
+      :className="[labelType]" />
+    <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
+      :class="{ 'unclickable': confirmButton.unclickable }" @click="addLyric">
+      {{ confirmButton.text }}
+    </button>
   </div>
+  <atmos-not-found v-else :tips="message" />
 </template>
 
 <script setup>
@@ -35,7 +33,7 @@ const {
   removeLocal,
 } = useLyricStore();
 
-const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricTimeStamp,spaceIndex } = toRefs(
+const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricTimeStamp, spaceIndex } = toRefs(
   useLyricStore()
 );
 
@@ -51,7 +49,7 @@ const message = ref("");
 
 watch(
   () => selected.labelType,
-  () => {    
+  () => {
     labelType.value = selected.labelType;
   }
 );

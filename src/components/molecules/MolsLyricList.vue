@@ -9,7 +9,7 @@
           :disappear="disappear.indexOf(item.video_id) > -1">
           <template #configure>
             <div class="w-[22.5px] relative">
-              <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer" :class="[
+              <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer max-md:block" :class="[
                 { '!block': clickClassName === item.video_id },
                 { 'group-hover': !disappear },
               ]" />

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center max-sm:items-start" :class="{'disappear':disappear}">
+  <div class="flex items-center" :class="{'disappear':disappear}">
     <component
       :is="href ? 'a' : 'div'"
       @click="selected"
@@ -14,7 +14,7 @@
           已選歌曲
         </p>
         <div
-          class="w-full relative before:block before:pb-[60%] overflow-hidden"
+          class="w-full relative before:block before:pb-[56.25%] overflow-hidden"
         >
           <picture>
             <source
@@ -28,16 +28,16 @@
               :width="songDetail.width"
               :height="songDetail.height"
               :alt="songDetail.title"
-              class="img-to-cover transition-transform group-hover:scale-[125%] pr-3"
+              class="img-to-cover transition-transform group-hover:scale-[125%]"
             />
           </picture>
         </div>
       </div>
       <div
-        class="w-full max-sm:max-w-[210px] max-w-[500px] transition-all hover:bg-slate-300/[0.2]"
+        class="w-full max-sm:max-w-[190px] max-w-[500px] transition-all hover:bg-slate-300/[0.2] pl-5"
       >
         <p class="line-clamp">{{ songDetail.title }}</p>
-        <div class="text-xs text-slate-500 leading-5">
+        <div v-if="songDetail.subTitle" class="text-xs text-slate-500 leading-5">
           <p>{{ songDetail.subTitle }}</p>
         </div>
       </div>

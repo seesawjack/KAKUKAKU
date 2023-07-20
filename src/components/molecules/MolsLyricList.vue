@@ -3,36 +3,18 @@
     <div v-if="loggedIn">
       <div v-if="songList.length" class="w-full">
         <p class="text-left mb-5">已建立歌曲 {{ songList.length }} 首</p>
-        <atmos-card
-          class="max-sm:ml-0 ml-2 mb-5 group"
-          :class="`dropdown-${item.video_id}`"
-          v-for="item in songList"
-          :key="item.id"
-          :id="item.video_id"
-          :url="item.video_img"
-          :title="item.title"
-          :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`"
-          :isAdded="true"
-          :disappear="disappear.indexOf(item.video_id) > -1"
-        >
+        <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
+          :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title"
+          :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" :isAdded="true"
+          :disappear="disappear.indexOf(item.video_id) > -1">
           <template #configure>
             <div class="w-[22.5px] relative">
-              <more-icon
-                @click="showDropDown(item.video_id)"
-                class="hidden group-hover:block cursor-pointer"
-                :class="[
-                  { '!block': clickClassName === item.video_id },
-                  { 'group-hover': !disappear },
-                ]"
-              />
-              <atmos-drop-down
-                class="top-4 right-3 py-1 px-2"
-                :show="clickClassName === item.video_id"
-              >
-                <button
-                  class="w-full py-1 rounded-md hover:bg-slate-800"
-                  @click="deleteSong(item.video_id)"
-                >
+              <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer" :class="[
+                { '!block': clickClassName === item.video_id },
+                { 'group-hover': !disappear },
+              ]" />
+              <atmos-drop-down class="top-4 right-3 py-1 px-2" :show="clickClassName === item.video_id">
+                <button class="w-full py-1 rounded-md hover:bg-slate-800" @click="deleteSong(item.video_id)">
                   刪除此歌曲
                 </button>
               </atmos-drop-down>
@@ -47,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useGlobalStore } from "../../stores/index";
 import { useAuthStore } from "../../stores/auth";
 import useSupabase from "../../stores/supabase";
@@ -83,7 +65,7 @@ async function deleteSong(id) {
   loadingState(true);
   disappear.value.push(id);
   songList.value = songList.value.filter((song) => song.video_id !== id);
-  
+
   const { data, error } = await supabase
     .from("lyrics_list")
     .delete()
@@ -102,20 +84,18 @@ const clickClassName = ref("");
 function showDropDown(id) {
   clickClassName.value = clickClassName.value === id ? "" : id;
 }
+
+const notClickDropdwonSelf = () => {
+  if (!event.target.closest(`.dropdown-${clickClassName.value}`)) {
+    clickClassName.value = "";
+  }
+}
 onMounted(() => {
-  document.addEventListener("click", () => {
-    if (!event.target.closest(`.dropdown-${clickClassName.value}`)) {
-      clickClassName.value = "";
-    }
-  });
+  document.addEventListener("click", notClickDropdwonSelf);
 });
 
-onBeforeUnmount(() => {
-  document.body.removeEventListener("click", () => {
-    if (!event.target.closest(`.dropdown-${clickClassName.value}`)) {
-      clickClassName.value = "";
-    }
-  });
+onUnmounted(() => {
+  document.body.removeEventListener("click", notClickDropdwonSelf);
 });
 </script>
 

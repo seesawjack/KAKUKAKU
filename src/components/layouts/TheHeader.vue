@@ -8,12 +8,11 @@
       </router-link>
     </div>
   </header>
-  <atmos-sidebar class="sidebar fixed -left-[100%] transition-all z-30"
-    :class="{ 'show': isShow }" />
+  <atmos-sidebar class="sidebar fixed -left-[100%] transition-all z-30" :class="{ 'show': isShow }" />
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import TheLogo from "../svg/TheLogo.vue";
 import BarsIcon from "../svg/BarsIcon.vue";
 import AtmosSidebar from "../atmos/AtmosSidebar.vue";
@@ -23,20 +22,18 @@ function showSidebar() {
   isShow.value = !isShow.value;
 }
 
+const notClickSidebar = () => {
+  if (!event.target.closest(".sidebar")) {
+    isShow.value = false;
+  }
+}
+
 onMounted(() => {
-  document.addEventListener("click", () => {
-    if (!event.target.closest(".sidebar")) {
-      isShow.value = false;
-    }
-  });
+  document.addEventListener("click", notClickSidebar);
 });
 
-onBeforeUnmount(() => {
-  document.body.removeEventListener("click", () => {
-    if (!event.target.closest(".sidebar")) {
-      isShow.value = false;
-    }
-  });
+onUnmounted(() => {
+  document.body.removeEventListener("click", notClickSidebar);
 });
 </script>
 

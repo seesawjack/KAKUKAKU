@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="windowWidth >768" class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
+    <div v-if="windowWidth > 768" class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
       :class="[font, className]">
       <div class="absolute w-full left-1/2 translate-x-[-50%]">
         <template v-for="(lyric, index) in lyrics" :key="index">
@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, watch, toRefs, onMounted,onUnmounted } from "vue";
+import { ref, watch, toRefs, onMounted, onUnmounted } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";
@@ -145,24 +145,26 @@ function editHiragana() {
 let windowWidth = ref(window.innerWidth);
 const onWidthChange = () => windowWidth.value = window.innerWidth;
 
+const editRubi = () => {
+  if (event.target.closest('.hanji-word')) {
+    const text = event.target.textContent.split(/[()]/g);
+    const index = event.target.dataset.index;
+    clickHanji.value = text[0];
+    clickHiragana.value = text[1];
+    initHiragana.value = text[1];
+    editId.value = index;
+  }
+  return;
+}
 
 onMounted(() => {
-  document.addEventListener("click", () => {
-    if (event.target.closest('.hanji-word')) {
-      const text = event.target.textContent.split(/[()]/g);
-      const index = event.target.dataset.index;
-      clickHanji.value = text[0];
-      clickHiragana.value = text[1];
-      initHiragana.value = text[1];
-      editId.value = index;
-    }
-    return;
-  });
-  window.addEventListener('resize',onWidthChange);
+  document.addEventListener("click", editRubi);
+  document.addEventListener('resize', onWidthChange);
 });
 
-onUnmounted(()=>{
-  window.removeEventListener('resize',onWidthChange)
+onUnmounted(() => {
+  document.removeEventListener("click",editRubi);
+  document.removeEventListener('resize', onWidthChange);
 })
 </script>
 

@@ -8,10 +8,10 @@
         </div>
         <div class="max-md:mx-2 my-2 cursor-pointer" @click="lockVideo">
           <lock-open-icon class="translate-x-[2px]  w-[22px]" v-if="!isLock" />
-          <lock-close-icon class="is-click w-[22px]"  v-else />
+          <lock-close-icon class="is-click w-[22px]" v-else />
         </div>
         <div class="max-md:hidden flex items-center max-md:mx-2 my-2 h-6 cursor-pointer" @click="changeScreen">
-          <div class="border-2 h-4 round-sm w-[20px]" :class="{'is-dramaMode':selected.dramaMode}"></div>
+          <div class="border-2 h-4 round-sm w-[20px]" :class="{ 'is-dramaMode': selected.dramaMode }"></div>
         </div>
       </template>
     </atmos-configure>
@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, toRefs, watch, onMounted, onUnmounted } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useRoute } from "vue-router";
 import { useYoutubeStore } from "../../stores/youtube";
@@ -94,7 +94,7 @@ const {
   selectedFontStyle,
 } = useLyricStore();
 
-const { controlVideoPlay} = useYoutubeStore();
+const { controlVideoPlay } = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
 
 const selectedLabelType = ref('hanji-rubi')
@@ -118,7 +118,7 @@ const fontSelect = ref("middle");
 const timeStamp = ref(false);
 const loopLyric = ref(false);
 
-function changeScreen(){
+function changeScreen() {
   selected.dramaMode = !selected.dramaMode;
 }
 
@@ -140,20 +140,18 @@ watch(loopLyric, () => {
   selected.loopLyric = loopLyric.value
 })
 
+const notClickDropdown = () => {
+  if (!event.target.closest(".dropdown")) {
+    isShow.value = false;
+  }
+}
+
 onMounted(() => {
-  document.addEventListener("click", () => {
-    if (!event.target.closest(".dropdown")) {
-      isShow.value = false;
-    }
-  });
+  document.addEventListener("click", notClickDropdown);
 });
 
-onBeforeUnmount(() => {
-  document.body.removeEventListener("click", () => {
-    if (!event.target.closest(".dropdown")) {
-      isShow.value = false;
-    }
-  });
+onUnmounted(() => {
+  document.body.removeEventListener("click", notClickDropdown);
 });
 </script>
 
@@ -163,7 +161,7 @@ onBeforeUnmount(() => {
   filter: drop-shadow(0px 0px 3px rgb(147, 197, 253, 0.8));
 }
 
-.is-dramaMode{
+.is-dramaMode {
   border-color: rgb(147, 197, 253);
   filter: drop-shadow(0px 0px 3px rgb(147, 197, 253, 0.8));
 }

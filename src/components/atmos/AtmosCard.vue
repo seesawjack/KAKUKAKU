@@ -14,7 +14,7 @@
           已選歌曲
         </p>
         <div
-          class="w-full relative before:block before:pb-[56%] overflow-hidden"
+          class="w-full relative before:block before:pb-[60%] overflow-hidden"
         >
           <picture>
             <source
@@ -28,13 +28,13 @@
               :width="songDetail.width"
               :height="songDetail.height"
               :alt="songDetail.title"
-              class="img-to-cover transition-transform group-hover:scale-[125%]"
+              class="img-to-cover transition-transform group-hover:scale-[125%] pr-3"
             />
           </picture>
         </div>
       </div>
       <div
-        class="w-full max-sm:max-w-[165px] max-w-[500px] max-sm:pl-2 pl-5 transition-all hover:bg-slate-300/[0.2]"
+        class="w-full max-sm:max-w-[210px] max-w-[500px] transition-all hover:bg-slate-300/[0.2]"
       >
         <p class="line-clamp">{{ songDetail.title }}</p>
         <div class="text-xs text-slate-500 leading-5">

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full ease-in-out duration-700" :class="[isActive ? '' : 'mt-56']">
+  <div class="w-full ease-in-out duration-700" :class="[isActive ? 'mt-5' : 'mt-56']">
     <mols-search-song :className="disappear" @search="searchResult">
       <h1 class="max-sm:text-2xl max-sm:h-8 text-5xl h-12" :class="{ 'move-down': isActive }">{{ showOnPage }}</h1>
     </mols-search-song>

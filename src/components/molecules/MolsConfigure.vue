@@ -15,7 +15,7 @@
         </div>
       </template>
     </atmos-configure>
-    <atmos-drop-down class="dropdown max-md:top-11 -top-2 max-md:-left-24 left-8 py-2 px-3" :show="isShow">
+    <atmos-drop-down class="dropdown max-md:top-10 -top-2 max-md:-left-[5.6rem] left-8 py-2 px-3" :show="isShow">
       <!-- 歌詞選項 -->
       <div v-if="route.path === '/song'">
         <!-- ▼單選 文字大小 -->
@@ -41,7 +41,7 @@
         <!-- ▼下拉式選單 標註形式 -->
         <div>
           <p class="text-left">標註形式</p>
-          <select v-model="selectedLabelType" class="w-full mt-2 p-1 bg-slate-500 rounded-md">
+          <select v-model="selectedLabelType" class="w-full mt-2 p-1 bg-slate-500 rounded-md outline-none">
             <option value="all-hiragana">全平假名</option>
             <option value="only-hanji">漢字(無標註發音)</option>
             <option value="hanji-rubi" selected>漢字(有標註發音)</option>

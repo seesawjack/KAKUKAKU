@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="max-md:hidden relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
+    <div v-if="windowWidth >768" class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
       :class="[font, className]">
       <div class="absolute w-full left-1/2 translate-x-[-50%]">
         <template v-for="(lyric, index) in lyrics" :key="index">
@@ -8,9 +8,8 @@
             <p class="init tracking-[2px] test-ly leading-[2.75rem]"
               :class="{ 'text-slate-400': lyricDisplay(index - 1) }" v-html="lyric">
             </p>
-            <p v-if="selected.labelType === 'all-hiragana'"
-              class=" hiraganatracking-[2px] test-ly leading-[2.75rem]" :class="{ 'text-slate-400': lyricDisplay(index - 1) }"
-              v-html="hiraganaLyrics[index]">
+            <p v-if="selected.labelType === 'all-hiragana'" class=" hiraganatracking-[2px] test-ly leading-[2.75rem]"
+              :class="{ 'text-slate-400': lyricDisplay(index - 1) }" v-html="hiraganaLyrics[index]">
             </p>
           </div>
         </template>
@@ -60,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, watch, toRefs, onMounted } from "vue";
+import { ref, watch, toRefs, onMounted,onUnmounted } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";
@@ -143,6 +142,9 @@ function editHiragana() {
   editId.value = -1
 }
 
+let windowWidth = ref(window.innerWidth);
+const onWidthChange = () => windowWidth.value = window.innerWidth;
+
 
 onMounted(() => {
   document.addEventListener("click", () => {
@@ -156,7 +158,12 @@ onMounted(() => {
     }
     return;
   });
+  window.addEventListener('resize',onWidthChange);
 });
+
+onUnmounted(()=>{
+  window.removeEventListener('resize',onWidthChange)
+})
 </script>
 
 <style scoped>

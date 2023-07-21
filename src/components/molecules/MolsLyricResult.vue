@@ -1,34 +1,36 @@
 <template>
-  <div v-if="!isShow" class="w-full flex flex-col mx-auto">
+  <div v-if="songState.show" class="w-full flex flex-col mx-auto">
     <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
     <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="relative"
-      :className="[labelType]" />
+      :className="[selected.labelType]" />
     <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-      :class="{ 'unclickable': confirmButton.unclickable }" @click="addLyric">
+      :class="{ 'unclickable': confirmButton.unclickable }" @click="addSong">
       {{ confirmButton.text }}
     </button>
   </div>
-  <atmos-not-found v-else :tips="message" />
+  <atmos-not-found v-else :tips="songState.message" />
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch, toRefs } from "vue";
+import { ref, reactive, computed, onMounted,toRefs } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/lyric";
-import { useGlobalStore } from "../../stores/index";
-
 import useSupabase from "../../stores/supabase";
-import AtmosVideo from "../../components/atmos/AtmosVideo.vue";
-import AtmosLyric from "../../components/atmos/AtmosLyric.vue";
+
+import AtmosVideo from "../atmos/AtmosVideo.vue";
+import AtmosLyric from "../atmos/AtmosLyric.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
 
 const route = useRoute();
 
 const songId = computed(() => route.query.song_id);
 
+const { isLoggedIn, userInfo } = useAuthStore();
+
 const {
   lyricConfiguration: { selected },
+  songState,
   tolyrics,
   removeLocal,
 } = useLyricStore();
@@ -37,31 +39,20 @@ const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricT
   useLyricStore()
 );
 
+const { supabase } = useSupabase();
 
 const lyrics = ref([]);
 const hiraLyrics = ref([]);
 const romaLyrics = ref([]);
 
-const labelType = ref('');
-
-const isShow = ref(false);
-const message = ref("");
-
-watch(
-  () => selected.labelType,
-  () => {
-    labelType.value = selected.labelType;
-  }
-);
-
+function toSongState({ show, message }) {
+  songState.show = show;
+  songState.message = message;
+}
 
 const isfixedVideo = computed(() => {
-  return { fixedVideo: selected.fixedVideo };
+  return { 'fixedVideo': selected.fixedVideo };
 });
-
-const { isLoggedIn, userInfo } = useAuthStore();
-const { isError, loadingState } = useGlobalStore();
-const { supabase } = useSupabase();
 
 const confirmButton = reactive({
   text: "儲存建立",
@@ -75,14 +66,12 @@ function buttonState({ text, state, unclickable }) {
   confirmButton.unclickable = unclickable;
 }
 
-async function addLyric() {
-  if (confirmButton.state === "isAdded") {
-    return;
-  }
-  if (confirmButton.state === "Update") {
-    return;
-  }
-  if (!isLoggedIn() || !resultLyrics.value.length) {
+//新增歌曲
+async function addSong() {
+  if (
+    confirmButton.state === "isAdded" ||
+    confirmButton.state === "Update" ||
+    (!isLoggedIn() || !resultLyrics.value.length)) {
     return;
   }
   loadingState(true);
@@ -111,22 +100,22 @@ async function addLyric() {
         spaceIndex: JSON.stringify(spaceIndex.value)
       },
     ]);
+
   buttonState({ text: "已新增", state: "isAdded", unclickable: true });
   removeLocal();
   loadingState(false);
 }
 
 onMounted(async () => {
+  //防呆機制
   if (!route.query.song_id) {
-    isShow.value = true;
-    message.value = "此歌曲尚未建立";
+    toSongState({ show: false, message: "此歌曲尚未建立" });
     return;
   }
-
+  //若網址含使用者參數
   if (route.query.user) {
     if (route.query.user !== userInfo.user_metadata?.name) {
-      isShow.value = true;
-      message.value = "無法查看此歌曲";
+      toSongState({ show: false, message: "無法查看此歌曲" });
       return;
     }
 
@@ -136,9 +125,8 @@ onMounted(async () => {
       .eq("video_id", route.query.song_id)
       .eq("user_id", userInfo.id);
 
-    if (!data.length) {
-      isShow.value = true;
-      message.value = "無法查看此歌曲";
+    if (data.length === 0) {
+      toSongState({ show: false, message: "查無此歌曲" });
       return;
     }
 
@@ -147,6 +135,7 @@ onMounted(async () => {
     romaLyrics.value = JSON.parse(data[0].romaji);
     lyricTimeStamp.value = JSON.parse(data[0].timestamp);
     spaceIndex.value = JSON.parse(data[0].spaceIndex);
+
     buttonState({
       text: "修改功能日後開放，敬請期待",
       state: "Update",
@@ -161,17 +150,12 @@ onMounted(async () => {
   }
 
   if (!resultLyrics.value.length) {
-    isShow.value = true;
-    message.value = "無法讀取歌詞，請稍後再嘗試";
+    toSongState({ show: false, message: "無法讀取歌詞，請稍後再嘗試" });
     return;
   }
 
   if (!isLoggedIn()) {
     buttonState({ text: "登入後方可儲存歌曲", state: "", unclickable: true });
-    return;
-  }
-  if (!resultLyrics.value.length) {
-    buttonState({ text: "產生歌曲後方可儲存", state: "", unclickable: true });
     return;
   }
 

@@ -45,7 +45,7 @@ const { youtubeSearch } = useSearchStore();
 const searchResult = ref("");
 async function searchSongs(value) {
   if (!searchResult.value){
-    isError({isError:true,message:'請輸入歌曲名稱'});
+    isError({showError:true,message:'請輸入歌曲名稱'});
     return;
   }
   loadingState(true);

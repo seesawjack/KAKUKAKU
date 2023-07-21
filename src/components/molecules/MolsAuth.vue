@@ -1,6 +1,5 @@
 <template>
   <section>
-    <atmos-dialog :show="errorMessage?.showError" :title="errorMessage?.message" @close="closeDialog" />
     <div class="container mx-auto">
       <div class="flex items-center justify-center mt-6">
         <a href="/login" class="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b"
@@ -24,7 +23,6 @@ import { useAuthStore } from "../../stores/auth";
 import { useGlobalStore } from "../../stores";
 
 import AtmosForm from "../atmos/AtmosForm.vue";
-import AtmosDialog from "../atmos/AtmosDialog.vue";
 
 const route = useRoute();
 const router = useRouter();

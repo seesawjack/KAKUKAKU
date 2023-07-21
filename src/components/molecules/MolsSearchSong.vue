@@ -14,7 +14,7 @@
     >
       <search-glasses
         class="absolute right-3 top-2"
-        :class="{ 'opacity-40': !isOpacity, 'cursor-pointer': isOpacity }"
+        :class="hasSearchText"
         @click="searchSongs"
       />
     </atmos-input>
@@ -23,10 +23,11 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import AtmosInput from "../atmos/AtmosInput.vue";
-import SearchGlasses from "../svg/SearchGlasses.vue";
 import { useSearchStore } from "../../stores/search/index";
 import { useGlobalStore } from "../../stores/index";
+
+import AtmosInput from "../atmos/AtmosInput.vue";
+import SearchGlasses from "../svg/SearchGlasses.vue";
 
 const props = defineProps({
   className: {
@@ -34,12 +35,14 @@ const props = defineProps({
     required: true,
   },
 });
-const { isError,loadingState } = useGlobalStore(); 
 
-const searchResult = ref("");
 const emit = defineEmits(["search"]);
+
+const { isError,loadingState } = useGlobalStore(); 
 const { youtubeSearch } = useSearchStore();
 
+//判斷搜尋框是否含有資料(含 loading 及錯誤訊息顯示)
+const searchResult = ref("");
 async function searchSongs(value) {
   if (!searchResult.value){
     isError({isError:true,message:'請輸入歌曲名稱'});
@@ -51,8 +54,9 @@ async function searchSongs(value) {
   loadingState(false);
 }
 
-const isOpacity = computed(() => {
-  return searchResult.value ? true : false;
+//根據搜尋框內是否含有效文字而顯示對應樣式
+const hasSearchText = computed(() => {
+  return searchResult.value ? 'cursor-pointer' : 'opacity-40';
 });
 </script>
 

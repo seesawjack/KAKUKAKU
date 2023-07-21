@@ -2,9 +2,9 @@
   <particle-bg />
   <atmos-loading v-if="isLoading"/>
   <atmos-dialog
-    :show="errorMessage?.isError"
+    :show="errorMessage?.showError"
     :title="errorMessage?.message"
-    @close="showDialog"
+    @close="closeDialog"
   />
   <the-header />
   <router-view class="max-sm:pt-8 pt-14"></router-view>
@@ -27,8 +27,8 @@ let { isLoading } = toRefs(useGlobalStore());
 const { isError } = useGlobalStore();
 const { errorMessage } = toRefs(useGlobalStore());
 
-function showDialog() {
-  isError({ isError: false, message: "" });
+function closeDialog() {
+  isError({ showError: false, message: "" });
   return;
 }
 

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <template v-if="!isIdinUrl">
+    <template v-if="!isYoutubeSearch">
       <label for="songName" class="flex items-center mb-3">
-        <span class="flex-none w-full max-w-[9rem] text-left">歌曲名稱</span>
-        <atmos-input id="songName" class="max-sm:text-sm ml-3 flex-initial w-10/12" :inputTips="'請輸入歌曲名稱'"
-          :inputClass="'block w-full py-3 pl-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40'"
+        <span class="w-full max-w-[9rem] text-left">歌曲名稱</span>
+        <atmos-input id="songName" class="w-10/12 max-sm:text-sm ml-3" :inputTips="'請輸入歌曲名稱'"
+          :inputClass="'w-full block py-3 pl-3 border rounded-lg bg-gray-900 border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40'"
           v-model.trim="songName" />
       </label>
       <label for="songUrl" class="flex items-center mb-3">
-        <span class="flex-none w-full  max-w-[9rem] text-left">Youtube 影片連結</span>
-        <atmos-input id="songUrl" class="max-sm:text-sm ml-3 flex-initial w-10/12" :inputTips="'請輸入 Youtube 影片連結'"
-          :inputClass="'block w-full py-3 pl-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40'"
+        <span class="w-full max-w-[9rem] text-left">Youtube 影片連結</span>
+        <atmos-input id="songUrl" class="w-10/12 max-sm:text-sm ml-3" :inputTips="'請輸入 Youtube 影片連結'"
+          :inputClass="'w-full block py-3 pl-3 border rounded-lg bg-gray-900 border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40'"
           v-model.trim="songUrl" />
       </label>
     </template>
@@ -36,6 +36,7 @@ import { useRouter, useRoute } from "vue-router";
 import { useLyricStore } from "../../stores/lyric";
 import { useGlobalStore } from "../../stores/index";
 import { useRegexStore } from "../../stores/regex";
+
 import AtmosEdit from "../atmos/AtmosEdit.vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
 
@@ -46,29 +47,31 @@ const { isError } = useGlobalStore();
 const { songIdRegex } = useRegexStore();
 
 const props = defineProps({
-  isIdinUrl: {
+  isYoutubeSearch: {
     type: Boolean,
     required: true,
   },
 });
-
-async function transformLyrics(lyric, id) {
-  await tolyrics(lyric);
-  router.push(`/song?song_id=${id}`);
-}
 
 const lyrics = ref("");
 const songName = ref("");
 const songUrl = ref("");
 const songId = ref("");
 
-//確定送出判斷
+//歌詞轉換成平假名
+async function transformLyrics(lyric, id) {
+  await tolyrics(lyric);
+  router.push(`/song?song_id=${id}`);
+}
+
+//歌詞確定送出
 function sendLyric() {
-  if (!songName.value && !props.isIdinUrl) {
+  //防呆機制
+  if (!songName.value && !props.isYoutubeSearch) {
     isError({ isError: true, message: "請輸入歌曲名稱" });
     return;
   }
-  if (!songUrl.value && !props.isIdinUrl) {
+  if (!songUrl.value && !props.isYoutubeSearch) {
     isError({ isError: true, message: "請輸入 Youtube 影片連結" });
     return;
   }
@@ -77,7 +80,8 @@ function sendLyric() {
     return;
   }
 
-  if (props.isIdinUrl) {
+  //根據從 youtube 搜尋或直接搜尋而進相對應行為
+  if (props.isYoutubeSearch) {
     songId.value = route.query.song_id;
   } else {
     try {
@@ -97,7 +101,7 @@ function sendLyric() {
   transformLyrics(lyrics.value, songId.value);
 }
 
-//上傳歌詞
+//上傳歌詞功能
 async function uploadFile(e) {
   let file = e.target.files[0];
   if (!file) return;
@@ -109,9 +113,6 @@ async function uploadFile(e) {
     },
     false
   );
-
-  if (file) {
-    reader.readAsText(file);
-  }
+  reader.readAsText(file);
 }
 </script>

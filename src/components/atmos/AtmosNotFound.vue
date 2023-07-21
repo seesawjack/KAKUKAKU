@@ -5,7 +5,7 @@
       :alt="tips"
       width="150"
       class="mx-auto mb-3 cursor-pointer transition-all"
-      :class="catStyle"
+      :class="catAnimate"
       @click="catSound"
     />
     <p>{{tips}}</p>
@@ -13,10 +13,7 @@
 </template>
 
 <script setup>
-import { reactive, onBeforeUnmount } from "vue";
-const catStyle = reactive({
-  move: false,
-});
+import { reactive, onUnmounted } from "vue";
 
 const props = defineProps({
   tips: {
@@ -25,17 +22,21 @@ const props = defineProps({
   },
 });
 
+const catAnimate = reactive({
+  move: false,
+});
+
 let timer;
 function catSound() {
   const audio = new Audio("/src/assets/sound/cat_meow.mp3");
   audio.play();
-  catStyle.move = true;
+  catAnimate.move = true;
 
   timer = setTimeout(() => {
-    catStyle.move = false;
+    catAnimate.move = false;
   }, 1000);
 }
-onBeforeUnmount(() => clearTimeout(timer));
+onUnmounted(() => clearTimeout(timer));
 </script>
 
 <style scoped>

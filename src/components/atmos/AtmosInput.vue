@@ -4,7 +4,7 @@
       :class="inputClass"
       :type="inputType || 'text'"
       :placeholder="inputTips"
-      v-model.trim.lazy="value"
+      v-model.trim.lazy="infoValue"
     />
     <slot></slot>
   </div>
@@ -33,7 +33,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
-const value = computed({
+
+const infoValue = computed({
   get(){
     return props.modelValue
   },
@@ -41,5 +42,4 @@ const value = computed({
     emit('update:modelValue',value)
   }
 })
-
 </script>

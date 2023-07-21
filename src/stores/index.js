@@ -8,10 +8,10 @@ export const useGlobalStore = defineStore('global', () => {
         isLoading.value = value;
     }
 
-    const errorMessage = reactive({ isError: false, message: '' });
+    const errorMessage = reactive({ showError: false, message: '' });
     
-    function isError({ isError, message }) {
-        errorMessage.isError = isError;
+    function isError({ showError, message }) {
+        errorMessage.showError = showError;
         errorMessage.message = message;
     }
     

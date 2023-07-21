@@ -3,13 +3,14 @@
     class="w-full resize-none bg-[transparent] border border-solid rounded-xl py-2 px-5 outline-none"
     cols="53"
     rows="14"
-    v-model.trim.lazy="value"
+    v-model.trim.lazy="lyricValue"
     :placeholder="placeholder"
   ></textarea>
 </template>
 
 <script setup>
 import { computed } from "vue";
+
 const props = defineProps({
   placeholder: {
     type: String,
@@ -20,8 +21,10 @@ const props = defineProps({
     required: true
   },
 });
+
 const emit = defineEmits(["update:modelValue"]);
-const value = computed({
+
+const lyricValue = computed({
   get() {
     return props.modelValue;
   },

@@ -8,37 +8,37 @@
 </template>
 
 <script setup>
-import { ref, watch} from "vue";
+import { ref, watch } from "vue";
 import MolsListCard from "../molecules/MolsListCard.vue";
 import MolsSearchSong from '../molecules/MolsSearchSong.vue';
 
-
+//首頁搜尋框上方 slogan typing 載入動畫
 const slogan = ref('一鍵平假名，輕鬆學日文歌');
 const showOnPage = ref('');
-
 const charIndex = ref(0);
+
 function typingAnimation() {
   showOnPage.value = slogan.value.slice(0, charIndex.value);
   charIndex.value += 1;
 }
-const loopShowSlogan = setInterval(typingAnimation, 150);
 
+const loopShowSlogan = setInterval(typingAnimation, 150);
 watch(charIndex, () => {
   if (charIndex.value === slogan.value.length + 1) {
     clearInterval(loopShowSlogan);
   }
 })
+
+//根據搜尋框是否有文字進行 (1)slogan 文字向下淡出 (2)將搜尋資料傳給 molsListCard 組件 
 const isActive = ref(false);
 const resultData = ref({});
 const disappear = ref("");
 
 async function searchResult(value) {
-  if (!isActive.value) {
-    isActive.value = true;
-    setTimeout(() => {
-      disappear.value = "disappear";
-    }, 300);
-  }
+  isActive.value = true;
+  setTimeout(() => {
+    disappear.value = "disappear";
+  }, 300);
 
   resultData.value = value;
 }

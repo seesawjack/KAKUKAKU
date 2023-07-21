@@ -2,40 +2,21 @@
   <section>
     <div class="container flex items-center justify-center px-6 mx-auto">
       <Form @submit="onSubmit" class="w-full" :validation-schema="validate">
-        <div
-          v-for="{ as, name, children, icon, ...attrs } in schema"
-          :key="name"
-          class="relative"
-        >
-          <Field
-            :as="as"
-            :id="name"
-            :name="name"
-            v-bind="attrs"
-            :ref="name"
+        <div v-for="{ as, name, children, icon, ...attrs } in schema" :key="name" class="relative">
+          <Field :as="as" :id="name" :name="name" v-bind="attrs" :ref="name"
             class="block w-full py-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8"
-            :class="{ 'pl-11': name !== 'birth', 'pl-3': name === 'birth' }"
-          >
+            :class="{ 'pl-11': name !== 'birth', 'pl-3': name === 'birth' }">
             <template v-if="children && children.length">
-              <component
-                v-for="({ tag, text, ...childAttrs }, idx) in children"
-                :key="idx"
-                :is="tag"
-                v-bind="childAttrs"
-              >
+              <component v-for="({ tag, text, ...childAttrs }, idx) in children" :key="idx" :is="tag" v-bind="childAttrs">
                 {{ text }}
               </component>
             </template>
           </Field>
-          <component :is="icon" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
-          <ErrorMessage
-            :name="name"
-            class="absolute left-0 top-15 text-sm text-red-500"
-          />
+          <component :is="iconGroup[icon]" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
+          <ErrorMessage :name="name" class="absolute left-0 top-15 text-sm text-red-500" />
         </div>
         <button
-          class="w-full mt-8 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg hover:bg-sky-900/90 focus:outline-none"
-        >
+          class="w-full mt-8 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg hover:bg-sky-900/90 focus:outline-none">
           {{ buttonName }}
         </button>
       </Form>
@@ -45,8 +26,17 @@
 
 <script setup>
 import { computed } from "vue";
-import { Form,Field, ErrorMessage,useForm } from "vee-validate";
+import { Form, Field, ErrorMessage, useForm } from "vee-validate";
 import { useRoute } from "vue-router";
+
+import UserIcon from "../svg/UserIcon.vue";
+import PasswordIcon from "../svg/PasswordIcon.vue";
+import EmailIcon from "../svg/EmailIcon.vue";
+import GenderIcon from "../svg/GenderIcon.vue";
+import PaperIcon from "../svg/PaperIcon.vue";
+import CalenderIcon from "../svg/CalenderIcon.vue";
+
+const route = useRoute();
 
 const props = defineProps({
   schema: {
@@ -59,13 +49,21 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["submit"]);
-
-function onSubmit(values){
-  emits("submit",{info:values})
+const iconGroup = {
+  'UserIcon': UserIcon,
+  'PasswordIcon': PasswordIcon,
+  'EmailIcon': EmailIcon,
+  'GenderIcon': GenderIcon,
+  'PaperIcon': PaperIcon,
+  'CalenderIcon': CalenderIcon
 }
 
-const route = useRoute();
+const emits = defineEmits(["submit"]);
+
+function onSubmit(formValue) {
+  emits("submit", { info: formValue })
+}
+
 const buttonName = computed(() => {
   return route.path.replace("/", "") === "login" ? "登入" : "下一步";
 });
@@ -84,12 +82,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   z-index: 10;
   margin-right: 10px;
 }
+
 input[type="date"] {
   display: flex;
   flex-direction: row-reverse;
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
 }
+
 select {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));

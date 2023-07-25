@@ -2,16 +2,18 @@
   <div class="w-full max-w-[600px] max-sm:px-5 mx-auto mt-5">
     <div v-if="loggedIn">
       <div v-if="songList.length" class="w-full">
+        <form @submit.prevent="searchSongs">
+          <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入想搜尋的已建立歌曲名稱'"
+            :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
+            v-model.trim="searchSongName">
+            <search-glasses class="absolute right-3 top-2"
+            :class="hasSearchText" @click="searchSongs" />
+          </atmos-input>
+        </form>
         <p class="text-left mb-5">已建立歌曲 {{ songList.length }} 首</p>
-        <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" 
-        :class="`dropdown-${item.video_id}`" 
-        v-for="item in songList"
-          :key="item.id" 
-          :id="item.video_id" 
-          :url="item.video_img" 
-          :title="item.title"
-          :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" 
-          :isAdded="true"
+        <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
+          :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title"
+          :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" :isAdded="true"
           :disappear="deletedSong.indexOf(item.video_id) > -1">
           <template #configure>
             <div class="w-[22.5px] relative">
@@ -42,9 +44,11 @@ import { useAuthStore } from "../../stores/auth";
 import useSupabase from "../../stores/supabase";
 
 import AtmosCard from "../atmos/AtmosCard.vue";
+import AtmosInput from "../atmos/AtmosInput.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import MoreIcon from "../svg/MoreIcon.vue";
+import SearchGlasses from "../svg/SearchGlasses.vue";
 
 const { userInfo, isLoggedIn } = useAuthStore();
 const { loadingState } = useGlobalStore();
@@ -52,8 +56,30 @@ const { supabase } = useSupabase();
 
 const songList = ref([]);
 const loggedIn = computed(() => isLoggedIn());
-
+const searchSongName = ref('');
 const deletedSong = ref([]);
+
+//搜尋歌曲
+async function searchSongs() {
+  if (!isLoggedIn()) return;
+  loadingState(true);
+
+  const { data, error } = await supabase
+    .from("lyrics_list")
+    .select()
+    .eq("user_id", userInfo.id)
+    .ilike("title", `%${searchSongName.value}%`);
+
+  songList.value = data;
+
+  loadingState(false);
+}
+
+//根據搜尋框內是否含有效文字而顯示對應樣式
+const hasSearchText = computed(() => {
+  return searchSongName.value ? 'cursor-pointer' : 'opacity-40';
+});
+//刪除歌曲
 async function deleteSong(id) {
   loadingState(true);
 
@@ -88,6 +114,7 @@ const notClickDropdwonSelf = () => {
   }
 }
 
+//頁面載入所有已建立歌曲
 async function loadingLyricList() {
   if (!isLoggedIn()) return;
   loadingState(true);

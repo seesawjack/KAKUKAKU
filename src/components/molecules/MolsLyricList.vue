@@ -1,16 +1,15 @@
 <template>
   <div class="w-full max-w-[600px] max-sm:px-5 mx-auto mt-5">
-    <div v-if="loggedIn">
-      <div v-if="songList.length" class="w-full">
+    <div v-if="loggedIn && searchError.state !== 1">
+      <div class="w-full">
         <form @submit.prevent="searchSongs">
           <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入想搜尋的已建立歌曲名稱'"
             :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
             v-model.trim="searchSongName">
-            <search-glasses class="absolute right-3 top-2"
-            :class="hasSearchText" @click="searchSongs" />
+            <search-glasses class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
           </atmos-input>
         </form>
-        <p class="text-left mb-5">已建立歌曲 {{ songList.length }} 首</p>
+        <p v-if="songList.length > 0" class="text-left mb-5">{{ searchedTips }}</p>
         <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
           :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title"
           :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" :isAdded="true"
@@ -31,9 +30,8 @@
           </template>
         </atmos-card>
       </div>
-      <atmos-not-found v-else tips="您尚未新增歌曲" />
     </div>
-    <atmos-not-found v-else tips="登入後才能看到已建立歌詞清單" />
+    <atmos-not-found v-if="!loggedIn || searchError.state > 0" :tips="searchError.message" />
   </div>
 </template>
 
@@ -58,9 +56,23 @@ const songList = ref([]);
 const loggedIn = computed(() => isLoggedIn());
 const searchSongName = ref('');
 const deletedSong = ref([]);
+const searchError = ref({ state: '', message: '' });
+const isSearch = ref(false);
 
+//輸入框左下方提示文字
+const searchedTips = computed(() => {
+  return isSearch.value ? `符合搜尋結果 ${songList.value.length} 首` : `已建立 ${songList.value.length} 首`;
+})
+//搜尋結果錯誤訊息
+function searchIsError({ state, message }) {
+  searchError.value.state = state;
+  searchError.value.message = message;
+}
 //搜尋歌曲
 async function searchSongs() {
+  isSearch.value = true;
+  searchIsError({ state: 0, message: '' });
+
   if (!isLoggedIn()) return;
   loadingState(true);
 
@@ -70,8 +82,11 @@ async function searchSongs() {
     .eq("user_id", userInfo.id)
     .ilike("title", `%${searchSongName.value}%`);
 
-  songList.value = data;
+  if (data.length === 0) {
+    searchIsError({ state: 2, message: '搜尋不到對應歌曲，請重新搜尋' });
+  }
 
+  songList.value = data;
   loadingState(false);
 }
 
@@ -124,6 +139,10 @@ async function loadingLyricList() {
     .select()
     .eq("user_id", userInfo.id);
 
+  if (data.length === 0) {
+    searchIsError({ state: 1, message: '您尚未新增歌曲，建立歌曲後方可瀏覽已建立歌曲清單' });
+  }
+
   songList.value = data;
 
   loadingState(false);
@@ -132,6 +151,9 @@ async function loadingLyricList() {
 onMounted(async () => {
   document.addEventListener("click", notClickDropdwonSelf);
   loadingLyricList();
+  if (!isLoggedIn()) {
+    searchIsError({ state: 3, message: '登入會員後方可看到已建立歌曲清單' });
+  }
 
 });
 

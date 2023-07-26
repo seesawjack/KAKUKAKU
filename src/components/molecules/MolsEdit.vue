@@ -17,10 +17,10 @@
 
     <atmos-edit :placeholder="'請輸入 / 貼上 / 上傳歌詞'" v-model.trim="lyrics" />
     <div class="flex">
-      <button class="w-full border border-solid rounded-xl mr-2 hover:bg-slate-600" @click="sendLyric">
+      <button class="w-full bg-gray-900/50 border border-solid rounded-xl mr-2 hover:bg-slate-600" @click="sendLyric">
         確定
       </button>
-      <label class="w-full border border-solid rounded-xl leading-10 hover:bg-slate-600 cursor-pointer"
+      <label class="w-full bg-gray-900/50 border border-solid rounded-xl leading-10 hover:bg-slate-600 cursor-pointer"
         for="file-uploader">
         <input type="file" id="file-uploader" data-target="file-uploader" accept=".txt,.doc,.docx" class="hidden"
           @change="uploadFile" />

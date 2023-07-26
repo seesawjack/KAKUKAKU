@@ -1,6 +1,6 @@
 <template>
   <textarea
-    class="w-full resize-none bg-[transparent] border border-solid rounded-xl py-2 px-5 outline-none"
+    class="w-full resize-none bg-gray-900/50 border border-solid rounded-xl py-2 px-5 outline-none"
     cols="53"
     rows="14"
     v-model.trim.lazy="lyricValue"

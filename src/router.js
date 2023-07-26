@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from './pages/Home/Index.vue';
 import LyricsEdit from './pages/Lyrics/LyricsEdit.vue';
 import LyricsResult from './pages/Lyrics/LyricsResult.vue';
-import AboutPage from './pages/AboutPage.vue';
+import AboutPage from './pages/about/Index.vue'
 import AuthPage from './pages/Auth/Index.vue';
 import OnboardingPage from './pages/Auth/OnboardingPage.vue';
 import LyricsList from './pages/Lyrics/LyricsList.vue';

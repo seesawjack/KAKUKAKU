@@ -18,7 +18,7 @@
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
         <div class="group relative lyric"
-          :class="{ 'mt-10': spaceIndex.indexOf(index) > -1, 'max-w-[830px]': !selected.dramaMode, 'max-w-[1270px]': selected.dramaMode }"
+          :class="{ 'mt-10': spaceIndex.indexOf(index) > -1}"
           v-if="lyric !== ''">
           <p class="init tracking-[2px] test-ly flex-wrap pr-6"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"

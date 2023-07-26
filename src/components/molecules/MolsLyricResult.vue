@@ -86,7 +86,7 @@ async function addSong() {
         video_id: songInfo.value.id,
         title: songInfo.value.title,
         video_img: songInfo.value.url,
-        recommend: JSON.stringify(selected.isRecommend)
+        recommend: selected.isRecommend
       },
     ]);
 

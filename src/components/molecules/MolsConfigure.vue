@@ -13,6 +13,9 @@
         <div class="max-md:hidden flex items-center max-md:mx-2 my-2 h-6 cursor-pointer" @click="changeScreen">
           <div class="border-2 h-4 round-sm w-[20px]" :class="{ 'is-dramaMode': selected.dramaMode }"></div>
         </div>
+        <div class="max-md:mx-2 my-2 cursor-pointer" @click="recommendSong">
+          <recommend-icon class="translate-x-[2px] w-[22px]" :class="{'is-click':selected.isRecommend.state}"/>
+        </div>
       </template>
     </atmos-configure>
     <atmos-drop-down class="dropdown max-md:top-10 -top-2 max-md:-left-[5.6rem] left-8 py-2 px-3" :show="isShow">
@@ -80,6 +83,7 @@ import { ref, toRefs, watch, onMounted, onUnmounted } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useRoute } from "vue-router";
 import { useYoutubeStore } from "../../stores/youtube";
+import { useAuthStore } from "../../stores/auth";
 
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import AtmosConfigure from "../atmos/AtmosConfigure.vue";
@@ -87,12 +91,15 @@ import PlayVideoIcon from "../svg/PlayVideoIcon.vue";
 import PauseVideoIcon from "../svg/PauseVideoIcon.vue";
 import LockCloseIcon from "../svg/LockCloseIcon.vue";
 import LockOpenIcon from "../svg/LockOpenIcon.vue";
+import RecommendIcon from "../svg/RecommendIcon.vue";
 
 const route = useRoute();
 const {
   lyricConfiguration: { fontSize, selected },
   selectedFontStyle,
 } = useLyricStore();
+
+const { userInfo } = useAuthStore();
 
 const { controlVideoPlay } = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
@@ -108,6 +115,13 @@ const isLock = ref(false);
 function lockVideo() {
   isLock.value = !isLock.value;
   selected.fixedVideo = isLock.value;
+}
+
+const isRecommend = ref(false);
+function recommendSong() {
+  isRecommend.value = !isRecommend.value;
+  selected.isRecommend.state = isRecommend.value;
+  selected.isRecommend.recommender = userInfo.user_metadata?.name
 }
 
 const isShow = ref(false);

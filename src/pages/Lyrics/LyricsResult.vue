@@ -5,6 +5,3 @@
 <script setup>
 import OrganLyricResult from "../../components/organisms/OrganLyricResult.vue";
 </script>
-
-<style>
-</style>

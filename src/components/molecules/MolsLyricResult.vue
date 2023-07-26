@@ -12,10 +12,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted,toRefs } from "vue";
+import { ref, reactive, computed, onMounted, toRefs } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/lyric";
+import { useGlobalStore } from "../../stores";
 import useSupabase from "../../stores/supabase";
 
 import AtmosVideo from "../atmos/AtmosVideo.vue";
@@ -40,6 +41,7 @@ const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricT
 );
 
 const { supabase } = useSupabase();
+const { loadingState } = useGlobalStore();
 
 const lyrics = ref([]);
 const hiraLyrics = ref([]);
@@ -84,6 +86,7 @@ async function addSong() {
         video_id: songInfo.value.id,
         title: songInfo.value.title,
         video_img: songInfo.value.url,
+        recommend: JSON.stringify(selected.isRecommend)
       },
     ]);
 
@@ -107,6 +110,9 @@ async function addSong() {
 }
 
 onMounted(async () => {
+  songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
+  initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
+
   //防呆機制
   if (!route.query.song_id) {
     toSongState({ show: false, message: "此歌曲尚未建立" });
@@ -144,6 +150,7 @@ onMounted(async () => {
     return;
   }
 
+  //使用者為儲存歌曲，重整後可讀取自動存在 cookie 的資料
   if (route.query.song_id === songInfo.value?.id) {
     await tolyrics(initLyrics.value);
     lyrics.value = resultLyrics.value

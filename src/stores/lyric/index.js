@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, reactive, onMounted, getCurrentInstance } from "vue";
+import { ref, reactive } from "vue";
 import { diff_match_patch } from "diff-match-patch";
 import { toRomaji } from "wanakana";
 import { useRequestStore } from "../request";
@@ -15,6 +15,7 @@ export const useLyricStore = defineStore("lyric", () => {
   const timeStampState = ref([]);
   const lyricTimeStamp = ref({});
   const songState = reactive({ show: true, message: '' });
+
   //轉換成全平假名
   async function toHiraganaLyrics(lyric) {
     const requsetData = ref({
@@ -68,7 +69,7 @@ export const useLyricStore = defineStore("lyric", () => {
 
     initLyrics.value = lyric;
     localStorage.setItem("initLyrics", JSON.stringify(lyric));
-    
+
     const haveEnglishLyric = ref(/\w/g.test(lyric));
     let requestLyric, onlyEnglish, result;
 
@@ -139,9 +140,8 @@ export const useLyricStore = defineStore("lyric", () => {
             html +=
               acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm)
                 ? acc.kanji
-                : `<ruby class="hanji-word hover:underline hover:cursor-pointer" data-index="${index}">${
-                    acc.kanji
-                  }<rp>(</rp><rt>${acc.hiragana || "?"}</rt><rp>)</rp></ruby>`;
+                : `<ruby class="hanji-word hover:underline hover:cursor-pointer" data-index="${index}">${acc.kanji
+                }<rp>(</rp><rt>${acc.hiragana || "?"}</rt><rp>)</rp></ruby>`;
             acc.kanji = null;
             acc.hiragana = null;
           }
@@ -185,19 +185,16 @@ export const useLyricStore = defineStore("lyric", () => {
       timeStamp: false,
       loopLyric: false,
       dramaMode: false,
+      isRecommend: {
+        state: false,
+        recommender: ''
+      }
     },
   });
 
   function selectedSong(info) {
     songInfo.value = info;
     localStorage.setItem("songInfo", JSON.stringify(info));
-  }
-
-  if (getCurrentInstance()) {
-    onMounted(() => {
-      songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
-      initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
-    });
   }
 
   function removeLocal() {

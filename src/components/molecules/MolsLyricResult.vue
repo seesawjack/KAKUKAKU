@@ -1,10 +1,18 @@
 <template>
   <div v-if="songState.show" class="w-full flex flex-col mx-auto">
     <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
-    <atmos-lyric :lyrics="lyrics" :hiraganaLyrics="hiraLyrics" :romajiLyrics="romaLyrics" class="relative"
-      :className="[selected.labelType]" />
-    <button class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-      :class="{ 'unclickable': confirmButton.unclickable }" @click="addSong">
+    <atmos-lyric
+      :lyrics="lyrics"
+      :hiraganaLyrics="hiraLyrics"
+      :romajiLyrics="romaLyrics"
+      class="relative"
+      :className="[selected.labelType]"
+    />
+    <button
+      class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
+      :class="{ unclickable: confirmButton.unclickable }"
+      @click="addSong"
+    >
       {{ confirmButton.text }}
     </button>
   </div>
@@ -36,9 +44,15 @@ const {
   removeLocal,
 } = useLyricStore();
 
-const { hiraganaLyrics, romajiLyrics, resultLyrics, songInfo, initLyrics, lyricTimeStamp, spaceIndex } = toRefs(
-  useLyricStore()
-);
+const {
+  hiraganaLyrics,
+  romajiLyrics,
+  resultLyrics,
+  songInfo,
+  initLyrics,
+  lyricTimeStamp,
+  spaceIndex,
+} = toRefs(useLyricStore());
 
 const { supabase } = useSupabase();
 const { loadingState } = useGlobalStore();
@@ -53,7 +67,7 @@ function toSongState({ show, message }) {
 }
 
 const isfixedVideo = computed(() => {
-  return { 'fixedVideo': selected.fixedVideo };
+  return { fixedVideo: selected.fixedVideo };
 });
 
 const confirmButton = reactive({
@@ -73,7 +87,9 @@ async function addSong() {
   if (
     confirmButton.state === "isAdded" ||
     confirmButton.state === "Update" ||
-    (!isLoggedIn() || !resultLyrics.value.length)) {
+    !isLoggedIn() ||
+    !resultLyrics.value.length
+  ) {
     return;
   }
   loadingState(true);
@@ -86,7 +102,7 @@ async function addSong() {
         video_id: songInfo.value.id,
         title: songInfo.value.title,
         video_img: songInfo.value.url,
-        recommend: selected.isRecommend
+        recommend: selected.isRecommend,
       },
     ]);
 
@@ -100,7 +116,7 @@ async function addSong() {
         romaji: JSON.stringify(romajiLyrics.value),
         hanji: JSON.stringify(resultLyrics.value),
         timestamp: JSON.stringify(lyricTimeStamp.value),
-        spaceIndex: JSON.stringify(spaceIndex.value)
+        spaceIndex: JSON.stringify(spaceIndex.value),
       },
     ]);
 
@@ -112,7 +128,8 @@ async function addSong() {
 onMounted(async () => {
   songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
   initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
-
+  console.log('%c 打印結果(藍)','color:blue;font-size:15px;background:#ddd',selected.isRecommend);
+  
   //防呆機制
   if (!route.query.song_id) {
     toSongState({ show: false, message: "此歌曲尚未建立" });
@@ -150,10 +167,29 @@ onMounted(async () => {
     return;
   }
 
+  if (route.query.recommend === "true") {
+    let { data, error } = await supabase
+      .from("lyrics_content")
+      .select()
+      .eq("video_id", route.query.song_id);
+
+    if (data.length === 0) {
+      toSongState({ show: false, message: "查無此歌曲" });
+      return;
+    }
+
+    lyrics.value = JSON.parse(data[0].hanji);
+    hiraLyrics.value = JSON.parse(data[0].hiragana);
+    romaLyrics.value = JSON.parse(data[0].romaji);
+    lyricTimeStamp.value = JSON.parse(data[0].timestamp);
+    spaceIndex.value = JSON.parse(data[0].spaceIndex);
+    return;
+  }
+
   //使用者為儲存歌曲，重整後可讀取自動存在 cookie 的資料
   if (route.query.song_id === songInfo.value?.id) {
     await tolyrics(initLyrics.value);
-    lyrics.value = resultLyrics.value
+    lyrics.value = resultLyrics.value;
   }
 
   if (!resultLyrics.value.length) {

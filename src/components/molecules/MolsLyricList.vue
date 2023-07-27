@@ -3,26 +3,53 @@
     <div v-if="loggedIn && searchError.state !== 1">
       <div class="w-full">
         <form @submit.prevent="searchSongs">
-          <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入想搜尋的已建立歌曲名稱'"
+          <atmos-input
+            class="w-full max-sm:text-sm mb-5"
+            :inputTips="'請輸入想搜尋的已建立歌曲名稱'"
             :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
-            v-model.trim="searchSongName">
-            <search-glasses class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
+            v-model.trim="searchSongName"
+          >
+            <search-glasses
+              class="absolute right-3 top-2"
+              :class="hasSearchText"
+              @click="searchSongs"
+            />
           </atmos-input>
         </form>
-        <p v-if="songList.length > 0" class="text-left mb-5">{{ searchedTips }}</p>
-        <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
-          :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title"
-          :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" :isAdded="true"
-          :disappear="deletedSong.indexOf(item.video_id) > -1">
+        <p v-if="songList.length > 0" class="text-left mb-5">
+          {{ searchedTips }}
+        </p>
+        <atmos-card
+          class="max-sm:ml-0 ml-2 mb-5 group"
+          :class="`dropdown-${item.video_id}`"
+          v-for="item in songList"
+          :key="item.id"
+          :id="item.video_id"
+          :url="item.video_img"
+          :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`"
+          :title="item.title"
+          :isAdded="true"
+          :disappear="deletedSong.indexOf(item.video_id) > -1"
+          @click="isRecommendSong(item.recommend?.state || false)"
+        >
           <template #configure>
             <div class="w-[22.5px] relative">
-              <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer max-md:block"
+              <more-icon
+                @click="showDropDown(item.video_id)"
+                class="hidden group-hover:block cursor-pointer max-md:block"
                 :class="[
                   { '!block': clickClassName === item.video_id },
                   { 'group-hover': !deletedSong },
-                ]" />
-              <atmos-drop-down class="top-4 right-3 py-1 px-2" :show="clickClassName === item.video_id">
-                <button class="w-full py-1 rounded-md hover:bg-slate-800" @click="deleteSong(item.video_id)">
+                ]"
+              />
+              <atmos-drop-down
+                class="top-4 right-3 py-1 px-2"
+                :show="clickClassName === item.video_id"
+              >
+                <button
+                  class="w-full py-1 rounded-md hover:bg-slate-800"
+                  @click="deleteSong(item.video_id)"
+                >
                   刪除此歌曲
                 </button>
               </atmos-drop-down>
@@ -31,7 +58,10 @@
         </atmos-card>
       </div>
     </div>
-    <atmos-not-found v-if="!loggedIn || searchError.state > 0" :tips="searchError.message" />
+    <atmos-not-found
+      v-if="!loggedIn || searchError.state > 0"
+      :tips="searchError.message"
+    />
   </div>
 </template>
 
@@ -39,6 +69,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useGlobalStore } from "../../stores/index";
 import { useAuthStore } from "../../stores/auth";
+import { useLyricStore } from "../../stores/lyric";
 import useSupabase from "../../stores/supabase";
 
 import AtmosCard from "../atmos/AtmosCard.vue";
@@ -50,19 +81,24 @@ import SearchGlasses from "../svg/SearchGlasses.vue";
 
 const { userInfo, isLoggedIn } = useAuthStore();
 const { loadingState } = useGlobalStore();
+const {
+  lyricConfiguration: { selected },
+} = useLyricStore();
 const { supabase } = useSupabase();
 
 const songList = ref([]);
 const loggedIn = computed(() => isLoggedIn());
-const searchSongName = ref('');
+const searchSongName = ref("");
 const deletedSong = ref([]);
-const searchError = ref({ state: '', message: '' });
+const searchError = ref({ state: "", message: "" });
 const isSearch = ref(false);
 
 //輸入框左下方提示文字
 const searchedTips = computed(() => {
-  return isSearch.value ? `符合搜尋結果 ${songList.value.length} 首` : `已建立 ${songList.value.length} 首`;
-})
+  return isSearch.value
+    ? `符合搜尋結果 ${songList.value.length} 首`
+    : `已建立 ${songList.value.length} 首`;
+});
 //搜尋結果錯誤訊息
 function searchIsError({ state, message }) {
   searchError.value.state = state;
@@ -71,7 +107,7 @@ function searchIsError({ state, message }) {
 //搜尋歌曲
 async function searchSongs() {
   isSearch.value = true;
-  searchIsError({ state: 0, message: '' });
+  searchIsError({ state: 0, message: "" });
 
   if (!isLoggedIn()) return;
   loadingState(true);
@@ -83,7 +119,7 @@ async function searchSongs() {
     .ilike("title", `%${searchSongName.value}%`);
 
   if (data.length === 0) {
-    searchIsError({ state: 2, message: '搜尋不到對應歌曲，請重新搜尋' });
+    searchIsError({ state: 2, message: "搜尋不到對應歌曲，請重新搜尋" });
   }
 
   songList.value = data;
@@ -92,8 +128,13 @@ async function searchSongs() {
 
 //根據搜尋框內是否含有效文字而顯示對應樣式
 const hasSearchText = computed(() => {
-  return searchSongName.value ? 'cursor-pointer' : 'opacity-40';
+  return searchSongName.value ? "cursor-pointer" : "opacity-40";
 });
+
+//判斷是否有推薦
+function isRecommendSong(isRecommend) {
+  selected.isRecommend.state = isRecommend;
+}
 //刪除歌曲
 async function deleteSong(id) {
   loadingState(true);
@@ -107,7 +148,7 @@ async function deleteSong(id) {
     .delete()
     .eq("video_id", id);
 
-  //歌詞內容清單刪除該歌曲的歌詞 
+  //歌詞內容清單刪除該歌曲的歌詞
   const { data: contentData, error: contentError } = await supabase
     .from("lyrics_content")
     .delete()
@@ -127,7 +168,7 @@ const notClickDropdwonSelf = () => {
   if (!event.target.closest(`.dropdown-${clickClassName.value}`)) {
     clickClassName.value = "";
   }
-}
+};
 
 //頁面載入所有已建立歌曲
 async function loadingLyricList() {
@@ -140,7 +181,10 @@ async function loadingLyricList() {
     .eq("user_id", userInfo.id);
 
   if (data.length === 0) {
-    searchIsError({ state: 1, message: '您尚未新增歌曲，建立歌曲後方可瀏覽已建立歌曲清單' });
+    searchIsError({
+      state: 1,
+      message: "您尚未新增歌曲，建立歌曲後方可瀏覽已建立歌曲清單",
+    });
   }
 
   songList.value = data;
@@ -152,13 +196,11 @@ onMounted(async () => {
   document.addEventListener("click", notClickDropdwonSelf);
   loadingLyricList();
   if (!isLoggedIn()) {
-    searchIsError({ state: 3, message: '登入會員後方可看到已建立歌曲清單' });
+    searchIsError({ state: 3, message: "登入會員後方可看到已建立歌曲清單" });
   }
-
 });
 
 onUnmounted(() => {
   document.body.removeEventListener("click", notClickDropdwonSelf);
 });
 </script>
-

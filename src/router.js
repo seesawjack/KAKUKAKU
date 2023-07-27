@@ -23,7 +23,7 @@ const router = createRouter({
         { path: '/login', component: AuthPage },
         { path: '/signup', component: AuthPage },
         { path: '/onboarding', component: OnboardingPage },
-        { path: '/song/list', component: LyricsList },
+        { path: '/song/personal/list', component: LyricsList },
         { path: '/song/recommend/list', component: RecommendList },
         { path: '/:notFound(.*)', redirect: '/song/search' }
     ],

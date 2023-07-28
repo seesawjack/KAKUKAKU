@@ -86,13 +86,27 @@ function buttonState({ text, state, unclickable }) {
 async function addSong() {
   if (
     confirmButton.state === "isAdded" ||
-    confirmButton.state === "Update" ||
     !isLoggedIn() ||
     !resultLyrics.value.length
   ) {
     return;
   }
+
   loadingState(true);
+
+  if (confirmButton.state === "update") {
+    const { data: lyricsListData, error: lyricsListError } = await supabase
+      .from("lyrics_list")
+      .update({ recommend: selected.isRecommend })
+      .eq("video_id", route.query.song_id)
+      .eq("user_id", userInfo.id);
+
+    buttonState({ text: "已修改", state: "isAdded", unclickable: true });
+    removeLocal();
+    loadingState(false);
+
+    return;
+  }
 
   const { data: lyricsListData, error: lyricsListError } = await supabase
     .from("lyrics_list")
@@ -123,13 +137,13 @@ async function addSong() {
   buttonState({ text: "已新增", state: "isAdded", unclickable: true });
   removeLocal();
   loadingState(false);
+  return;
 }
 
 onMounted(async () => {
   songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
   initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
-  console.log('%c 打印結果(藍)','color:blue;font-size:15px;background:#ddd',selected.isRecommend);
-  
+
   //防呆機制
   if (!route.query.song_id) {
     toSongState({ show: false, message: "此歌曲尚未建立" });
@@ -148,21 +162,30 @@ onMounted(async () => {
       .eq("video_id", route.query.song_id)
       .eq("user_id", userInfo.id);
 
+    let { data: list_data, error: list_error } = await supabase
+      .from("lyrics_list")
+      .select()
+      .eq("video_id", route.query.song_id)
+      .eq("user_id", userInfo.id);
+
     if (data.length === 0) {
       toSongState({ show: false, message: "查無此歌曲" });
       return;
     }
 
     lyrics.value = JSON.parse(data[0].hanji);
+    resultLyrics.value = JSON.parse(data[0].hanji);
     hiraLyrics.value = JSON.parse(data[0].hiragana);
     romaLyrics.value = JSON.parse(data[0].romaji);
     lyricTimeStamp.value = JSON.parse(data[0].timestamp);
     spaceIndex.value = JSON.parse(data[0].spaceIndex);
+    selected.isRecommend.state = list_data[0].recommend.state;
+    songInfo.value = list_data[0];
 
     buttonState({
-      text: "修改功能日後開放，敬請期待",
-      state: "Update",
-      unclickable: true,
+      text: "確認修改",
+      state: "update",
+      unclickable: false,
     });
     return;
   }

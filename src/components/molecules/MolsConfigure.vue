@@ -25,6 +25,9 @@
             :class="{ 'is-click': selected.isRecommend.state }"
           />
         </div>
+        <div class="max-md:mx-2 my-2 cursor-pointer" @click="switchEditMode">
+          <edit-song-icon />
+        </div>
       </template>
     </atmos-configure>
     <atmos-drop-down
@@ -140,6 +143,7 @@ import PauseVideoIcon from "../svg/PauseVideoIcon.vue";
 import LockCloseIcon from "../svg/LockCloseIcon.vue";
 import LockOpenIcon from "../svg/LockOpenIcon.vue";
 import RecommendIcon from "../svg/RecommendIcon.vue";
+import EditSongIcon from "../svg/EditSongIcon.vue";
 
 const route = useRoute();
 const {
@@ -165,13 +169,18 @@ function lockVideo() {
   selected.fixedVideo = isLock.value;
 }
 
-const isRecommend = ref(selected.isRecommend.state || false);
+const isRecommend = ref(false);
 function recommendSong() {
+  isRecommend.value = selected.isRecommend.state;
+
   isRecommend.value = !isRecommend.value;
   selected.isRecommend.state = isRecommend.value;
   selected.isRecommend.recommender = userInfo.user_metadata?.name;
 }
 
+function switchEditMode(){
+  
+}
 const isShow = ref(false);
 function showDropDown() {
   isShow.value = !isShow.value;

@@ -195,7 +195,8 @@ export const useLyricStore = defineStore("lyric", () => {
       isRecommend: {
         state: false,
         recommender: ''
-      }
+      },
+      isEditMode:false
     },
   });
 

@@ -74,12 +74,14 @@ const confirmButton = reactive({
   text: "儲存建立",
   state: "Add",
   unclickable: false,
+  isVisible: true,
 });
 
-function buttonState({ text, state, unclickable }) {
+function buttonState({ text, state, unclickable, isVisible }) {
   confirmButton.text = text;
   confirmButton.state = state;
   confirmButton.unclickable = unclickable;
+  confirmButton.isVisible = isVisible;
 }
 
 //新增歌曲
@@ -101,7 +103,11 @@ async function addSong() {
       .eq("video_id", route.query.song_id)
       .eq("user_id", userInfo.id);
 
-    buttonState({ text: "已修改", state: "isAdded", unclickable: true });
+    buttonState({
+      text: "已修改",
+      state: "isAdded",
+      unclickable: true
+    });
     removeLocal();
     loadingState(false);
 

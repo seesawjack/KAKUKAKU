@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, reactive, onMounted, getCurrentInstance  } from "vue";
+import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 import { diff_match_patch } from "diff-match-patch";
 import { toRomaji } from "wanakana";
 import { useRequestStore } from "../request";
@@ -14,7 +14,7 @@ export const useLyricStore = defineStore("lyric", () => {
   const songInfo = ref({});
   const timeStampState = ref([]);
   const lyricTimeStamp = ref({});
-  const songState = reactive({ show: true, message: '' });
+  const songState = reactive({ show: true, message: "" });
 
   if (getCurrentInstance()) {
     onMounted(() => {
@@ -135,6 +135,8 @@ export const useLyricStore = defineStore("lyric", () => {
   }
 
   function furigana(lyrics, hiraganaLyrics, index) {
+    
+
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, ""]); //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
@@ -147,8 +149,9 @@ export const useLyricStore = defineStore("lyric", () => {
             html +=
               acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm)
                 ? acc.kanji
-                : `<ruby class="hanji-word hover:underline hover:cursor-pointer" data-index="${index}">${acc.kanji
-                }<rp>(</rp><rt>${acc.hiragana || "?"}</rt><rp>)</rp></ruby>`;
+                : `<ruby class="hanji-word" data-index="${index}">${acc.kanji}<rp>(</rp><rt>${
+                    acc.hiragana || "?"
+                  }</rt><rp>)</rp></ruby>`;
             acc.kanji = null;
             acc.hiragana = null;
           }
@@ -194,9 +197,8 @@ export const useLyricStore = defineStore("lyric", () => {
       dramaMode: false,
       isRecommend: {
         state: false,
-        recommender: ''
+        recommender: "",
       },
-      isEditMode:false
     },
   });
 

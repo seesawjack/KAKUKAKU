@@ -19,7 +19,11 @@
             :class="{ 'is-dramaMode': selected.dramaMode }"
           ></div>
         </div>
-        <div class="max-md:hidden max-md:mx-2 my-2 cursor-pointer" @click="recommendSong">
+        <div
+          v-if="!isRecommendState"
+          class="max-md:hidden max-md:mx-2 my-2 cursor-pointer"
+          @click="recommendSong"
+        >
           <recommend-icon
             class="translate-x-[2px] w-[22px]"
             :class="{ 'is-click': selected.isRecommend.state }"
@@ -79,7 +83,7 @@
         </div>
         <hr class="max-md:hidden border-gray-200 dark:border-gray-500 my-3" />
         <!-- ▼開關 時間戳記 -->
-        <div class="max-md:hidden">
+        <div v-if="!isRecommendState" class="max-md:hidden">
           <label
             for="timeStamp"
             class="w-full relative inline-flex justify-between items-center cursor-pointer"
@@ -98,8 +102,8 @@
               >時間戳記</span
             >
           </label>
+          <hr class="max-md:hidden border-gray-200 dark:border-gray-500 my-3" />
         </div>
-        <hr class="max-md:hidden border-gray-200 dark:border-gray-500 my-3" />
         <!-- ▼開關 單句循環 -->
         <div class="max-md:hidden">
           <label
@@ -127,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch, onMounted, onUnmounted } from "vue";
+import { ref, toRefs, computed, watch, onMounted, onUnmounted } from "vue";
 import { useLyricStore } from "../../stores/lyric";
 import { useRoute } from "vue-router";
 import { useYoutubeStore } from "../../stores/youtube";
@@ -147,6 +151,9 @@ const {
   selectedFontStyle,
 } = useLyricStore();
 
+const isRecommendState = computed(() => {
+  return route.query.recommend === "true" ? true : false;
+});
 const { userInfo } = useAuthStore();
 
 const { controlVideoPlay } = useYoutubeStore();

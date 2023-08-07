@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="no-hover">
     <div v-if="windowWidth > 768" class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
       :class="[font, className]">
       <div class="absolute w-full left-1/2 translate-x-[-50%]">
@@ -18,9 +18,9 @@
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
         <div class="group relative lyric"
-          :class="{ 'mt-10': spaceIndex.indexOf(index) > -1}"
+          :class="{ 'mt-10': spaceIndex.indexOf(index) > -1,'is-recommend-state':route.query.recommend === 'true'}"
           v-if="lyric !== ''">
-          <p class="init tracking-[2px] test-ly flex-wrap pr-6"
+          <p class="init tracking-[2px] test-ly flex-wrap pr-6 hover:no-underline"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
             ref="initLyric" v-html="lyric">
           </p>
@@ -52,7 +52,7 @@
           </div>
         </div>
         <br v-if="lyric == ''">
-        <div v-if="lyric !== ''" class="my-3" :class="{ 'line': index !== lyrics.length - 1 }"></div>
+        <div v-if="lyric !== ''" class="my-3" :class="{ 'lyric-line': index !== lyrics.length - 1 }"></div>
       </template>
     </div>
   </div>
@@ -60,6 +60,7 @@
 
 <script setup>
 import { ref, watch, toRefs, onMounted, onUnmounted } from "vue";
+import { useRoute } from 'vue-router';
 import { useLyricStore } from "../../stores/lyric";
 import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";
@@ -83,6 +84,8 @@ const props = defineProps({
     required: true,
   }
 });
+
+const route = useRoute();
 
 const lyricStore = useLyricStore();
 const { lyricConfiguration, editLyric } = lyricStore;
@@ -158,7 +161,9 @@ const editRubi = () => {
 }
 
 onMounted(() => {
-  document.addEventListener("click", editRubi);
+  if(route.query.recommend !== 'true'){
+    document.addEventListener("click", editRubi);
+  }
   document.addEventListener('resize', onWidthChange);
 });
 
@@ -168,15 +173,11 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-.line {
+<style>
+.lyric-line {
   border-style: inset;
   border-top-width: 1px;
   height: 1px;
-}
-
-rt {
-  display: none;
 }
 
 .pen-shadow {
@@ -188,5 +189,15 @@ rt {
 .clock-selected {
   color: rgb(147, 197, 253);
   filter: drop-shadow(0px 0px 3px rgb(147, 197, 253, 0.8));
+}
+
+.hanji-word:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.is-recommend-state .hanji-word:hover{
+  text-decoration: none;
+  cursor: unset;
 }
 </style>

@@ -9,6 +9,7 @@
       :className="[selected.labelType]"
     />
     <button
+      v-if="!isRecommendState"
       class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
       :class="{ unclickable: confirmButton.unclickable }"
       @click="addSong"
@@ -34,6 +35,8 @@ import AtmosNotFound from "../atmos/AtmosNotFound.vue";
 const route = useRoute();
 
 const songId = computed(() => route.query.song_id);
+
+const isRecommendState = ref(false);
 
 const { isLoggedIn, userInfo } = useAuthStore();
 
@@ -103,11 +106,25 @@ async function addSong() {
       .eq("video_id", route.query.song_id)
       .eq("user_id", userInfo.id);
 
+    const { data: lyricsContentData, error: lyricsContentError } =
+      await supabase
+        .from("lyrics_content")
+        .update({
+          hiragana: JSON.stringify(hiraganaLyrics.value),
+          romaji: JSON.stringify(romajiLyrics.value),
+          hanji: JSON.stringify(resultLyrics.value),
+          timestamp: JSON.stringify(lyricTimeStamp.value),
+          spaceIndex: JSON.stringify(spaceIndex.value),
+        })
+        .eq("video_id", route.query.song_id)
+        .eq("user_id", userInfo.id);
+
     buttonState({
       text: "已修改",
       state: "isAdded",
-      unclickable: true
+      unclickable: true,
     });
+
     removeLocal();
     loadingState(false);
 
@@ -181,13 +198,15 @@ onMounted(async () => {
 
     lyrics.value = JSON.parse(data[0].hanji);
     resultLyrics.value = JSON.parse(data[0].hanji);
+    hiraganaLyrics.value = JSON.parse(data[0].hiragana);
+    romajiLyrics.value = JSON.parse(data[0].romaji);
     hiraLyrics.value = JSON.parse(data[0].hiragana);
     romaLyrics.value = JSON.parse(data[0].romaji);
     lyricTimeStamp.value = JSON.parse(data[0].timestamp);
     spaceIndex.value = JSON.parse(data[0].spaceIndex);
     selected.isRecommend.state = list_data[0].recommend.state;
     songInfo.value = list_data[0];
-
+    
     buttonState({
       text: "確認修改",
       state: "update",
@@ -195,8 +214,9 @@ onMounted(async () => {
     });
     return;
   }
-
+  //是分享狀態
   if (route.query.recommend === "true") {
+    isRecommendState.value = true;
     let { data, error } = await supabase
       .from("lyrics_content")
       .select()

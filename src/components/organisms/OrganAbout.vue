@@ -24,7 +24,7 @@ import AtmosAccordion from "../atmos/AtmosAccordion.vue";
 const faq = [
   {
     header: "若操作上有遇到狀況或是想提供改善建議，有提供相關溝通管道嗎?",
-    body: "有的，可在側欄的「意見反應」中，留下您寶貴的建議。",
+    body: "有的，可在側欄的「意見回饋」中，留下您寶貴的建議。",
   },
   {
     header: "為什麼手機版有部分功能無法使用?",

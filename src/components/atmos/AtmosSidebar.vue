@@ -4,41 +4,49 @@
   >
     <div class="flex flex-col justify-between flex-1 mt-6">
       <nav class="flex-1 -mx-3 space-y-3">
-        <a
+        <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('search') > 0 }"
-          href="/song/search"
+          to="/song/search"
         >
           <HomePageIcon />
           <span class="mx-2 text-sm font-medium">首頁</span>
-        </a>
+        </router-link>
 
-        <a
+        <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('upload') > 0 }"
-          href="/song/upload"
+          to="/song/upload"
         >
           <plus-paper-icon />
           <span class="mx-2 text-sm font-medium">新增歌曲</span>
-        </a>
+        </router-link>
 
-        <a
+        <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('personal') > 0 }"
-          href="/song/personal/list"
+          to="/song/personal/list"
         >
           <paper-icon />
           <span class="mx-2 text-sm font-medium">個人清單</span>
-        </a>
+        </router-link>
 
-        <a
+        <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('recommend') > 0 }"
-          href="/song/recommend/list"
+          to="/song/recommend/list"
         >
           <recommend-icon />
           <span class="mx-2 text-sm font-medium">推薦清單</span>
-        </a>
+        </router-link>
+        <router-link
+          to="/feedback"
+          class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+          :class="{ 'bg-slate-500': route.path.indexOf('feedback') > 0 }"
+        >
+          <fillin-icon />
+          <span class="mx-2 text-sm font-medium"> 意見回饋 </span>
+        </router-link>
 
         <router-link
           to="/about"
@@ -97,6 +105,7 @@ import RecommendIcon from "../svg/RecommendIcon.vue";
 import UserIcon from "../svg/UserIcon.vue";
 import PaperIcon from "../svg/PaperIcon.vue";
 import PlusPaperIcon from "../svg/PlusPaperIcon.vue";
+import FillinIcon from "../svg/FillinIcon.vue";
 import HomePageIcon from "../svg/HomePageIcon.vue";
 
 const { handleLogout, isLoggedIn } = useAuthStore();

@@ -5,7 +5,7 @@
         <div v-for="{ as, name, children, icon, ...attrs } in schema" :key="name" class="relative">
           <Field :as="as" :id="name" :name="name" v-bind="attrs" :ref="name"
             class="block w-full py-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8"
-            :class="{ 'pl-11': name !== 'birth', 'pl-3': name === 'birth' }">
+            :class="{ 'pl-11': name !== 'birth' && icon?.length, 'pl-3': name === 'birth' || !icon }">
             <template v-if="children && children.length">
               <component v-for="({ tag, text, ...childAttrs }, idx) in children" :key="idx" :is="tag" v-bind="childAttrs">
                 {{ text }}
@@ -16,8 +16,10 @@
           <ErrorMessage :name="name" class="absolute left-0 top-15 text-sm text-red-500" />
         </div>
         <button
-          class="w-full mt-8 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg hover:bg-sky-900/90 focus:outline-none">
-          {{ buttonName }}
+          class="w-full mt-8 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg hover:bg-sky-900/90 focus:outline-none"
+          :class="{'unclickable':!button.state}"
+          :disabled="!button.state">
+          {{ button.name }}
         </button>
       </Form>
     </div>
@@ -47,6 +49,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  button:{
+    type: Object,
+    required: true
+  }
 });
 
 const iconGroup = {
@@ -63,10 +69,6 @@ const emits = defineEmits(["submit"]);
 function onSubmit(formValue) {
   emits("submit", { info: formValue })
 }
-
-const buttonName = computed(() => {
-  return route.path.replace("/", "") === "login" ? "登入" : "下一步";
-});
 </script>
 
 <style scoped>
@@ -93,5 +95,13 @@ input[type="date"] {
 select {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+
+.unclickable {
+  --tw-bg-opacity: 1;
+  cursor: not-allowed;
+  background-color: rgb(71 85 105 / var(--tw-bg-opacity));
+  color: darkgrey;
+  font-weight: 900;
 }
 </style>

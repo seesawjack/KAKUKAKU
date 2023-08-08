@@ -11,7 +11,7 @@
     <button
       v-if="!isRecommendState"
       class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-      :class="{ unclickable: confirmButton.unclickable }"
+      :class="{'unclickable': confirmButton.unclickable }"
       @click="addSong"
     >
       {{ confirmButton.text }}

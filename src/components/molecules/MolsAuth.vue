@@ -3,15 +3,15 @@
     <div class="container mx-auto">
       <div class="flex items-center justify-center mt-6">
         <a href="/login" class="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b"
-          :class="{ 'atThisTab': atLoginPage === 'login' }">
+          :class="{ 'border-sky-400 text-white': atLoginPage === 'login' }">
           登入
         </a>
         <a href="/signup" class="w-1/3 pb-4 font-medium text-center text-gray-600 capitalize border-b "
-          :class="{ 'atThisTab': atLoginPage === 'signup' }">
+          :class="{ 'border-sky-400 text-white': atLoginPage === 'signup' }">
           註冊
         </a>
       </div>
-      <atmos-form :schema="formSchema[atLoginPage]" :validate="validate[atLoginPage]" @submit="handleSubmit"></atmos-form>
+      <atmos-form :schema="formSchema[atLoginPage]" :validate="validate[atLoginPage]" :button="buttonState" @submit="handleSubmit"></atmos-form>
     </div>
   </section>
 </template>
@@ -28,7 +28,6 @@ const route = useRoute();
 const router = useRouter();
 const { formSchema, validate, handleLogin, handleSignup } = useAuthStore();
 const { isError } = useGlobalStore();
-const { errorMessage } = toRefs(useGlobalStore());
 
 
 //判斷目前在「登入」或「註冊」Tab
@@ -36,10 +35,12 @@ const atLoginPage = computed(() => {
   return route.path.indexOf("login") > -1 ? 'login' : 'signup';
 });
 
+const buttonState = computed(()=>{
+  return route.path.indexOf("login") > -1 ? { state: true, name: "登入" }
+    : { state: true, name: "下一步" };
 
-function closeDialog() {
-  isError({ showError: false, message: '' });
-}
+})
+
 
 //送出「登入」或「註冊」事件
 async function handleSubmit(form) {
@@ -60,12 +61,3 @@ async function handleSubmit(form) {
   }
 }
 </script>
-
-<style scoped>
-.atThisTab {
-  border-bottom-width: 2px;
-  --tw-border-opacity: 1;
-  border-color: rgb(70 176 221 / var(--tw-border-opacity));
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-</style>

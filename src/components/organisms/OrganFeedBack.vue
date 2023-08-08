@@ -1,5 +1,5 @@
 <template>
-    <mols-feed-back/>
+    <mols-feed-back class="w-full max-w-sm"/>
 </template>
 
 <script setup>

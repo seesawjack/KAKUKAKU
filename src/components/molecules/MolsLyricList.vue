@@ -183,7 +183,7 @@ async function loadingLyricList() {
   if (data.length === 0) {
     searchIsError({
       state: 1,
-      message: "您尚未新增歌曲，建立歌曲後方可瀏覽已建立歌曲清單",
+      message: "您尚未新增歌曲",
     });
   }
 

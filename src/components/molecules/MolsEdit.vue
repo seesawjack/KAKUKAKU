@@ -68,15 +68,15 @@ async function transformLyrics(lyric, id) {
 function sendLyric() {
   //防呆機制
   if (!songName.value && !props.isYoutubeSearch) {
-    isError({ isError: true, message: "請輸入歌曲名稱" });
+    isError({ showError: true, message: "請輸入歌曲名稱" });
     return;
   }
   if (!songUrl.value && !props.isYoutubeSearch) {
-    isError({ isError: true, message: "請輸入 Youtube 影片連結" });
+    isError({ showError: true, message: "請輸入 Youtube 影片連結" });
     return;
   }
   if (!lyrics.value) {
-    isError({ isError: true, message: "請輸入 / 貼上 / 上傳歌詞" });
+    isError({ showError: true, message: "請輸入 / 貼上 / 上傳歌詞" });
     return;
   }
 
@@ -93,7 +93,7 @@ function sendLyric() {
         url: `https://i.ytimg.com/vi/${songId.value}/mqdefault.jpg`,
       });
     } catch (error) {
-      isError({ isError: true, message: "連結有誤，請再次確認" });
+      isError({ showError: true, message: "連結有誤，請再次確認" });
       return;
     }
   }

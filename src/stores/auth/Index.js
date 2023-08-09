@@ -155,11 +155,6 @@ export const useAuthStore = defineStore("auth", () => {
           },
           {
             tag: "option",
-            value: "feedback",
-            text: "意見回饋",
-          },
-          {
-            tag: "option",
             value: "operating",
             text: "網站操作流程",
           },

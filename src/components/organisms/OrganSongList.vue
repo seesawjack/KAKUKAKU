@@ -4,7 +4,7 @@
       <h1 class="max-sm:text-2xl max-sm:h-8 text-5xl h-12" :class="{ 'move-down': isActive }">{{ showOnPage }}</h1>
     </mols-search-song>
     <mols-list-card class="max-md:px-3 max-md:pl-5 max-w-[512px] mx-auto mt-5" :resultData="resultData" />
-    <atmos-pagination @search="pageChagne" :totalPages="resultData.pageInfo?.totalResults || 0" />
+    <atmos-pagination v-if="resultData?.items?.length>9" @search="pageChagne" :totalPages="resultData.pageInfo?.totalResults || 0" />
   </div>
 </template>
 

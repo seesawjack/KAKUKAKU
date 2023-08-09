@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { useGlobalStore } from "../index";
 import useSupabase from "../supabase";
@@ -13,6 +13,10 @@ export const useAuthStore = defineStore("auth", () => {
   function isLoggedIn() {
     return !!userInfo.value;
   }
+
+  const feedbackName = computed(() => {
+    return isLoggedIn() ? userInfo.value.user_metadata?.name : "";
+  });
   //登入及註冊時的表單內容
   const formSchema = ref({
     login: [
@@ -134,6 +138,7 @@ export const useAuthStore = defineStore("auth", () => {
       {
         name: "name",
         as: "input",
+        value: feedbackName,
         placeholder: "請輸入使用者名稱",
         icon: "UserIcon",
       },
@@ -281,15 +286,13 @@ export const useAuthStore = defineStore("auth", () => {
   const handleFeedBack = async (info) => {
     try {
       loadingState(true);
-      const { data, error } = await supabase
-        .from("feedback")
-        .insert([
-          {
-            user_name: info.name,
-            question_type: info.questionType,
-            text: info.feedbackText,
-          },
-        ]);
+      const { data, error } = await supabase.from("feedback").insert([
+        {
+          user_name: info.name,
+          question_type: info.questionType,
+          text: info.feedbackText,
+        },
+      ]);
       if (error) throw error;
       return { message: "success", data: data };
     } catch (error) {

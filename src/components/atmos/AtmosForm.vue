@@ -2,23 +2,51 @@
   <section>
     <div class="container flex items-center justify-center px-6 mx-auto">
       <Form @submit="onSubmit" class="w-full" :validation-schema="validate">
-        <div v-for="{ as, name, children, icon, ...attrs } in schema" :key="name" class="relative">
-          <Field :as="as" :id="name" :name="name" v-bind="attrs" :ref="name"
+        <div
+          v-for="{ as, name, children, icon, ...attrs } in schema"
+          :key="name"
+          class="relative"
+        >
+          <Field
+            :as="as"
+            :id="name"
+            :name="name"
+            v-bind="attrs"
+            :ref="name"
             class="block w-full py-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8"
-            :class="{ 'pl-11': name !== 'birth' && icon?.length, 'pl-3': name === 'birth' || !icon }">
+            :class="{
+              'pl-11': name !== 'birth' && icon?.length,
+              'pl-3': name === 'birth' || !icon,
+            }"
+          >
             <template v-if="children && children.length">
-              <component v-for="({ tag, text, ...childAttrs }, idx) in children" :key="idx" :is="tag" v-bind="childAttrs">
+              <component
+                v-for="({ tag, text, ...childAttrs }, idx) in children"
+                :key="idx"
+                :is="tag"
+                v-bind="childAttrs"
+              >
                 {{ text }}
               </component>
             </template>
           </Field>
-          <component :is="iconGroup[icon]" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
-          <ErrorMessage :name="name" class="absolute left-0 top-15 text-sm text-red-500" />
+          <component
+            :is="iconGroup[icon]"
+            class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500"
+          />
+          <ErrorMessage
+            :name="name"
+            class="absolute left-0 top-15 text-sm text-red-500"
+          />
         </div>
         <button
-          class="w-full mt-8 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg hover:bg-sky-900/90 focus:outline-none"
-          :class="{'unclickable':!button.state}"
-          :disabled="!button.state">
+          class="w-full mt-8 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg focus:outline-none"
+          :class="{
+            unclickable: !button.state,
+            'hover:bg-sky-900/90': button.state,
+          }"
+          :disabled="!button.state"
+        >
           {{ button.name }}
         </button>
       </Form>
@@ -49,25 +77,25 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  button:{
+  button: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const iconGroup = {
-  'UserIcon': UserIcon,
-  'PasswordIcon': PasswordIcon,
-  'EmailIcon': EmailIcon,
-  'GenderIcon': GenderIcon,
-  'PaperIcon': PaperIcon,
-  'CalenderIcon': CalenderIcon
-}
+  UserIcon: UserIcon,
+  PasswordIcon: PasswordIcon,
+  EmailIcon: EmailIcon,
+  GenderIcon: GenderIcon,
+  PaperIcon: PaperIcon,
+  CalenderIcon: CalenderIcon,
+};
 
 const emits = defineEmits(["submit"]);
 
 function onSubmit(formValue) {
-  emits("submit", { info: formValue })
+  emits("submit", { info: formValue });
 }
 </script>
 

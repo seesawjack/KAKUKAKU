@@ -178,7 +178,8 @@ async function loadingLyricList() {
   const { data, error } = await supabase
     .from("lyrics_list")
     .select()
-    .eq("user_id", userInfo.id);
+    .eq("user_id", userInfo.id)
+    .order('created_at',{ ascending: false });
 
   if (data.length === 0) {
     searchIsError({

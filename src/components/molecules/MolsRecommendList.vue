@@ -101,15 +101,21 @@ const hasSearchText = computed(() => {
 async function loadingLyricList() {
   loadingState(true);
 
+  // const { data, error } = await supabase
+  //   .from("lyrics_list")
+  //   .select()
+  //   .eq("recommend->state", true);
+
   const { data, error } = await supabase
     .from("lyrics_list")
     .select()
-    .eq("recommend->state", true);
+    .eq("recommend->state", true)
+    .order('created_at',{ ascending: false });
 
   if (data?.length === 0) {
     searchIsError({
       state: 1,
-      message: "您尚未新增歌曲，建立歌曲後方可瀏覽已建立歌曲清單",
+      message: "目前無推薦歌曲清單",
     });
   }
 

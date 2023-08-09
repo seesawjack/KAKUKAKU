@@ -1,11 +1,18 @@
 import { defineStore } from "pinia";
+import { ref } from 'vue';
 import { useRequestStore } from '../request';
 
 export const useSearchStore = defineStore('search', () => {
     const { request } = useRequestStore();
-    
+
+    const youtubeURL = ref('https://youtube.googleapis.com/youtube/v3/search?');
+    const nextPage = ref('');
+    const prevPage = ref('');
+    const isReasearch = ref(false);
+
     async function youtubeSearch(value) {
-        let youtubeURL = "https://youtube.googleapis.com/youtube/v3/search?";
+        isReasearch.value = true;
+
         const queryString = {
             part: "snippet",
             q: encodeURI(value),
@@ -13,12 +20,30 @@ export const useSearchStore = defineStore('search', () => {
             key: import.meta.env.VITE_YOUTUBE_API_KEY,
         };
         for (const [key, value] of Object.entries(queryString)) {
-            youtubeURL += `${key}=${value}&`;
+            youtubeURL.value += `${key}=${value}&`;
         }
-        return await request({ url: youtubeURL });
+        const data = await request({ url: youtubeURL.value });
+        nextPage.value = data.nextPageToken;
+        prevPage.value = data.prevPageToken;
+
+        return data
     }
 
-    return{
-        youtubeSearch
+    async function youtubePageChange(next) {
+        isReasearch.value = false;
+
+        let pageUrl = youtubeURL.value;
+        pageUrl += next ? `pageToken=${nextPage.value}` : `pageToken=${prevPage.value}`
+
+        const data = await request({ url: pageUrl });
+        nextPage.value = data.nextPageToken;
+        prevPage.value = data.prevPageToken;
+        return data
+    }
+
+    return {
+        youtubeSearch,
+        youtubePageChange,
+        isReasearch
     }
 })

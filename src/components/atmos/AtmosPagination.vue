@@ -33,7 +33,6 @@
 <script setup>
 import { ref,toRefs,watch } from "vue";
 import { useSearchStore } from "../../stores/search/index";
-import { useGlobalStore } from "../../stores/index";
 
 const props = defineProps({
     totalPages: {
@@ -45,16 +44,11 @@ const props = defineProps({
 const nowPage = ref(1);
 const emit = defineEmits(["search"]);
 
-const { youtubePageChange } = useSearchStore();
 const { isReasearch } = toRefs(useSearchStore());
-const { loadingState } = useGlobalStore();
 
-async function pageChange(value) {
-    loadingState(true);
+function pageChange(value) {
     nowPage.value += value ? 1 : -1;
-    const data = await youtubePageChange(value);
-    emit("search", data);
-    loadingState(false);
+    emit("search", value);
 }
 
 watch(isReasearch,()=>{

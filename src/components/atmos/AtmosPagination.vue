@@ -1,6 +1,6 @@
 <template>
     <div class="inline-flex items-center justify-center gap-3">
-        <a v-if="nowPage !== 1" href="#"
+        <a v-if="page !== 1" href="#"
             class="inline-flex h-8 w-8 items-center justify-center text-white rtl:rotate-180 bg-gray-900/50 border border-white rounded hover:bg-slate-600"
             @click="pageChange(false)">
             <span class="sr-only">Next Page</span>
@@ -12,12 +12,14 @@
         </a>
 
         <p class="text-md text-white">
-            {{ nowPage }}
+            {{ page }}
             <span class="mx-0.25">/</span>
             {{ totalPages }}
         </p>
 
-        <a href="#"
+        <a 
+        v-if="page !== totalPages"
+        href="#"
             class="inline-flex h-8 w-8 items-center justify-center text-white rtl:rotate-180 bg-gray-900/50 border border-white rounded hover:bg-slate-600"
             @click="pageChange(true)">
             <span class="sr-only">Next Page</span>
@@ -35,23 +37,27 @@ import { ref,toRefs,watch } from "vue";
 import { useSearchStore } from "../../stores/search/index";
 
 const props = defineProps({
+    nowPage:{
+        type: Number,
+        required: true
+    },
     totalPages: {
         type: Number,
         required: true
     }
 })
 
-const nowPage = ref(1);
+const page = ref(props.nowPage);
 const emit = defineEmits(["search"]);
 
 const { isReasearch } = toRefs(useSearchStore());
 
 function pageChange(value) {
-    nowPage.value += value ? 1 : -1;
+    page.value += value ? 1 : -1;
     emit("search", value);
 }
 
 watch(isReasearch,()=>{
-    nowPage.value = isReasearch.value ? 1 : nowPage.value;
+    page.value = isReasearch.value ? 1 : page.value;
 })
 </script>

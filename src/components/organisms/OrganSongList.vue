@@ -18,7 +18,8 @@
     <atmos-pagination
       v-if="resultData?.items?.length > 9"
       @search="pageChagne"
-      :totalPages="resultData.pageInfo?.totalResults || 0"
+      :now-page="page+1"
+      :totalPages="totalPage || 0"
     />
   </div>
 </template>
@@ -57,8 +58,11 @@ watch(charIndex, () => {
 const isActive = ref(false);
 const resultData = ref({});
 const disappear = ref("");
+const totalPage = ref(0);
+const page = ref(0);
 
 async function searchResult(value) {
+  page.value = 0;
   if (!isActive.value) {
     isActive.value = true;
     setTimeout(() => {
@@ -66,9 +70,11 @@ async function searchResult(value) {
     }, 300);
   }
   resultData.value = value;
+  totalPage.value = parseInt(value.pageInfo?.totalResults / 10)
 }
 
 async function pageChagne(value) {
+  page.value += value ? 1 : -1;
   loadingState(true);
   const data = await youtubePageChange(value);
   resultData.value = data;

@@ -31,6 +31,7 @@
           :isAdded="true"
           :disappear="deletedSong.indexOf(item.video_id) > -1"
         />
+        <atmos-pagination v-if="totalSongCount > 10" @search="pageChagne" :nowPage="page+1" :totalPages="totalPages"/>
       </div>
     </div>
     <atmos-not-found v-if="searchError.state > 0" :tips="searchError.message" />
@@ -46,6 +47,7 @@ import useSupabase from "../../stores/supabase";
 import AtmosCard from "../atmos/AtmosCard.vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
+import AtmosPagination from "../atmos/AtmosPagination.vue";
 
 import SearchGlasses from "../svg/SearchGlasses.vue";
 
@@ -62,8 +64,8 @@ const isSearch = ref(false);
 //輸入框左下方提示文字
 const searchedTips = computed(() => {
   return isSearch.value
-    ? `符合搜尋結果 ${songList.value.length} 首`
-    : `已推薦 ${songList.value.length} 首`;
+    ? `符合搜尋結果 ${totalSongCount.value} 首`
+    : `已推薦 ${totalSongCount.value} 首`;
 });
 //搜尋結果錯誤訊息
 function searchIsError({ state, message }) {
@@ -72,6 +74,7 @@ function searchIsError({ state, message }) {
 }
 //搜尋歌曲
 async function searchSongs() {
+  page.value = 0;
   isSearch.value = true;
   searchIsError({ state: 0, message: "" });
 
@@ -79,15 +82,19 @@ async function searchSongs() {
 
   const { data, error } = await supabase
     .from("lyrics_list")
-    .select()
+    .select("*", { count: 'exact' })
     .eq("recommend->state", true)
-    .ilike("title", `%${searchSongName.value}%`);
+    .order('created_at', { ascending: false })
+    .ilike("title", `%${searchSongName.value}%`)
+    .range(0,9);
 
   if (data.length === 0) {
     searchIsError({ state: 2, message: "搜尋不到對應歌曲，請重新搜尋" });
   }
 
   songList.value = data;
+  totalPages.value = Math.ceil(count / 10);
+  totalSongCount.value = count
   loadingState(false);
 }
 
@@ -96,21 +103,46 @@ const hasSearchText = computed(() => {
   return searchSongName.value ? "cursor-pointer" : "opacity-40";
 });
 
+//分頁
+const getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const from = page ? page * limit : 0;
+  const to = page ? from + size - 1 : size - 1;
+
+  return { from, to };
+};
+
+const page = ref(0)
+async function pageChagne(value) {
+  page.value += value ? 1 : -1;
+
+  const { from, to } = getPagination(page.value, 10);
+  console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',from,to);
+  loadingState(true);
+  const { data, error } = await supabase
+    .from("lyrics_list")
+    .select()
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  songList.value = data;
+
+  loadingState(false);
+}
+const totalSongCount = ref(0)
+const totalPages = ref(0)
+
 
 //頁面載入所有已建立歌曲
 async function loadingLyricList() {
   loadingState(true);
 
-  // const { data, error } = await supabase
-  //   .from("lyrics_list")
-  //   .select()
-  //   .eq("recommend->state", true);
-
-  const { data, error } = await supabase
+  const { data,count, error } = await supabase
     .from("lyrics_list")
-    .select()
+    .select("*", { count: 'exact' })
     .eq("recommend->state", true)
-    .order('created_at',{ ascending: false });
+    .order('created_at',{ ascending: false })
+    .range(0, 9);
 
   if (data?.length === 0) {
     searchIsError({
@@ -118,9 +150,10 @@ async function loadingLyricList() {
       message: "目前無推薦歌曲清單",
     });
   }
-
+console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',count);
   songList.value = data;
-
+  totalPages.value = Math.ceil(count / 10);
+  totalSongCount.value = count
   loadingState(false);
 }
 

@@ -80,7 +80,7 @@ async function searchSongs() {
 
   loadingState(true);
 
-  const { data, error } = await supabase
+  const { data,count, error } = await supabase
     .from("lyrics_list")
     .select("*", { count: 'exact' })
     .eq("recommend->state", true)
@@ -117,7 +117,7 @@ async function pageChagne(value) {
   page.value += value ? 1 : -1;
 
   const { from, to } = getPagination(page.value, 10);
-  console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',from,to);
+
   loadingState(true);
   const { data, error } = await supabase
     .from("lyrics_list")

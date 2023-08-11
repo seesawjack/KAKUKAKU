@@ -2,19 +2,19 @@
   <section>
     <div class="container mx-auto">
       <div class="flex items-center justify-center mt-6">
-        <a href="/login" class="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b"
+        <a href="/login" class="w-1/3 pb-4 font-medium text-center text-gray-500 text-xl capitalize border-b"
           :class="{ 'border-sky-400 text-white': atLoginPage === 'login' }">
           登入
         </a>
-        <a href="/signup" class="w-1/3 pb-4 font-medium text-center text-gray-600 capitalize border-b "
+        <a href="/signup" class="w-1/3 pb-4 font-medium text-center text-xl  text-gray-600 capitalize border-b "
           :class="{ 'border-sky-400 text-white': atLoginPage === 'signup' }">
           註冊
         </a>
       </div>
-      <atmos-form :schema="formSchema[atLoginPage]" :validate="validate[atLoginPage]" :button="buttonState" @submit="handleSubmit"></atmos-form>
+      <atmos-form :form-type="atLoginPage" :schema="formSchema[atLoginPage]" :validate="validate[atLoginPage]" :button="buttonState" @submit="handleSubmit"></atmos-form>
     </div>
     <div class="mt-5" v-if="atLoginPage === 'login'">
-      <router-link to="/forgetPassword" class="hover:text-sky-400">忘記密碼</router-link>
+      <router-link to="/account/forget-password" class="hover:text-sky-400">忘記密碼</router-link>
       <span class="mx-3">|</span>
       <router-link to="/signup" class="hover:text-sky-400">新會員註冊</router-link>
       </div>

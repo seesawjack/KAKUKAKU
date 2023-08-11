@@ -1,17 +1,17 @@
 <template>
   <div class="w-full max-w-2xl">
     <div class="w-full text-start pt-14">
-      <h1 class="text-2xl">關於 KAKUKAKU</h1>
+      <h1 class="text-xl">關於 KAKUKAKU</h1>
       <hr class="w-full border-gray-200 dark:border-gray-500 my-3" />
       <p class="text-justify">提供使用者方便及快速的操作介面練習日文歌曲，且依據使用者回饋定期更新網站樣式及功能，期望能提供更完善的練習日文歌體驗。</p>
     </div>
     <div class="w-full text-start mt-10">
-      <h1 class="text-2xl">相關問題</h1>
+      <h1 class="text-xl">相關問題</h1>
       <hr class="w-full border-gray-200 dark:border-gray-500 my-3" />
       <atmos-accordion :content="faq"/>
     </div>
     <div class="w-full text-start mt-10">
-      <h1 class="text-2xl">版本更新紀錄</h1>
+      <h1 class="text-xl">版本更新紀錄</h1>
       <hr class="w-full border-gray-200 dark:border-gray-500 my-3" />
       <atmos-accordion :content="updateHistory"/>
     </div>

@@ -2,18 +2,16 @@
   <section>
     <div class="container mx-auto">
       <div class="flex items-center justify-center mt-6">
-        <p
-          class="w-2/3 pb-4 font-medium text-center text-white capitalize border-b border-sky-400"
-        >
+        <p class="w-2/3 pb-4 font-medium text-center text-white text-xl  capitalize border-b border-sky-400">
           網站問題回饋
         </p>
       </div>
-      <atmos-form
-        :schema="formSchema['feedback']"
-        :validate="validate['feedback']"
-        :button="buttonState"
-        @submit="handleSubmit"
-      ></atmos-form>
+      <atmos-form 
+      :form-type="'feedback'" 
+      :schema="formSchema['feedback']" 
+      :validate="validate['feedback']"
+      :button="buttonState" 
+      @submit="handleSubmit"/>
     </div>
   </section>
 </template>

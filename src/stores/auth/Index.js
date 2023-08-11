@@ -19,14 +19,14 @@ export const useAuthStore = defineStore("auth", () => {
   });
   //登入及註冊時的表單內容
   const formSchema = ref({
-    login: [
-      {
+    login: {
+      email: {
         name: "email",
         as: "input",
         placeholder: "請輸入信箱",
         icon: "EmailIcon",
       },
-      {
+      password: {
         name: "password",
         as: "input",
         type: "password",
@@ -34,21 +34,21 @@ export const useAuthStore = defineStore("auth", () => {
         icon: "PasswordIcon",
         icon2: "EyeCloseIcon"
       },
-    ],
-    signup: [
-      {
+    },
+    signup: {
+      userName: {
         name: "name",
         as: "input",
         placeholder: "請輸入使用者名稱",
         icon: "UserIcon",
       },
-      {
+      birth: {
         name: "birth",
         as: "input",
         type: "date",
         icon: "CalenderIcon",
       },
-      {
+      gender: {
         name: "gender",
         as: "select",
         icon: "GenderIcon",
@@ -71,7 +71,7 @@ export const useAuthStore = defineStore("auth", () => {
           },
         ],
       },
-      {
+      level: {
         name: "level",
         as: "select",
         icon: "PaperIcon",
@@ -114,13 +114,13 @@ export const useAuthStore = defineStore("auth", () => {
           },
         ],
       },
-      {
+      email: {
         name: "email",
         as: "input",
         placeholder: "請輸入信箱",
         icon: "EmailIcon",
       },
-      {
+      password: {
         name: "password",
         as: "input",
         type: "password",
@@ -129,24 +129,24 @@ export const useAuthStore = defineStore("auth", () => {
         icon2: "EyeCloseIcon"
 
       },
-      {
-        name: "confirmed",
+      passwordConfirmed: {
+        name: "passwordConfirmed",
         as: "input",
         type: "password",
         placeholder: "請再次輸入密碼",
         icon: "PasswordIcon",
         icon2: "EyeCloseIcon"
       },
-    ],
-    feedback: [
-      {
+    },
+    feedback: {
+      name: {
         name: "name",
         as: "input",
         value: feedbackName,
         placeholder: "請輸入使用者名稱",
         icon: "UserIcon",
       },
-      {
+      questionType: {
         name: "questionType",
         as: "select",
         icon: "PaperIcon",
@@ -174,20 +174,39 @@ export const useAuthStore = defineStore("auth", () => {
           },
         ],
       },
-      {
+      feedbackText: {
         name: "feedbackText",
         as: "textarea",
         placeholder: "請輸入意見或回饋",
       },
-    ],
-    forgetPassword:[
-      {
+    },
+    passwordForget: {
+      email: {
         name: "email",
         as: "input",
         placeholder: "請輸入信箱",
         icon: "EmailIcon",
       }
-    ]
+    },
+    passwordUpdate: {
+      password: {
+        name: "password",
+        as: "input",
+        type: "password",
+        placeholder: "請輸入新密碼",
+        icon: "PasswordIcon",
+        icon2: "EyeCloseIcon"
+
+      },
+      passwordConfirmed: {
+        name: "passwordConfirmed",
+        as: "input",
+        type: "password",
+        placeholder: "請再次輸入新密碼",
+        icon: "PasswordIcon",
+        icon2: "EyeCloseIcon"
+      },
+    }
   });
 
   //驗證表單內容
@@ -212,7 +231,7 @@ export const useAuthStore = defineStore("auth", () => {
         .required("請輸入密碼")
         .min(6, "至少輸入 6 個字")
         .max(20, "最多輸入 20 個字"),
-      confirmed: Yup.string()
+      passwordConfirmed: Yup.string()
         .oneOf([Yup.ref("password"), null], "密碼不相符")
         .required("請再次輸入密碼"),
     }),
@@ -227,8 +246,17 @@ export const useAuthStore = defineStore("auth", () => {
         .min(2, "至少輸入 2 個字")
         .max(300, "最多輸入 300 個字"),
     }),
-    forgetPassword:Yup.object({
-      name: Yup.string().email("信箱格式錯誤").required("請輸入信箱"),
+    passwordForget: Yup.object({
+      email: Yup.string().email("信箱格式錯誤").required("請輸入信箱"),
+    }),
+    passwordUpdate: Yup.object({
+      password: Yup.string()
+        .required("請輸入密碼")
+        .min(6, "至少輸入 6 個字")
+        .max(20, "最多輸入 20 個字"),
+      passwordConfirmed: Yup.string()
+        .oneOf([Yup.ref("password"), null], "密碼不相符")
+        .required("請再次輸入密碼"),
     }),
   });
 

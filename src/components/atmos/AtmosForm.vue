@@ -1,59 +1,32 @@
 <template>
   <section>
-    <div class="container flex items-center justify-center px-6 mx-auto">
+    <div class="container flex items-center justify-center max-md:px-6 mx-auto">
       <Form @submit="onSubmit" class="w-full" :validation-schema="validate">
-        <div
-          v-for="{ as, name, children, icon, icon2, ...attrs } in schema"
-          :key="name"
-          class="relative"
-        >
-          <Field
-            :as="as"
-            :id="name"
-            :name="name"
-            v-bind="attrs"
-            :ref="name"
+        <div v-for="{ as, name, children, icon, icon2, ...attrs } in schema" :key="name" class="relative">
+          <Field :as="as" :id="name" :name="name" v-bind="attrs" :ref="name"
             class="block w-full py-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8"
             :class="{
               'pl-11': name !== 'birth' && icon?.length,
               'pl-3': name === 'birth' || !icon,
-            }"
-          >
+            }">
             <template v-if="children && children.length">
-              <component
-                v-for="({ tag, text, ...childAttrs }, idx) in children"
-                :key="idx"
-                :is="tag"
-                v-bind="childAttrs"
-              >
+              <component v-for="({ tag, text, ...childAttrs }, idx) in children" :key="idx" :is="tag" v-bind="childAttrs">
                 {{ text }}
               </component>
             </template>
           </Field>
-          <component
-            :is="iconGroup[icon]"
-            class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500"
-          />
-          <component
-            v-if="icon2"
-            :is="iconGroup[showPasswordIcon]"
+          <component :is="iconGroup[icon]" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
+          <component v-if="icon2" :is="iconGroup[showPasswordIcon]"
             class="absolute right-0 top-3 mx-3 text-gray-300 dark:text-gray-500"
-            :class="{ 'stroke-white': showPasswordIcon === 'EyeIcon' }"
-            @click="changIcon"
-          />
-          <ErrorMessage
-            :name="name"
-            class="absolute left-0 top-15 text-sm text-red-500"
-          />
+            :class="{ 'stroke-white': showPasswordIcon === 'EyeIcon' }" @click="changIcon" />
+          <ErrorMessage :name="name" class="absolute left-0 top-15 text-sm text-red-500" />
         </div>
         <button
           class="w-full mt-8 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg focus:outline-none"
           :class="{
             unclickable: !button.state,
             'hover:bg-sky-900/90': button.state,
-          }"
-          :disabled="!button.state"
-        >
+          }" :disabled="!button.state">
           {{ button.name }}
         </button>
       </Form>
@@ -91,8 +64,13 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  formType: {
+    type: String,
+    required: true
+  }
 });
 
+const formName = ref(props.formType);
 const iconGroup = {
   UserIcon: UserIcon,
   PasswordIcon: PasswordIcon,
@@ -110,26 +88,21 @@ const iconChange = ref(false);
 const showPasswordIcon = computed(() => {
   return iconChange.value ? "EyeIcon" : "EyeCloseIcon";
 });
+
 function changIcon() {
   iconChange.value = !iconChange.value;
-  
-  if (route.path.indexOf("login")>0) {
-    if (iconChange.value) {
-      formSchema.value.login[1].type = "text";
-    } else {
-      formSchema.value.login[1].type = "password";
+  if (iconChange.value) {
+    formSchema.value[formName.value].password.type = "text";
+    if (formSchema.value[formName.value].passwordConfirmed) {
+      formSchema.value[formName.value].passwordConfirmed.type = "text";
     }
-    
-  }else if( route.path.indexOf("signup")>0){
-    
-    if (iconChange.value) {
-      formSchema.value.signup[5].type = "text";
-      formSchema.value.signup[6].type = "text";
-    } else {
-      formSchema.value.signup[5].type = "password";
-      formSchema.value.signup[6].type = "password";
+  } else {
+    formSchema.value[formName.value].password.type = "password";
+    if (formSchema.value[formName.value].passwordConfirmed) {
+      formSchema.value[formName.value].passwordConfirmed.type = "password";
     }
-}}
+  }
+}
 
 const emits = defineEmits(["submit"]);
 

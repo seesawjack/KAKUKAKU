@@ -10,9 +10,10 @@ import LyricsList from './pages/Lyrics/LyricsList.vue';
 import RecommendList from './pages/Lyrics/RecommendList.vue';
 import FeedBackPage from './pages/FeedBack/Index.vue';
 import ForgetPassword from './pages/Auth/ForgetPassword.vue';
+import UpdatePassword from './pages/Auth/UpdatePassword.vue';
 // import NotFound from './pages/NotFound.vue';
 
-import useSupabase  from './stores/supabase';
+import useSupabase from './stores/supabase';
 const { supabase } = useSupabase();
 const router = createRouter({
     history: createWebHistory(),
@@ -28,15 +29,27 @@ const router = createRouter({
         { path: '/song/personal/list', component: LyricsList },
         { path: '/song/recommend/list', component: RecommendList },
         { path: '/feedback', component: FeedBackPage },
-        { path: '/forgetPassword', component: ForgetPassword },
+        {
+            path: '/account',
+            children: [
+                {
+                    path: 'forget-password',
+                    component: ForgetPassword
+                },
+                {
+                    path: 'update-password',
+                    component: UpdatePassword
+                },
+            ]
+        },
         { path: '/:notFound(.*)', redirect: '/song/search' }
     ],
 });
 
 router.beforeEach(async (to, from) => {
     const { data: { session } } = await supabase.auth.getSession();
-    if(to.fullPath === '/login' || to.fullPath === '/signup'){
-        if(session?.user){
+    if (to.fullPath === '/login' || to.fullPath === '/signup') {
+        if (session?.user) {
             return '/song/search'
         }
     }

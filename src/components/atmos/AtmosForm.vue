@@ -3,7 +3,7 @@
     <div class="container flex items-center justify-center px-6 mx-auto">
       <Form @submit="onSubmit" class="w-full" :validation-schema="validate">
         <div
-          v-for="{ as, name, children, icon, ...attrs } in schema"
+          v-for="{ as, name, children, icon, icon2, ...attrs } in schema"
           :key="name"
           class="relative"
         >
@@ -34,6 +34,13 @@
             :is="iconGroup[icon]"
             class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500"
           />
+          <component
+            v-if="icon2"
+            :is="iconGroup[showPasswordIcon]"
+            class="absolute right-0 top-3 mx-3 text-gray-300 dark:text-gray-500"
+            :class="{ 'stroke-white': showPasswordIcon === 'EyeIcon' }"
+            @click="changIcon"
+          />
           <ErrorMessage
             :name="name"
             class="absolute left-0 top-15 text-sm text-red-500"
@@ -55,9 +62,10 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, computed, toRefs } from "vue";
 import { Form, Field, ErrorMessage, useForm } from "vee-validate";
 import { useRoute } from "vue-router";
+import { useAuthStore } from "../../stores/auth";
 
 import UserIcon from "../svg/UserIcon.vue";
 import PasswordIcon from "../svg/PasswordIcon.vue";
@@ -65,6 +73,8 @@ import EmailIcon from "../svg/EmailIcon.vue";
 import GenderIcon from "../svg/GenderIcon.vue";
 import PaperIcon from "../svg/PaperIcon.vue";
 import CalenderIcon from "../svg/CalenderIcon.vue";
+import EyeCloseIcon from "../svg/EyeCloseIcon.vue";
+import EyeIcon from "../svg/EyeIcon.vue";
 
 const route = useRoute();
 
@@ -90,7 +100,36 @@ const iconGroup = {
   GenderIcon: GenderIcon,
   PaperIcon: PaperIcon,
   CalenderIcon: CalenderIcon,
+  EyeCloseIcon: EyeCloseIcon,
+  EyeIcon: EyeIcon,
 };
+
+const { formSchema } = toRefs(useAuthStore());
+
+const iconChange = ref(false);
+const showPasswordIcon = computed(() => {
+  return iconChange.value ? "EyeIcon" : "EyeCloseIcon";
+});
+function changIcon() {
+  iconChange.value = !iconChange.value;
+  
+  if (route.path.indexOf("login")>0) {
+    if (iconChange.value) {
+      formSchema.value.login[1].type = "text";
+    } else {
+      formSchema.value.login[1].type = "password";
+    }
+    
+  }else if( route.path.indexOf("signup")>0){
+    
+    if (iconChange.value) {
+      formSchema.value.signup[5].type = "text";
+      formSchema.value.signup[6].type = "text";
+    } else {
+      formSchema.value.signup[5].type = "password";
+      formSchema.value.signup[6].type = "password";
+    }
+}}
 
 const emits = defineEmits(["submit"]);
 

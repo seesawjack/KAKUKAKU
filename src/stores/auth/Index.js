@@ -32,6 +32,7 @@ export const useAuthStore = defineStore("auth", () => {
         type: "password",
         placeholder: "請輸入密碼",
         icon: "PasswordIcon",
+        icon2: "EyeCloseIcon"
       },
     ],
     signup: [
@@ -125,6 +126,8 @@ export const useAuthStore = defineStore("auth", () => {
         type: "password",
         placeholder: "請輸入密碼",
         icon: "PasswordIcon",
+        icon2: "EyeCloseIcon"
+
       },
       {
         name: "confirmed",
@@ -132,6 +135,7 @@ export const useAuthStore = defineStore("auth", () => {
         type: "password",
         placeholder: "請再次輸入密碼",
         icon: "PasswordIcon",
+        icon2: "EyeCloseIcon"
       },
     ],
     feedback: [

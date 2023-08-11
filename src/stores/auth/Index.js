@@ -180,6 +180,14 @@ export const useAuthStore = defineStore("auth", () => {
         placeholder: "請輸入意見或回饋",
       },
     ],
+    forgetPassword:[
+      {
+        name: "email",
+        as: "input",
+        placeholder: "請輸入信箱",
+        icon: "EmailIcon",
+      }
+    ]
   });
 
   //驗證表單內容
@@ -218,6 +226,9 @@ export const useAuthStore = defineStore("auth", () => {
         .required("請輸入意見或回饋")
         .min(2, "至少輸入 2 個字")
         .max(300, "最多輸入 300 個字"),
+    }),
+    forgetPassword:Yup.object({
+      name: Yup.string().email("信箱格式錯誤").required("請輸入信箱"),
     }),
   });
 

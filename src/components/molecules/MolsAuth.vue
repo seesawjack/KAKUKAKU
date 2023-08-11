@@ -13,6 +13,11 @@
       </div>
       <atmos-form :schema="formSchema[atLoginPage]" :validate="validate[atLoginPage]" :button="buttonState" @submit="handleSubmit"></atmos-form>
     </div>
+    <div class="mt-5" v-if="atLoginPage === 'login'">
+      <router-link to="/forgetPassword" class="hover:text-sky-400">忘記密碼</router-link>
+      <span class="mx-3">|</span>
+      <router-link to="/signup" class="hover:text-sky-400">新會員註冊</router-link>
+      </div>
   </section>
 </template>
 

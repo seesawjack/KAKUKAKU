@@ -150,7 +150,6 @@ async function loadingLyricList() {
       message: "目前無推薦歌曲清單",
     });
   }
-console.log('%c 結果(紅) ', 'background: #EA0000; color: #ffffff',count);
   songList.value = data;
   totalPages.value = Math.ceil(count / 10);
   totalSongCount.value = count

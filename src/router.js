@@ -8,7 +8,8 @@ import AuthPage from './pages/Auth/Index.vue';
 import OnboardingPage from './pages/Auth/OnboardingPage.vue';
 import LyricsList from './pages/Lyrics/LyricsList.vue';
 import RecommendList from './pages/Lyrics/RecommendList.vue';
-import FeedBackPage from './pages/FeedBack/Index.vue'
+import FeedBackPage from './pages/FeedBack/Index.vue';
+import ForgetPassword from './pages/Auth/ForgetPassword.vue';
 // import NotFound from './pages/NotFound.vue';
 
 import useSupabase  from './stores/supabase';
@@ -27,6 +28,7 @@ const router = createRouter({
         { path: '/song/personal/list', component: LyricsList },
         { path: '/song/recommend/list', component: RecommendList },
         { path: '/feedback', component: FeedBackPage },
+        { path: '/forgetPassword', component: ForgetPassword },
         { path: '/:notFound(.*)', redirect: '/song/search' }
     ],
 });

@@ -14,7 +14,7 @@
         </p>
         <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
           :key="item.id" :id="item.video_id" :url="item.video_img"
-          :href="`/song?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" :title="item.title"
+          :href="`/song/item?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" :title="item.title"
           :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1"
           @click="isRecommendSong(item.recommend?.state || false)">
           <template #configure>

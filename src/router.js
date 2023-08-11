@@ -19,15 +19,20 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         { path: '/', redirect: '/song/search' },
-        { path: '/song/search', component: HomePage },
-        { path: '/song/upload', component: LyricsEdit },
-        { path: '/song', component: LyricsResult },
+        {
+            path: '/song',
+            children: [
+                { path: 'item', component: LyricsResult },
+                { path: 'search', component: HomePage },
+                { path: 'upload', component: LyricsEdit },
+                { path: 'personal/list', component: LyricsList },
+                { path: 'recommend/list', component: RecommendList },
+            ]
+        },
         { path: '/about', component: AboutPage },
         { path: '/login', component: AuthPage },
         { path: '/signup', component: AuthPage },
         { path: '/onboarding', component: OnboardingPage },
-        { path: '/song/personal/list', component: LyricsList },
-        { path: '/song/recommend/list', component: RecommendList },
         { path: '/feedback', component: FeedBackPage },
         {
             path: '/account',

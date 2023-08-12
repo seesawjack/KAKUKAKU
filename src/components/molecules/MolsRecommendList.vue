@@ -122,6 +122,7 @@ async function pageChagne(value) {
   const { data, error } = await supabase
     .from("lyrics_list")
     .select()
+    .eq("recommend->state", true)
     .order('created_at', { ascending: false })
     .range(from, to);
 
@@ -150,6 +151,7 @@ async function loadingLyricList() {
       message: "目前無推薦歌曲清單",
     });
   }
+  
   songList.value = data;
   totalPages.value = Math.ceil(count / 10);
   totalSongCount.value = count

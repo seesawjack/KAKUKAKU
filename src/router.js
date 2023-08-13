@@ -7,7 +7,6 @@ import AboutPage from './pages/about/Index.vue'
 import AuthPage from './pages/Auth/Index.vue';
 import OnboardingPage from './pages/Auth/OnboardingPage.vue';
 import LyricsList from './pages/Lyrics/LyricsList.vue';
-import RecommendList from './pages/Lyrics/RecommendList.vue';
 import FeedBackPage from './pages/FeedBack/Index.vue';
 import ForgetPassword from './pages/Auth/ForgetPassword.vue';
 import UpdatePassword from './pages/Auth/UpdatePassword.vue';
@@ -26,7 +25,7 @@ const router = createRouter({
                 { path: 'search', component: HomePage },
                 { path: 'upload', component: LyricsEdit },
                 { path: 'personal/list', component: LyricsList },
-                { path: 'recommend/list', component: RecommendList },
+                { path: 'recommend/list', component: LyricsList },
             ]
         },
         { path: '/about', component: AboutPage },

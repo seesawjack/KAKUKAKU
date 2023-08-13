@@ -1,23 +1,22 @@
 <template>
   <div class="w-full max-w-[600px] max-sm:px-5 mx-auto mt-5">
-    <div v-if="loggedIn && searchError.state !== 1">
+    <div v-if="pageIsPersonal && searchError.state !== 1">
       <div class="w-full">
         <form @submit.prevent="searchSongs">
-          <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入想搜尋的已建立歌曲名稱'"
+          <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
             :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
             v-model.trim="searchSongName">
             <search-glasses class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
           </atmos-input>
         </form>
-        <p v-if="songList.length > 0" class="text-left mb-5">
+        <p v-if="songList?.length > 0" class="text-left mb-5">
           {{ searchedTips }}
         </p>
         <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
-          :key="item.id" :id="item.video_id" :url="item.video_img"
-          :href="`/song/item?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`" :title="item.title"
-          :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1"
-          @click="isRecommendSong(item.recommend?.state || false)">
-          <template #configure>
+          :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title"
+          :href="`/song/item?song_id=${item.video_id}&${route.path.indexOf('personal') > 0 ? 'user=' + userInfo.user_metadata?.name : 'recommend=true'}`"
+          :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1">
+          <template #configure v-if="route.path.indexOf('personal') > 0">
             <div class="w-[22.5px] relative">
               <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer max-md:block"
                 :class="[
@@ -32,15 +31,16 @@
             </div>
           </template>
         </atmos-card>
-        <atmos-pagination v-if="totalSongCount > 10" @search="pageChagne" :nowPage="page+1" :totalPages="totalPages" />
+        <atmos-pagination v-if="totalSongCount > 10" :nowPage="page + 1" :totalPages="totalPages" @search="pageChagne" />
       </div>
     </div>
-    <atmos-not-found v-if="!loggedIn || searchError.state > 0" :tips="searchError.message" />
+    <atmos-not-found v-if="pageIsPersonal || searchError.state > 0" :tips="searchError.message" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, watch, computed, onMounted, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
 import { useGlobalStore } from "../../stores/index";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/lyric";
@@ -60,6 +60,7 @@ const {
   lyricConfiguration: { selected },
 } = useLyricStore();
 const { supabase } = useSupabase();
+const route = useRoute();
 
 const songList = ref([]);
 const loggedIn = computed(() => isLoggedIn());
@@ -89,13 +90,13 @@ async function searchSongs() {
   if (!isLoggedIn()) return;
   loadingState(true);
 
-  const { data,count, error } = await supabase
+  const { data, count, error } = await supabase
     .from("lyrics_list")
     .select("*", { count: 'exact' })
     .eq("user_id", userInfo.id)
     .order('created_at', { ascending: false })
     .ilike("title", `%${searchSongName.value}%`)
-    .range(0,9);
+    .range(0, 9);
 
   if (data.length === 0) {
     searchIsError({ state: 2, message: "搜尋不到對應歌曲，請重新搜尋" });
@@ -104,19 +105,25 @@ async function searchSongs() {
   songList.value = data;
   totalPages.value = Math.ceil(count / 10);
   totalSongCount.value = count
-  
+
   loadingState(false);
 }
+//頁面判斷提示
+const pageIsPersonal = computed(()=>{
+  if(route.path.indexOf('recommend')>0){
+    return true;
+  }else if(route.path.indexOf('personal')>0 && isLoggedIn()){
+    return true;
+  }else{
+    return false
+  }
+})
 
 //根據搜尋框內是否含有效文字而顯示對應樣式
 const hasSearchText = computed(() => {
   return searchSongName.value ? "cursor-pointer" : "opacity-40";
 });
 
-//判斷是否有推薦
-function isRecommendSong(isRecommend) {
-  selected.isRecommend.state = isRecommend;
-}
 //刪除歌曲
 async function deleteSong(id) {
   loadingState(true);
@@ -163,18 +170,32 @@ const getPagination = (page, size) => {
 
 const page = ref(0)
 async function pageChagne(value) {
+  let songData = {};
   page.value += value ? 1 : -1;
 
   const { from, to } = getPagination(page.value, 10);
   loadingState(true);
-  const { data, error } = await supabase
-    .from("lyrics_list")
-    .select()
-    .eq("user_id", userInfo.id)
-    .order('created_at', { ascending: false })
-    .range(from, to);
+  if (route.path.indexOf('personal') > 0) {
+    const { data, error } = await supabase
+      .from("lyrics_list")
+      .select()
+      .eq("user_id", userInfo.id)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+    songData.data = data;
+  } else if (route.path.indexOf('recommend') > 0) {
+    const { data, error } = await supabase
+      .from("lyrics_list")
+      .select()
+      .eq("recommend->state", true)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+    songData.data = data;
+  }
 
-  songList.value = data;
+
+  songList.value = songData.data;
+  ;
 
   loadingState(false);
 }
@@ -183,32 +204,51 @@ const totalPages = ref(0)
 
 //頁面載入所有已建立歌曲
 async function loadingLyricList() {
-  if (!isLoggedIn()) return;
+  let songData = {};
   loadingState(true);
+  if (isLoggedIn() && route.path.indexOf('personal') > 0) {
+    const { data, count, error } = await supabase
+      .from("lyrics_list")
+      .select("*", { count: 'exact' })
+      .eq("user_id", userInfo.id)
+      .order('created_at', { ascending: false })
+      .range(0, 9);
+    songData.data = data;
+    songData.count = count;
+  } else if (route.path.indexOf('recommend') > 0) {
+    const { data, count, error } = await supabase
+      .from("lyrics_list")
+      .select("*", { count: 'exact' })
+      .eq("recommend->state", true)
+      .order('created_at', { ascending: false })
+      .range(0, 9);
+    songData.data = data;
+    songData.count = count;
+  }
 
-  const { data, count, error } = await supabase
-    .from("lyrics_list")
-    .select("*", { count: 'exact' })
-    .eq("user_id", userInfo.id)
-    .order('created_at', { ascending: false })
-    .range(0, 9);
-
-  if (data.length === 0) {
+  if (songData.data?.length === 0) {
     searchIsError({
       state: 1,
       message: "您尚未新增歌曲",
     });
   }
-  songList.value = data;
-  totalPages.value = Math.ceil(count / 10);
-  totalSongCount.value = count
+  songList.value = songData.data;
+  totalPages.value = Math.ceil(songData.count / 10);
+  totalSongCount.value = songData.count
   loadingState(false);
 }
+
+watch(() => route.path, () => {
+  if (route.path.indexOf('personal') || route.path.indexOf('recommend')) {
+    loadingLyricList();
+  }
+})
 
 onMounted(async () => {
   document.addEventListener("click", notClickDropdwonSelf);
   loadingLyricList();
-  if (!isLoggedIn()) {
+  if (isLoggedIn() && route.path.indexOf('personal') > 0) {
+    console.log('%c 結果(藍) ', 'background: #009393; color: #ffffff', '觸發');
     searchIsError({ state: 3, message: "登入會員後方可看到已建立歌曲清單" });
   }
 });

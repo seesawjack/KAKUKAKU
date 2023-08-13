@@ -1,7 +1,7 @@
 <template>
   <div class="max-md:!w-full flex justify-center max-md:px-5 mt-5"
     :class="widthContainer">
-    <mols-lyric-result />
+    <mols-song-item/>
     <mols-configure v-if="songState.show"
       class="max-md:fixed sticky max-md:top-1 top-12 max-md:right-7 z-50 h-[24px] translate-x-4 transition-all" />
   </div>
@@ -11,7 +11,7 @@
 import { computed } from 'vue';
 import { useLyricStore } from "../../stores/lyric";
 
-import MolsLyricResult from "../molecules/MolsLyricResult.vue";
+import MolsSongItem from "../molecules/MolsSongItem.vue";
 import MolsConfigure from "../molecules/MolsConfigure.vue";
 
 const {

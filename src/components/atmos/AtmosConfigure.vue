@@ -11,6 +11,6 @@ import ToothIcon from "../svg/ToothIcon.vue";
 const emit = defineEmits(["showDrop"]);
 
 function showDropDown() {
-  emit("showDrop", null);
+  emit("showDrop");
 }
 </script>

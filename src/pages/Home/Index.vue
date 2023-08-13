@@ -1,10 +1,7 @@
 <template>
-  <OrganSongList />
+  <organ-song-search />
 </template>
 
 <script setup>
-import OrganSongList from "../../components/organisms/OrganSongList.vue";
+import OrganSongSearch from "../../components/organisms/OrganSongSearch.vue";
 </script>
-
-<style lang="scss">
-</style>

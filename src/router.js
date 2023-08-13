@@ -1,15 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import HomePage from './pages/Home/Index.vue';
-import LyricsEdit from './pages/Lyrics/LyricsEdit.vue';
-import LyricsResult from './pages/Lyrics/LyricsResult.vue';
-import AboutPage from './pages/about/Index.vue'
+
+import SongEdit from './pages/Song/SongEdit.vue';
+import SongList from './pages/Song/SongList.vue';
+import SongItem from './pages/Song/SongItem.vue';
+
 import AuthPage from './pages/Auth/Index.vue';
 import OnboardingPage from './pages/Auth/OnboardingPage.vue';
-import LyricsList from './pages/Lyrics/LyricsList.vue';
+import PasswordForget from './pages/Auth/PasswordForget.vue';
+import PasswordUpdate from './pages/Auth/PasswordUpdate.vue';
+
+import AboutPage from './pages/about/Index.vue';
+
 import FeedBackPage from './pages/FeedBack/Index.vue';
-import ForgetPassword from './pages/Auth/ForgetPassword.vue';
-import UpdatePassword from './pages/Auth/UpdatePassword.vue';
+
 // import NotFound from './pages/NotFound.vue';
 
 import useSupabase from './stores/supabase';
@@ -21,31 +26,31 @@ const router = createRouter({
         {
             path: '/song',
             children: [
-                { path: 'item', component: LyricsResult },
                 { path: 'search', component: HomePage },
-                { path: 'upload', component: LyricsEdit },
-                { path: 'personal/list', component: LyricsList },
-                { path: 'recommend/list', component: LyricsList },
+                { path: 'upload', component: SongEdit },
+                { path: 'personal/list', component: SongList },
+                { path: 'recommend/list', component: SongList },
+                { path: 'item', component: SongItem }
             ]
         },
-        { path: '/about', component: AboutPage },
         { path: '/login', component: AuthPage },
         { path: '/signup', component: AuthPage },
         { path: '/onboarding', component: OnboardingPage },
-        { path: '/feedback', component: FeedBackPage },
         {
             path: '/account',
             children: [
                 {
                     path: 'forget-password',
-                    component: ForgetPassword
+                    component: PasswordForget
                 },
                 {
                     path: 'update-password',
-                    component: UpdatePassword
+                    component: PasswordUpdate
                 },
             ]
         },
+        { path: '/about', component: AboutPage },
+        { path: '/feedback', component: FeedBackPage },
         { path: '/:notFound(.*)', redirect: '/song/search' }
     ],
 });

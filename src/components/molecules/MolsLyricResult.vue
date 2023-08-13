@@ -2,9 +2,9 @@
   <div v-if="songState.show" class="w-full flex flex-col mx-auto">
     <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
     <atmos-lyric
-      :lyrics="lyrics"
-      :hiraganaLyrics="hiraLyrics"
-      :romajiLyrics="romaLyrics"
+      :lyrics="resultLyrics"
+      :hiraganaLyrics="hiraganaLyrics"
+      :romajiLyrics="romajiLyrics"
       class="relative"
       :className="[selected.labelType]"
     />
@@ -235,7 +235,7 @@ onMounted(async () => {
     return;
   }
 
-  //使用者為儲存歌曲，重整後可讀取自動存在 cookie 的資料
+  //使用者未儲存歌曲，重整後可讀取自動存在 cookie 的資料
   if (route.query.song_id === songInfo.value?.id) {
     await tolyrics(initLyrics.value);
     lyrics.value = resultLyrics.value;

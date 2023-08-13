@@ -150,7 +150,7 @@ const pageIsPersonal = computed(() => {
     return true;
   } else if (route.path.indexOf("personal") > 0 && isLoggedIn()) {
     return true;
-  } else {
+  } else {    
     searchIsError({ state: 3, message: "登入會員後方可看到已建立歌曲清單" });
     return false;
   }
@@ -241,6 +241,7 @@ async function loadingLyricList() {
   let songData = {};
   loadingState(true);
   if (isLoggedIn() && route.path.indexOf("personal") > 0) {
+    searchIsError({ state: 0, message: "" });
     const { data, count, error } = await supabase
       .from("lyrics_list")
       .select("*", { count: "exact" })
@@ -285,9 +286,6 @@ watch(
 onMounted(async () => {
   document.addEventListener("click", notClickDropdwonSelf);
   loadingLyricList();
-  if (isLoggedIn() && route.path.indexOf("personal") > 0) {
-    searchIsError({ state: 3, message: "登入會員後方可看到已建立歌曲清單" });
-  }
 });
 
 onUnmounted(() => {

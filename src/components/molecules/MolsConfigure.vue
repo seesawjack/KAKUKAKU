@@ -36,7 +36,7 @@
       :show="isShow"
     >
       <!-- 歌詞選項 -->
-      <div v-if="route.path === '/song'">
+      <div v-if="route.path.indexOf('song/item')>0">
         <!-- ▼單選 文字大小 -->
         <div>
           <p class="text-left">文字大小</p>

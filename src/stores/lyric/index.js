@@ -220,14 +220,11 @@ export const useLyricStore = defineStore("lyric", () => {
     //修改平假名跑位
     resultLyrics.value[index] = resultLyrics.value[index].replace(init, edit);
     //平假名錯誤調整
-    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(
-      init,
-      edit
-    );
+    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init,edit);
     //羅馬字錯誤調整
     romajiLyrics.value[index] = toRomajiLyrics(
       hiraganaLyrics.value[index].replace(init, edit)
-    );
+    );   
   }
 
   return {

@@ -1,8 +1,10 @@
 <template>
   <div class="no-hover">
-    <div v-if="windowWidth > 768" class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
+    <div v-if="windowWidth > 768"
+      class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
       :class="[font, className]">
-      <div class="absolute w-full left-1/2 translate-x-[-50%]">
+      <div class="absolute w-full left-1/2 translate-x-[-50%]"
+        :class="{ 'is-recommend-state': route.query.recommend === 'true' }">
         <template v-for="(lyric, index) in lyrics" :key="index">
           <div v-if="lyricDisplay(index) || lyricDisplay(index - 1)">
             <p class="init tracking-[2px] test-ly leading-[2.75rem]"
@@ -18,7 +20,7 @@
     <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
       <template v-for="(lyric, index) in lyrics" :key="index">
         <div class="group relative lyric"
-          :class="{ 'mt-10': spaceIndex.indexOf(index) > -1,'is-recommend-state':route.query.recommend === 'true'}"
+          :class="{ 'mt-10': spaceIndex.indexOf(index) > -1, 'is-recommend-state': route.query.recommend === 'true' }"
           v-if="lyric !== ''">
           <p class="init tracking-[2px] test-ly flex-wrap pr-6 hover:no-underline"
             :class="{ 'font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	': lyricDisplay(index) }"
@@ -161,14 +163,14 @@ const editRubi = () => {
 }
 
 onMounted(() => {
-  if(route.query.recommend !== 'true'){
+  if (route.query.recommend !== 'true') {
     document.addEventListener("click", editRubi);
   }
   document.addEventListener('resize', onWidthChange);
 });
 
 onUnmounted(() => {
-  document.removeEventListener("click",editRubi);
+  document.removeEventListener("click", editRubi);
   document.removeEventListener('resize', onWidthChange);
 })
 </script>
@@ -196,7 +198,7 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-.is-recommend-state .hanji-word:hover{
+.is-recommend-state .hanji-word:hover {
   text-decoration: none;
   cursor: unset;
 }

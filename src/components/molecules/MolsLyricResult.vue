@@ -61,8 +61,6 @@ const { supabase } = useSupabase();
 const { loadingState } = useGlobalStore();
 
 const lyrics = ref([]);
-const hiraLyrics = ref([]);
-const romaLyrics = ref([]);
 
 function toSongState({ show, message }) {
   songState.show = show;
@@ -196,12 +194,9 @@ onMounted(async () => {
       return;
     }
 
-    lyrics.value = JSON.parse(data[0].hanji);
     resultLyrics.value = JSON.parse(data[0].hanji);
     hiraganaLyrics.value = JSON.parse(data[0].hiragana);
     romajiLyrics.value = JSON.parse(data[0].romaji);
-    hiraLyrics.value = JSON.parse(data[0].hiragana);
-    romaLyrics.value = JSON.parse(data[0].romaji);
     lyricTimeStamp.value = JSON.parse(data[0].timestamp);
     spaceIndex.value = JSON.parse(data[0].spaceIndex);
     selected.isRecommend.state = list_data[0].recommend.state;
@@ -226,10 +221,9 @@ onMounted(async () => {
       toSongState({ show: false, message: "查無此歌曲" });
       return;
     }
-
-    lyrics.value = JSON.parse(data[0].hanji);
-    hiraLyrics.value = JSON.parse(data[0].hiragana);
-    romaLyrics.value = JSON.parse(data[0].romaji);
+    resultLyrics.value = JSON.parse(data[0].hanji);
+    hiraganaLyrics.value = JSON.parse(data[0].hiragana);
+    romajiLyrics.value =  JSON.parse(data[0].romaji);
     lyricTimeStamp.value = JSON.parse(data[0].timestamp);
     spaceIndex.value = JSON.parse(data[0].spaceIndex);
     return;
@@ -250,10 +244,6 @@ onMounted(async () => {
     buttonState({ text: "登入後方可儲存歌曲", state: "", unclickable: true });
     return;
   }
-
-  lyrics.value = resultLyrics.value;
-  hiraLyrics.value = hiraganaLyrics.value;
-  romaLyrics.value = romajiLyrics.value;
 });
 </script>
 

@@ -3,74 +3,39 @@
     <div v-if="pageIsPersonal && searchError.state !== 1">
       <div class="w-full">
         <form @submit.prevent="searchSongs">
-          <atmos-input
-            class="w-full max-sm:text-sm mb-5"
-            :inputTips="'請輸入歌曲名稱'"
+          <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
             :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
-            v-model.trim="searchSongName"
-          >
-            <search-glasses
-              class="absolute right-3 top-2"
-              :class="hasSearchText"
-              @click="searchSongs"
-            />
+            v-model.trim="searchSongName">
+            <search-glasses class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
           </atmos-input>
         </form>
         <p v-if="songList?.length > 0" class="text-left mb-5">
           {{ searchedTips }}
         </p>
-        <atmos-card
-          class="max-sm:ml-0 ml-2 mb-5 group"
-          :class="`dropdown-${item.video_id}`"
-          v-for="item in songList"
-          :key="item.id"
-          :id="item.video_id"
-          :url="item.video_img"
-          :title="item.title"
-          :href="`/song/item?song_id=${item.video_id}&${
-            route.path.indexOf('personal') > 0
+        <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
+          :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title" :href="`/song/item?song_id=${item.video_id}&${route.path.indexOf('personal') > 0
               ? 'user=' + userInfo.user_metadata?.name
               : 'recommend=true'
-          }`"
-          :isAdded="true"
-          :disappear="deletedSong.indexOf(item.video_id) > -1"
-        >
+            }`" :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1">
           <template #configure v-if="route.path.indexOf('personal') > 0">
             <div class="w-[22.5px] relative">
-              <more-icon
-                @click="showDropDown(item.video_id)"
-                class="hidden group-hover:block cursor-pointer max-md:block"
+              <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer max-md:block"
                 :class="[
                   { '!block': clickClassName === item.video_id },
                   { 'group-hover': !deletedSong },
-                ]"
-              />
-              <atmos-drop-down
-                class="top-4 right-3 py-1 px-2"
-                :show="clickClassName === item.video_id"
-              >
-                <button
-                  class="w-full py-1 rounded-md hover:bg-slate-800"
-                  @click="deleteSong(item.video_id)"
-                >
+                ]" />
+              <atmos-drop-down class="top-4 right-3 py-1 px-2" :show="clickClassName === item.video_id">
+                <button class="w-full py-1 rounded-md hover:bg-slate-800" @click="deleteSong(item.video_id)">
                   刪除此歌曲
                 </button>
               </atmos-drop-down>
             </div>
           </template>
         </atmos-card>
-        <atmos-pagination
-          v-if="totalSongCount > 10"
-          :nowPage="page + 1"
-          :totalPages="totalPages"
-          @search="pageChagne"
-        />
+        <atmos-pagination v-if="totalSongCount > 10" :nowPage="page + 1" :totalPages="totalPages" @search="pageChagne" />
       </div>
     </div>
-    <atmos-not-found
-      v-if="searchError.state > 0"
-      :tips="searchError.message"
-    />
+    <atmos-not-found v-if="searchError.state > 0" :tips="searchError.message" />
   </div>
 </template>
 
@@ -119,28 +84,43 @@ function searchIsError({ state, message }) {
 }
 //搜尋歌曲
 async function searchSongs() {
+  let songData = {};
   page.value = 0;
   isSearch.value = true;
   searchIsError({ state: 0, message: "" });
 
-  if (!isLoggedIn()) return;
+  if (!pageIsPersonal) return;
   loadingState(true);
+  if (route.path.indexOf("personal") > 0) {
+    const { data, count, error } = await supabase
+      .from("lyrics_list")
+      .select("*", { count: "exact" })
+      .eq("user_id", userInfo.id)
+      .order("created_at", { ascending: false })
+      .ilike("title", `%${searchSongName.value}%`)
+      .range(0, 9);
+    songData.data = data;
+    songData.count = count
+  } else if (route.path.indexOf("recommend") > 0) {
+    const { data, count, error } = await supabase
+      .from("lyrics_list")
+      .select("*", { count: "exact" })
+      .eq("recommend->state", true)
+      .order("created_at", { ascending: false })
+      .ilike("title", `%${searchSongName.value}%`)
+      .range(0, 9);
+    songData.data = data;
+    songData.count = count;
+  }
 
-  const { data, count, error } = await supabase
-    .from("lyrics_list")
-    .select("*", { count: "exact" })
-    .eq("user_id", userInfo.id)
-    .order("created_at", { ascending: false })
-    .ilike("title", `%${searchSongName.value}%`)
-    .range(0, 9);
 
-  if (data.length === 0) {
+  if (songData.data.length === 0) {
     searchIsError({ state: 2, message: "搜尋不到對應歌曲，請重新搜尋" });
   }
 
-  songList.value = data;
-  totalPages.value = Math.ceil(count / 10);
-  totalSongCount.value = count;
+  songList.value = songData.data;
+  totalPages.value = Math.ceil(songData.count / 10);
+  totalSongCount.value = songData.count;
 
   loadingState(false);
 }
@@ -150,7 +130,7 @@ const pageIsPersonal = computed(() => {
     return true;
   } else if (route.path.indexOf("personal") > 0 && isLoggedIn()) {
     return true;
-  } else {    
+  } else {
     searchIsError({ state: 3, message: "登入會員後方可看到已建立歌曲清單" });
     return false;
   }
@@ -236,8 +216,15 @@ async function pageChagne(value) {
 const totalSongCount = ref(0);
 const totalPages = ref(0);
 
+//初始化資料
+function pageDataInit(){
+  isSearch.value = false;
+  searchSongName.value = '';
+}
+
 //頁面載入所有已建立歌曲
 async function loadingLyricList() {
+  
   let songData = {};
   loadingState(true);
   if (isLoggedIn() && route.path.indexOf("personal") > 0) {
@@ -278,6 +265,7 @@ watch(
   () => route.path,
   () => {
     if (route.path.indexOf("personal") || route.path.indexOf("recommend")) {
+      pageDataInit();
       loadingLyricList();
     }
   }

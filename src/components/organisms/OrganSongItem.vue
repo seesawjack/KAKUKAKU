@@ -9,7 +9,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 
 import MolsSongItem from "../molecules/MolsSongItem.vue";
 import MolsConfigure from "../molecules/MolsConfigure.vue";

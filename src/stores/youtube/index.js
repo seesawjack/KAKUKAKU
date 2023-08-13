@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, toRefs,computed } from 'vue';
-import { useLyricStore } from '../lyric/index.js';
+import { useLyricStore } from '../song/index.js';
 
 export const useYoutubeStore = defineStore('youtube', () => {
 

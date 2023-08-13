@@ -24,7 +24,7 @@
 import { ref, reactive, computed, onMounted, toRefs } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 import { useGlobalStore } from "../../stores";
 import useSupabase from "../../stores/supabase";
 

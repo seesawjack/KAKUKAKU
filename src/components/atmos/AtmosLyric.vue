@@ -63,7 +63,7 @@
 <script setup>
 import { ref, watch, toRefs, onMounted, onUnmounted } from "vue";
 import { useRoute } from 'vue-router';
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 import { useYoutubeStore } from "../../stores/youtube";
 import ClockIcon from "../svg/ClockIcon.vue";
 import LoopIcon from "../svg/LoopIcon.vue";

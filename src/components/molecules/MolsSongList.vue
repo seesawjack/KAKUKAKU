@@ -44,7 +44,7 @@ import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useGlobalStore } from "../../stores/index";
 import { useAuthStore } from "../../stores/auth";
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 import useSupabase from "../../stores/supabase";
 
 import AtmosCard from "../atmos/AtmosCard.vue";

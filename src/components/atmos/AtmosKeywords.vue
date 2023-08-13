@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 import { useRegexStore } from "../../stores/regex";
 
 const { songInfo } = useLyricStore();

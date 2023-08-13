@@ -33,7 +33,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 import { useGlobalStore } from "../../stores/index";
 import { useRegexStore } from "../../stores/regex";
 

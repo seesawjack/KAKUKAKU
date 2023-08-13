@@ -48,7 +48,7 @@
 
 <script setup>
 import { reactive } from "vue";
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 
 const { selectedSong } = useLyricStore();
 

@@ -132,7 +132,7 @@
 
 <script setup>
 import { ref, toRefs, computed, watch, onMounted, onUnmounted } from "vue";
-import { useLyricStore } from "../../stores/lyric";
+import { useLyricStore } from "../../stores/song";
 import { useRoute } from "vue-router";
 import { useYoutubeStore } from "../../stores/youtube";
 import { useAuthStore } from "../../stores/auth";

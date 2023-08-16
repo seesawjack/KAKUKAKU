@@ -38,19 +38,20 @@
 </template>
 
 <script setup>
-import { computed, toRefs } from "vue";
+import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
-import { useGlobalStore } from "../../stores";
 import { useApiStore } from "../../stores/api";
+import { useRequestStore } from "../../stores/request";
 
 import AtmosForm from "../atmos/AtmosForm.vue";
 
 const route = useRoute();
 const router = useRouter();
-const { formSchema, validate, handleSignup } = useAuthStore();
-const { isError } = useGlobalStore();
-const { handleLogin } = useApiStore();
+
+const { formSchema, validate } = useAuthStore();
+const { supabaseRequest } = useRequestStore();
+const { handleLogin, handleSignup } = useApiStore();
 
 //判斷目前在「登入」或「註冊」Tab
 const atLoginPage = computed(() => {
@@ -65,8 +66,17 @@ const buttonState = computed(() => {
 
 //送出「登入」或「註冊」事件
 async function handleSubmit(form) {
+  //登入事件
   if (atLoginPage.value === "login") {
-    const result = await handleLogin({
+    const result = await supabaseRequest(handleLogin, {
+      email: form.info.email,
+      password: form.info.password,
+    });
+
+    if (result !== undefined && result.session) router.back();
+  } else {
+    //註冊事件
+    const result = await supabaseRequest(handleSignup, {
       email: form.info.email,
       password: form.info.password,
       name: form.info.name,
@@ -74,18 +84,8 @@ async function handleSubmit(form) {
       gender: form.info.gender,
       level: form.info.level,
     });
-    // if (result.message === "success") {
-    //   router.back();
-    // } else {
-    //   isError({ showError: true, message: result.data.toString() });
-    // }
-  } else {
-    const result = await handleSignup(form.info);
-    if (result.message === "success") {
-      router.push("/onboarding");
-    } else {
-      isError({ showError: true, message: result.data.toString() });
-    }
+    
+    if (result !== undefined && result.user) router.push("/onboarding");
   }
 }
 </script>

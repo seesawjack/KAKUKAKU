@@ -11,7 +11,7 @@
     <button
       v-if="!isRecommendState"
       class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-      :class="{'unclickable': confirmButton.unclickable }"
+      :class="{ unclickable: confirmButton.unclickable }"
       @click="addSong"
     >
       {{ confirmButton.text }}
@@ -26,7 +26,8 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/song";
 import { useGlobalStore } from "../../stores";
-import useSupabase from "../../stores/supabase";
+import { useRequestStore } from "../../stores/request";
+import { useApiStore } from "../../stores/api";
 
 import AtmosVideo from "../atmos/AtmosVideo.vue";
 import AtmosLyric from "../atmos/AtmosLyric.vue";
@@ -57,8 +58,16 @@ const {
   spaceIndex,
 } = toRefs(useLyricStore());
 
-const { supabase } = useSupabase();
 const { loadingState } = useGlobalStore();
+const { supabaseRequest } = useRequestStore();
+const {
+  handleSongInfoAdd,
+  handleSongContentAdd,
+  handleSongRecommendUpdate,
+  handleSongContentUpdate,
+  getSongContent,
+  getSongInfo,
+} = useApiStore();
 
 const lyrics = ref([]);
 
@@ -95,27 +104,22 @@ async function addSong() {
     return;
   }
 
-  loadingState(true);
-
   if (confirmButton.state === "update") {
-    const { data: lyricsListData, error: lyricsListError } = await supabase
-      .from("lyrics_list")
-      .update({ recommend: selected.isRecommend })
-      .eq("video_id", route.query.song_id)
-      .eq("user_id", userInfo.id);
+    await supabaseRequest(handleSongRecommendUpdate, {
+      isRecommend: selected.isRecommend,
+      videoId: route.query.song_id,
+      userId: userInfo.id,
+    });
 
-    const { data: lyricsContentData, error: lyricsContentError } =
-      await supabase
-        .from("lyrics_content")
-        .update({
-          hiragana: JSON.stringify(hiraganaLyrics.value),
-          romaji: JSON.stringify(romajiLyrics.value),
-          hanji: JSON.stringify(resultLyrics.value),
-          timestamp: JSON.stringify(lyricTimeStamp.value),
-          spaceIndex: JSON.stringify(spaceIndex.value),
-        })
-        .eq("video_id", route.query.song_id)
-        .eq("user_id", userInfo.id);
+    await supabaseRequest(handleSongContentUpdate, {
+      hiragana: hiraganaLyrics.value,
+      romaji: romajiLyrics.value,
+      hanji: resultLyrics.value,
+      timestamp: lyricTimeStamp.value,
+      spaceIndex: spaceIndex.value,
+      videoId: route.query.song_id,
+      userId: userInfo.id,
+    });
 
     buttonState({
       text: "已修改",
@@ -124,40 +128,28 @@ async function addSong() {
     });
 
     removeLocal();
-    loadingState(false);
-
     return;
   }
 
-  const { data: lyricsListData, error: lyricsListError } = await supabase
-    .from("lyrics_list")
-    .insert([
-      {
-        user_id: userInfo.id,
-        video_id: songInfo.value.id,
-        title: songInfo.value.title,
-        video_img: songInfo.value.url,
-        recommend: selected.isRecommend,
-      },
-    ]);
+  await supabaseRequest(handleSongInfoAdd, {
+    userId: userInfo.id,
+    videoId: songInfo.value.id,
+    title: songInfo.value.title,
+    img: songInfo.value.url,
+    isRecommend: selected.isRecommend,
+  });
 
-  const { data: lyricsContentData, error: lyricsContentError } = await supabase
-    .from("lyrics_content")
-    .insert([
-      {
-        user_id: userInfo.id,
-        video_id: songInfo.value.id,
-        hiragana: JSON.stringify(hiraganaLyrics.value),
-        romaji: JSON.stringify(romajiLyrics.value),
-        hanji: JSON.stringify(resultLyrics.value),
-        timestamp: JSON.stringify(lyricTimeStamp.value),
-        spaceIndex: JSON.stringify(spaceIndex.value),
-      },
-    ]);
-
+  await supabaseRequest(handleSongContentAdd, {
+    userId: userInfo.id,
+    videoId: songInfo.value.id,
+    hiragana: hiraganaLyrics.value,
+    romaji: romajiLyrics.value,
+    hanji: resultLyrics.value,
+    timestamp: lyricTimeStamp.value,
+    spaceIndex: spaceIndex.value,
+  });
   buttonState({ text: "已新增", state: "isAdded", unclickable: true });
   removeLocal();
-  loadingState(false);
   return;
 }
 
@@ -176,32 +168,29 @@ onMounted(async () => {
       toSongState({ show: false, message: "無法查看此歌曲" });
       return;
     }
+    const { data: contentData } = await supabaseRequest(getSongContent, {
+      videoId: route.query.song_id,
+      userId: userInfo.id,
+    });
+    const { data: itemData } = await supabaseRequest(getSongInfo, {
+      videoId: route.query.song_id,
+      userId: userInfo.id,
+    });
 
-    let { data, error } = await supabase
-      .from("lyrics_content")
-      .select()
-      .eq("video_id", route.query.song_id)
-      .eq("user_id", userInfo.id);
-
-    let { data: list_data, error: list_error } = await supabase
-      .from("lyrics_list")
-      .select()
-      .eq("video_id", route.query.song_id)
-      .eq("user_id", userInfo.id);
-
-    if (data.length === 0) {
+    if (contentData.length === 0) {
       toSongState({ show: false, message: "查無此歌曲" });
       return;
     }
 
-    resultLyrics.value = JSON.parse(data[0].hanji);
-    hiraganaLyrics.value = JSON.parse(data[0].hiragana);
-    romajiLyrics.value = JSON.parse(data[0].romaji);
-    lyricTimeStamp.value = JSON.parse(data[0].timestamp);
-    spaceIndex.value = JSON.parse(data[0].spaceIndex);
-    selected.isRecommend.state = list_data[0].recommend.state;
-    songInfo.value = list_data[0];
-    
+    resultLyrics.value = contentData[0].hanji;
+    hiraganaLyrics.value = contentData[0].hiragana;
+    romajiLyrics.value = contentData[0].romaji;
+    lyricTimeStamp.value = contentData[0].timestamp;
+    spaceIndex.value = contentData[0].spaceIndex;
+
+    selected.isRecommend.state = itemData[0].recommend.state;
+    songInfo.value = itemData[0];
+
     buttonState({
       text: "確認修改",
       state: "update",
@@ -212,10 +201,16 @@ onMounted(async () => {
   //是分享狀態
   if (route.query.recommend === "true") {
     isRecommendState.value = true;
-    let { data, error } = await supabase
-      .from("lyrics_content")
-      .select()
-      .eq("video_id", route.query.song_id);
+    const { data: itemData } = await supabaseRequest(getSongInfo, {
+      videoId: route.query.song_id,
+    });
+    if (!itemData.length) {
+      toSongState({ show: false, message: "此歌曲不在推薦清單中" });
+      return;
+    }
+    const { data } = await supabaseRequest(getSongContent, {
+      videoId: route.query.song_id,
+    });
 
     if (data.length === 0) {
       toSongState({ show: false, message: "查無此歌曲" });
@@ -223,7 +218,7 @@ onMounted(async () => {
     }
     resultLyrics.value = JSON.parse(data[0].hanji);
     hiraganaLyrics.value = JSON.parse(data[0].hiragana);
-    romajiLyrics.value =  JSON.parse(data[0].romaji);
+    romajiLyrics.value = JSON.parse(data[0].romaji);
     lyricTimeStamp.value = JSON.parse(data[0].timestamp);
     spaceIndex.value = JSON.parse(data[0].spaceIndex);
     return;

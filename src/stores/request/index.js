@@ -33,9 +33,9 @@ export const useRequestStore = defineStore("request", () => {
   const supabaseRequest = async (func, meta) => {
     try {
       loadingState(true);
-      const { data, error } = await func(meta);
+      const { data, count = 0, error } = await func(meta);
       if (error) throw error;
-      return data;
+      return { data, count };
     } catch (error) {
       if (error) {
         isError({
@@ -48,7 +48,7 @@ export const useRequestStore = defineStore("request", () => {
       loadingState(false);
     }
   };
-  
+
   return {
     supabase,
     request,

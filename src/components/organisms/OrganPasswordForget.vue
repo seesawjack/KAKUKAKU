@@ -21,33 +21,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useAuthStore } from '../../stores/auth';
-import { useRoute } from "vue-router";
-import useSupabase from "../../stores/supabase";
-import { useGlobalStore } from '../../stores';
+import { useRequestStore } from '../../stores/request';
+import { useApiStore } from '../../stores/api';
 
 import AtmosForm from '../atmos/AtmosForm.vue';
 
-const route = useRoute();
 const { formSchema, validate } = useAuthStore();
-const { loadingState, isError } = useGlobalStore();
-const { supabase } = useSupabase();
+const { supabaseRequest } = useRequestStore();
+const { sendPasswordResetEmail } = useApiStore();
 
 const buttonState = ref({ state: true, name: "下一步" })
 
 async function handleSubmit(form) {
-    loadingState(true);
-    const { data, error } = await supabase.auth.resetPasswordForEmail(form.info.email, {
-        redirectTo: 'http://localhost:5173/account/update-password',
-    });
-    if (error) {
-        isError({ showError: true, message: "目前系統運載繁重，請稍後再試" });
-        buttonState.value = { state: false, name: '請稍後再試' }
-        loadingState(false);
-        return;
-    }
-    loadingState(false);
+    await supabaseRequest(sendPasswordResetEmail,{email:form.info.email});
     buttonState.value = { state: false, name: '已送出，請到信箱確認信件' }
 }
 </script>

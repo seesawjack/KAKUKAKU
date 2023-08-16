@@ -23,7 +23,8 @@ import { useGlobalStore } from "./stores/index";
 import { useAuthStore } from "./stores/auth";
 import { useRequestStore } from "./stores/request";
 
-const { isError,isLoading } = useGlobalStore();
+const { isLoading } = toRefs(useGlobalStore())
+const { isError } = useGlobalStore();
 
 const { supabase } = useRequestStore();
 

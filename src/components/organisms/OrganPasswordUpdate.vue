@@ -13,25 +13,21 @@
 </template>
 
 <script setup>
-import { ref,computed } from 'vue';
+import { ref } from 'vue';
 import { useAuthStore } from '../../stores/auth';
-import { useRoute } from "vue-router";
-import useSupabase from "../../stores/supabase";
-import { useGlobalStore } from '../../stores';
+import { useRequestStore } from '../../stores/request';
+import { useApiStore } from '../../stores/api';
 
 import AtmosForm from '../atmos/AtmosForm.vue';
 
-const route = useRoute();
 const { formSchema, validate } = useAuthStore();
-const { loadingState } = useGlobalStore();
-const { supabase } = useSupabase();
+const { supabaseRequest } = useRequestStore();
+const { handlePasswordReset } = useApiStore();
 
 const buttonState = ref({ state: true, name: "確認送出" })
 
 async function handleSubmit(form) {
-    loadingState(true);
-    await supabase.auth.updateUser({ password: form.info.password })
-    loadingState(false);
+    await supabaseRequest(handlePasswordReset,{password:form.info.password});
     buttonState.value = { state: false, name: '已送出' }
 }
 </script>

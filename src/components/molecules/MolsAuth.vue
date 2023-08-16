@@ -72,8 +72,8 @@ async function handleSubmit(form) {
       email: form.info.email,
       password: form.info.password,
     });
-
-    if (result !== undefined && result.session) router.back();
+    
+    if (result !== undefined && result.data?.session) router.back();
   } else {
     //註冊事件
     const result = await supabaseRequest(handleSignup, {

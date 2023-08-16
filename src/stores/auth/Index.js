@@ -1,13 +1,8 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import { useGlobalStore } from "../index";
-import useSupabase from "../supabase";
 import * as Yup from "yup";
 
 export const useAuthStore = defineStore("auth", () => {
-  const { supabase } = useSupabase();
-  const { loadingState } = useGlobalStore();
-
   const userInfo = ref("");
 
   function isLoggedIn() {
@@ -17,6 +12,7 @@ export const useAuthStore = defineStore("auth", () => {
   const feedbackName = computed(() => {
     return isLoggedIn() ? userInfo.value.user_metadata?.name : "";
   });
+  
   //登入及註冊時的表單內容
   const formSchema = ref({
     login: {
@@ -260,96 +256,11 @@ export const useAuthStore = defineStore("auth", () => {
     }),
   });
 
-  const handleSignup = async (info) => {
-    try {
-      loadingState(true);
-      const { data, error } = await supabase.auth.signUp({
-        email: info.email,
-        password: info.password,
-        options: {
-          data: {
-            name: info.name,
-            birth: info.birth,
-            gender: info.gender,
-            level: info.level,
-            emailRedirectTo: "http://localhost:5173/login",
-          },
-        },
-      });
-      if (error) throw error;
-      return { message: "success", data: data };
-    } catch (error) {
-      if (error instanceof Error) {
-        return { message: "error", data: error };
-      }
-    } finally {
-      loadingState(false);
-    }
-  };
-
-  const handleLogin = async (info) => {
-    try {
-      loadingState(true);
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: info.email,
-        password: info.password,
-      });
-      if (error) throw error;
-      return { message: "success", data: data };
-    } catch (error) {
-      if (error instanceof Error) {
-        return { message: "error", data: error };
-      }
-    } finally {
-      loadingState(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      loadingState(true);
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      return { message: "success" };
-    } catch (error) {
-      if (error instanceof Error) {
-        return error;
-      }
-    } finally {
-      loadingState(false);
-    }
-  };
-
-  const handleFeedBack = async (info) => {
-    try {
-      loadingState(true);
-      const { data, error } = await supabase.from("feedback").insert([
-        {
-          user_name: info.name,
-          question_type: info.questionType,
-          text: info.feedbackText,
-        },
-      ]);
-      if (error) throw error;
-      return { message: "success", data: data };
-    } catch (error) {
-      if (error instanceof Error) {
-        return { message: "error", data: error };
-      }
-    } finally {
-      loadingState(false);
-    }
-  };
 
   return {
     formSchema,
     validate,
     userInfo,
-    isLoggedIn,
-    handleLogin,
-    handleSignup,
-    handleLogout,
-    handleFeedBack,
+    isLoggedIn
   };
 });

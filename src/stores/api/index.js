@@ -156,26 +156,46 @@ export const useApiStore = defineStore("api", () => {
 
   //讀取指定歌曲內容
   const getSongContent = async ({ videoId, userId }) => {
-    const { data, error } = await supabase
-      .from("lyrics_content")
-      .select()
-      .eq("video_id", videoId)
-      .eq("user_id", userId);
+    if (userId) {
+      const { data, error } = await supabase
+        .from("lyrics_content")
+        .select()
+        .eq("video_id", videoId)
+        .eq("user_id", userId);
 
-    if (error) return { error };
-    return { data };
+      if (error) return { error };
+      return { data };
+    } else {
+      const { data, error } = await supabase
+        .from("lyrics_content")
+        .select()
+        .eq("video_id", videoId);
+
+      if (error) return { error };
+      return { data };
+    }
   };
 
-  //讀取指定歌曲資訊
+  //讀取歌曲資訊
   const getSongInfo = async ({ videoId, userId }) => {
-    const { data, error } = await supabase
-      .from("lyrics_list")
-      .select()
-      .eq("video_id", videoId)
-      .eq("user_id", userId);
+    if (userId) {
+      const { data, error } = await supabase
+        .from("lyrics_list")
+        .select()
+        .eq("video_id", videoId)
+        .eq("user_id", userId);
 
-    if (error) return { error };
-    return { data };
+      if (error) return { error };
+      return { data };
+    } else {
+      const { data, error } = await supabase
+        .from("lyrics_list")
+        .select()
+        .eq("video_id", videoId);
+
+      if (error) return { error };
+      return { data };
+    }
   };
 
   //讀取[搜尋]目標歌曲列表
@@ -282,6 +302,22 @@ export const useApiStore = defineStore("api", () => {
     handleSignup,
     handleLogin,
     handleLogout,
+    sendPasswordResetEmail,
+    handlePasswordReset,
     handleFeedBack,
+    handleSongRecommendUpdate,
+    handleSongContentUpdate,
+    handleSongInfoAdd,
+    handleSongContentAdd,
+    getSongContent,
+    getSongInfo,
+    getSearchedSongList,
+    getSearchedRecomSongList,
+    deleteSong,
+    deleteSongContent,
+    handlePageChange,
+    handleRecoPageChange,
+    getSongList,
+    getRecoSongList,
   };
 });

@@ -18,13 +18,16 @@ import TheFooter from "./components/layouts/TheFooter.vue";
 import AtmosLoading from "./components/atmos/AtmosLoading.vue";
 import AtmosDialog from "./components/atmos/AtmosDialog.vue";
 
-import { onMounted, toRefs, computed, watch } from "vue";
+import { onMounted, toRefs } from "vue";
 import { useGlobalStore } from "./stores/index";
 import { useAuthStore } from "./stores/auth";
-import useSupabase from "./stores/supabase";
+import { useRequestStore } from "./stores/request";
 
-let { isLoading } = toRefs(useGlobalStore());
-const { isError } = useGlobalStore();
+const { isError,isLoading } = useGlobalStore();
+
+const { supabase } = useRequestStore();
+
+const { userInfo } = toRefs(useAuthStore());
 const { errorMessage } = toRefs(useGlobalStore());
 
 function closeDialog() {
@@ -32,18 +35,13 @@ function closeDialog() {
   return;
 }
 
-const { supabase } = useSupabase();
-
-const authStore = useAuthStore();
-
 onMounted(() => {
   supabase.auth.onAuthStateChange((event, session) => {
     if (event == "SIGNED_IN") {
-      authStore.userInfo = session?.user || null;
+      userInfo.value = session?.user || null;      
     }
   });
 });
-</script> 
+</script>
 
-<style>
-</style>
+<style></style>

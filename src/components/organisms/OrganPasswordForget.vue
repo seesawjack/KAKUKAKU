@@ -2,12 +2,12 @@
     <section>
         <div class="container mx-auto">
             <div class="flex items-center justify-center mt-6">
-                <p class="w-2/3 pb-4 font-medium text-center text-white text-xl capitalize border-b border-sky-400">
+                <p class="w-2/3 pb-4 font-medium text-center text-white text-3xl capitalize border-b border-sky-400">
                     請輸入信箱
                 </p>
             </div>
-            <p class="mt-10">請輸入您註冊時的信箱，我們會發送更新密碼的連結到您的信箱</p>
-            <div class="text-sm text-left text-gray-300">
+            <p class="mt-10 text-lg">請輸入您註冊時的信箱，我們會發送更新密碼的連結到您的信箱</p>
+            <div class="text-lg text-left text-gray-300">
                 <p>※ 若收件匣無顯示新郵件，請至垃圾郵件尋找</p>
                 <p>※ 更新密碼郵件有時間限制，若十分鐘內未點擊連結請重新申請</p>
             </div>

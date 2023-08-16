@@ -2,7 +2,7 @@
     <section>
         <div class="container mx-auto w-full">
             <div class="w-full flex items-center justify-center mt-6">
-                <p class="w-2/3 pb-4 font-medium text-center text-white text-xl capitalize border-b border-sky-400">
+                <p class="w-2/3 pb-4 font-medium text-center text-white text-3xl capitalize border-b border-sky-400">
                     更新密碼
                 </p>
             </div>

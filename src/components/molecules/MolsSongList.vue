@@ -93,7 +93,7 @@ const route = useRoute();
 const { userInfo, isLoggedIn } = useAuthStore();
 const { loadingState } = useGlobalStore();
 const {
-  lyricConfiguration: { selected },
+  songPageOption: { selected },
 } = useLyricStore();
 const { supabaseRequest } = useRequestStore();
 const {

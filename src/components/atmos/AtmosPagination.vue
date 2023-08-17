@@ -34,7 +34,7 @@
 
 <script setup>
 import { ref,toRefs,watch } from "vue";
-import { useSearchStore } from "../../stores/search/index";
+import { useYoutubeStore } from "../../stores/youtube";
 
 const props = defineProps({
     nowPage:{
@@ -50,7 +50,7 @@ const props = defineProps({
 const page = ref(props.nowPage);
 const emit = defineEmits(["search"]);
 
-const { isReasearch } = toRefs(useSearchStore());
+const { isReasearch } = toRefs(useYoutubeStore());
 
 function pageChange(value) {
     page.value += value ? 1 : -1;

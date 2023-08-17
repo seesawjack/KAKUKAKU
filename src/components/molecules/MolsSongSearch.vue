@@ -23,7 +23,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useSearchStore } from "../../stores/search/index";
+import { useYoutubeStore } from "../../stores/youtube";
 import { useGlobalStore } from "../../stores/index";
 
 import AtmosInput from "../atmos/AtmosInput.vue";
@@ -39,7 +39,7 @@ const props = defineProps({
 const emit = defineEmits(["search"]);
 
 const { isError,loadingState } = useGlobalStore(); 
-const { youtubeSearch } = useSearchStore();
+const { youtubeSearch } = useYoutubeStore();
 
 //判斷搜尋框是否含有資料(含 loading 及錯誤訊息顯示)
 const searchResult = ref("");

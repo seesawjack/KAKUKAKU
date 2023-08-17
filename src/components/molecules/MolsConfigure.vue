@@ -76,8 +76,8 @@
             class="w-full mt-2 p-1 bg-slate-500 rounded-md outline-none"
           >
             <option value="all-hiragana">全平假名</option>
-            <option value="only-hanji">漢字(無標註發音)</option>
-            <option value="hanji-rubi" selected>漢字(有標註發音)</option>
+            <option value="only-kanji">漢字(無標註發音)</option>
+            <option value="kanji-rubi" selected>漢字(有標註發音)</option>
             <option value="plus-romaji">羅馬字</option>
           </select>
         </div>
@@ -147,7 +147,7 @@ import RecommendIcon from "../svg/RecommendIcon.vue";
 
 const route = useRoute();
 const {
-  lyricConfiguration: { fontSize, selected },
+  songPageOption: { fontSize, selected },
   selectedFontStyle,
 } = useLyricStore();
 
@@ -159,7 +159,7 @@ const { userInfo } = useAuthStore();
 const { controlVideoPlay } = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
 
-const selectedLabelType = ref("hanji-rubi");
+const selectedLabelType = ref("kanji-rubi");
 
 function stopVideo() {
   isPlayVideo.value = !isPlayVideo.value;

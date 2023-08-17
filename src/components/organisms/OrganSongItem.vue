@@ -15,7 +15,7 @@ import MolsSongItem from "../molecules/MolsSongItem.vue";
 import MolsConfigure from "../molecules/MolsConfigure.vue";
 
 const {
-  lyricConfiguration: { selected },
+  songPageOption: { selected },
   songState
 } = useLyricStore();
 

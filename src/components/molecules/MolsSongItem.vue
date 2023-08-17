@@ -2,7 +2,7 @@
   <div v-if="songState.show" class="w-full flex flex-col mx-auto">
     <atmos-video :id="songId" v-if="songId" :class="isfixedVideo" />
     <atmos-lyric
-      :lyrics="resultLyrics"
+      :lyrics="furiganaLyrics"
       :hiraganaLyrics="hiraganaLyrics"
       :romajiLyrics="romajiLyrics"
       class="relative"
@@ -41,9 +41,9 @@ const isRecommendState = ref(false);
 const { isLoggedIn, userInfo } = useAuthStore();
 
 const {
-  lyricConfiguration: { selected },
+  songPageOption: { selected },
   songState,
-  toLyrics,
+  handleLyricTransform,
   removeLocal,
   handleSongState,
 } = useLyricStore();
@@ -51,7 +51,7 @@ const {
 const {
   hiraganaLyrics,
   romajiLyrics,
-  resultLyrics,
+  furiganaLyrics,
   songInfo,
   initLyrics,
   lyricTimeStamp,
@@ -98,7 +98,7 @@ async function addSong() {
   if (
     confirmButton.state === "isAdded" ||
     !isLoggedIn() ||
-    !resultLyrics.value.length
+    !furiganaLyrics.value.length
   ) {
     return;
   }
@@ -113,7 +113,7 @@ async function addSong() {
     await supabaseRequest(handleSongContentUpdate, {
       hiragana: hiraganaLyrics.value,
       romaji: romajiLyrics.value,
-      hanji: resultLyrics.value,
+      furigana: furiganaLyrics.value,
       timestamp: lyricTimeStamp.value,
       spaceIndex: spaceIndex.value,
       videoId: route.query.song_id,
@@ -143,7 +143,7 @@ async function addSong() {
     videoId: songInfo.value.id,
     hiragana: hiraganaLyrics.value,
     romaji: romajiLyrics.value,
-    hanji: resultLyrics.value,
+    furigana: furiganaLyrics.value,
     timestamp: lyricTimeStamp.value,
     spaceIndex: spaceIndex.value,
   });
@@ -181,7 +181,7 @@ onMounted(async () => {
       return;
     }
     handleSongState({
-      result: contentData[0].hanji,
+      furigana: contentData[0].furigana,
       hiragana: contentData[0].hiragana,
       romaji: contentData[0].romaji,
       timeStamp: contentData[0].timestamp,
@@ -217,7 +217,7 @@ onMounted(async () => {
       return;
     }
     handleSongState({
-      result: data[0].hanji,
+      furigana: data[0].furigana,
       hiragana: data[0].hiragana,
       romaji: data[0].romaji,
       timeStamp: data[0].timestamp,
@@ -228,11 +228,11 @@ onMounted(async () => {
 
   //使用者未儲存歌曲，重整後可讀取自動存在 cookie 的資料
   if (route.query.song_id === songInfo.value?.id) {
-    await toLyrics(initLyrics.value);
-    lyrics.value = resultLyrics.value;
+    await handleLyricTransform(initLyrics.value);
+    lyrics.value = furiganaLyrics.value;
   }
 
-  if (!resultLyrics.value.length) {
+  if (!furiganaLyrics.value.length) {
     toSongState({ show: false, message: "無法讀取歌詞，請稍後再嘗試" });
     return;
   }
@@ -245,7 +245,7 @@ onMounted(async () => {
 </script>
 
 <style>
-.only-hanji rt {
+.only-kanji rt {
   display: none;
 }
 

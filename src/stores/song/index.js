@@ -8,12 +8,12 @@ export const useLyricStore = defineStore("lyric", () => {
   const { request } = useRequestStore();
 
   const initLyrics = ref([]);
-  const resultLyrics = ref([]);
+  const furiganaLyrics = ref([]);
   const hiraganaLyrics = ref([]);
   const romajiLyrics = ref([]);
-  const songInfo = ref({});
   const timeStampState = ref([]);
   const lyricTimeStamp = ref({});
+  const songInfo = ref({});
   const songState = reactive({ show: true, message: "" });
 
   if (getCurrentInstance()) {
@@ -23,8 +23,8 @@ export const useLyricStore = defineStore("lyric", () => {
     });
   }
 
-  //轉換成全平假名
-  async function toHiraganaLyrics(lyric) {
+  //發出轉換成平假名的請求
+  async function getHiragana(lyric) {
     const requsetData = ref({
       app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
       output_type: "hiragana",
@@ -37,68 +37,62 @@ export const useLyricStore = defineStore("lyric", () => {
       sendData: requsetData.value,
     });
   }
-  //轉換成全羅馬字
-  function toRomajiLyrics(hiragana) {
-    if (Array.isArray(hiragana)) {
-      return hiragana.map((i) => {
-        if (/^[A-Za-z\s',]+$/.test(i)) return "";
 
-        return i
-          .split(" ")
-          .map((k) => {
-            if (k.match(/[^\w',]/)) {
-              return toRomaji(k.split("").join(" "), {
-                customRomajiMapping: { は: "wa" },
-              });
-            }
-            return k;
-          })
-          .join(" ");
-      });
-    } else {
-      return hiragana
-        .split(" ")
-        .map((k) => {
-          if (k.match(/[^\w',]/)) {
-            return toRomaji(k.split("").join(" "), {
-              customRomajiMapping: { は: "wa" },
-            });
-          }
-          return k;
-        })
-        .join(" ");
-    }
+  //全部歌詞轉換成羅馬字
+  function handleAllToRomaji(hiragana) {
+    return hiragana.map((i) => {
+      if (/^[A-Za-z\s',]+$/.test(i)) return ""; //英文歌詞不轉換
+      return handleToRomaji(i);
+    });
+  }
+
+  //單一歌詞轉換成羅馬字
+  function handleToRomaji(hiragana) {
+    return hiragana
+      .split(" ")
+      .map((k) => {
+        if (k.match(/[^\w',]/)) {
+          return toRomaji(k.split("").join(" "), {
+            customRomajiMapping: { は: "wa" },
+          });
+        }
+        return k;
+      })
+      .join(" ");
   }
 
   const spaceIndex = ref([]);
-  //日文歌詞轉換
-  async function toLyrics(lyric) {
-    resultLyrics.value.length = 0; //初始化
 
-    initLyrics.value = lyric;
+  //日文歌詞轉換
+  async function handleLyricTransform(lyric) {
+    furiganaLyrics.value.length = 0; //初始化
+
+    initLyrics.value = lyric; //網頁暫存最初歌詞型態
     localStorage.setItem("initLyrics", JSON.stringify(lyric));
 
-    const haveEnglishLyric = ref(/\w/g.test(lyric));
-    let requestLyric, onlyEnglish, result;
+    const haveEnglishLyrics = /\w/g.test(lyric);
+    let requestLyrics, englishLyrics, result;
 
-    if (haveEnglishLyric.value) {
-      requestLyric = lyric.replace(/\n/g, "||").replace(/[\w']/g, "※");
-      onlyEnglish = lyric
+    //依據全部歌詞是否含有英文分別處理
+    if (haveEnglishLyrics) {
+      requestLyrics = lyric.replace(/\n/g, "||").replace(/[\w']/g, "※");
+      englishLyrics = lyric
         .replace(/[^\w']/g, "#")
         .replace(/\#{1,}/g, ",")
         .replace(/^,/, "")
         .split(",");
     } else {
-      requestLyric = lyric.replace(/\n/g, "||");
+      requestLyrics = lyric.replace(/\n/g, "||");
     }
 
-    const requestLyrics = await toHiraganaLyrics(requestLyric);
+    const response = await getHiragana(requestLyrics);
 
-    if (haveEnglishLyric.value) {
+    //依據全部歌詞是否含有英文分別處理
+    if (haveEnglishLyrics) {
       let index = 0;
-      result = requestLyrics.converted
+      result = response.converted
         .replace(/\※{2,}/g, "※")
-        .replace(/\※/g, () => "@" + onlyEnglish[index++] + "@")
+        .replace(/\※/g, () => "@" + englishLyrics[index++] + "@")
         .replace(/\s+/g, "")
         .replace(/@/g, " ")
         .replace(/\s{2,}/g, " ")
@@ -106,40 +100,44 @@ export const useLyricStore = defineStore("lyric", () => {
         .split("||")
         .map((i) => i.trim());
     } else {
-      result = requestLyrics.converted
+      result = response.converted
         .replace(/[\s](?!\s)/gm, "")
         .replace(/\s{2,}/g, " ")
         .split("||")
         .map((i) => i.trim());
     }
 
-    result = result.filter((lyric, index) => {
-      if (lyric === "") {
+    //計算平假名歌詞含有空白段落的位置，並返回不含空白段落的歌詞
+    result = result.filter((sentence, index) => {
+      if (sentence === "") {
         spaceIndex.value.push(index - spaceIndex.value.length);
       }
-      return lyric !== "";
+      return sentence !== "";
     });
 
-    const filtetLyric = lyric.split("\n").filter((i) => i !== "");
-    kanjiLabelHiragana(result, filtetLyric);
+    //空白段落調整計算
+    spaceIndex.value = spaceIndex.value.filter(
+      (space, i, arr) => space - 1 !== arr[i - 1]
+    );
+
+    hiraganaLyrics.value = result;
+    romajiLyrics.value = handleAllToRomaji(result);
+
+    const initArrLyrics = lyric.split("\n").filter((i) => i !== "");
+    handleLyricsLabel(result, initArrLyrics);
   }
 
-  //平假名 羅馬字轉換處理
-  async function kanjiLabelHiragana(hiragana, lyrics) {
-    spaceIndex.value = spaceIndex.value.filter(
-      (spaceIndex, i, arr) => spaceIndex - 1 !== arr[i - 1]
-    );
-    hiraganaLyrics.value = hiragana;
-    romajiLyrics.value = toRomajiLyrics(hiragana);
-    await lyrics.map((sentence, i) => {
-      furigana(sentence, hiragana[i], i);
+  //產生振假名歌詞
+  async function handleLyricsLabel(hiraganaArrLyrics, initArrLyrics) {
+    furiganaLyrics.value = await initArrLyrics.map((sentence, i) => {
+      return sentence = handleToFurigana(sentence, hiraganaArrLyrics[i], i);
     });
   }
 
   //漢字標注平假名
-  function furigana(lyrics, hiraganaLyrics, index) {
+  function handleToFurigana(sentence, hiraganaSentence, index) {
     const dmp = new diff_match_patch();
-    const diff = dmp.diff_main(lyrics, hiraganaLyrics);
+    const diff = dmp.diff_main(sentence, hiraganaSentence);
     diff.push([0, ""]); //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
 
     let html = "";
@@ -150,9 +148,8 @@ export const useLyricStore = defineStore("lyric", () => {
             html +=
               acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm)
                 ? acc.kanji
-                : `<ruby class="hanji-word" data-index="${index}">${acc.kanji}<rp>(</rp><rt>${
-                    acc.hiragana || "?"
-                  }</rt><rp>)</rp></ruby>`;
+                : `<ruby class="kanji-word" data-index="${index}">${acc.kanji}<rp>(</rp><rt>${acc.hiragana || "?"
+                }</rt><rp>)</rp></ruby>`;
             acc.kanji = null;
             acc.hiragana = null;
           }
@@ -165,13 +162,11 @@ export const useLyricStore = defineStore("lyric", () => {
       },
       { kanji: null, hiragana: null }
     );
-
-    resultLyrics.value.push(html);
-    return;
+    return html;
   }
 
-  //▾歌詞結果頁功能
-  const lyricConfiguration = reactive({
+  //歌曲頁功能
+  const songPageOption = reactive({
     fontSize: {
       big: {
         id: "big",
@@ -209,53 +204,55 @@ export const useLyricStore = defineStore("lyric", () => {
     localStorage.setItem("songInfo", JSON.stringify(info));
   }
 
+  //移除歌詞暫存資料
   function removeLocal() {
     localStorage.removeItem("songInfo");
     localStorage.removeItem("initLyrics");
   }
+
   function selectedFontStyle(style) {
-    lyricConfiguration.selected.fontSize = style;
+    songPageOption.selected.fontSize = style;
   }
 
-  function handleSongState({result,hiragana,romaji,timeStamp,space,recommend,info}){
-    resultLyrics.value = result;
+  //歌曲頁選項調整
+  function handleSongState({ furigana, hiragana, romaji, timeStamp, space, recommend, info }) {
+    furiganaLyrics.value = furigana;
     hiraganaLyrics.value = hiragana;
     romajiLyrics.value = romaji;
     lyricTimeStamp.value = timeStamp;
     spaceIndex.value = space;
-    lyricConfiguration.selected.isRecommend.state = recommend;
+    songPageOption.selected.isRecommend.state = recommend;
     songInfo.value = info;
   }
 
   //編輯功能
-  function editLyric({ init, edit, index }) {
-    //修改平假名跑位
-    resultLyrics.value[index] = resultLyrics.value[index].replace(init, edit);
-    //平假名錯誤調整
-    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init,edit);
-    //羅馬字錯誤調整
-    romajiLyrics.value[index] = toRomajiLyrics(
+  function editLyrics({ init, edit, index }) {
+    //修改振假名
+    furiganaLyrics.value[index] = furiganaLyrics.value[index].replace(init, edit);
+    //修改平假名
+    hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init, edit);
+    //修改羅馬字
+    romajiLyrics.value[index] = handleToRomaji(
       hiraganaLyrics.value[index].replace(init, edit)
-    );   
+    );
   }
 
   return {
     initLyrics,
-    resultLyrics,
+    furiganaLyrics,
     hiraganaLyrics,
     romajiLyrics,
-    lyricConfiguration,
+    songPageOption,
     songInfo,
     timeStampState,
     lyricTimeStamp,
     spaceIndex,
     songState,
-    kanjiLabelHiragana,
-    toLyrics,
+    handleLyricTransform,
     selectedSong,
     selectedFontStyle,
     removeLocal,
-    editLyric,
+    editLyrics,
     handleSongState
   };
 });

@@ -26,14 +26,14 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import { useSearchStore } from "../../stores/search/index";
+import { useYoutubeStore } from "../../stores/youtube";
 import { useGlobalStore } from "../../stores/index";
 
 import MolsListCard from "../molecules/MolsListCard.vue";
 import MolsSongSearch from "../molecules/MolsSongSearch.vue";
 import AtmosPagination from "../atmos/AtmosPagination.vue";
 
-const { youtubePageChange } = useSearchStore();
+const { youtubePageChange } = useYoutubeStore();
 const { loadingState } = useGlobalStore();
 
 //首頁搜尋框上方 slogan typing 載入動畫

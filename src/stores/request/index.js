@@ -11,6 +11,7 @@ export const useRequestStore = defineStore("request", () => {
 
   async function request({ url, method, headers, sendData }, option = {}) {
     try {
+      loadingState(true);
       const response = await fetch(url, {
         method: method || "GET",
         body: sendData ? JSON.stringify(sendData) : null,
@@ -26,7 +27,13 @@ export const useRequestStore = defineStore("request", () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      return error;
+      isError({
+        showError: true,
+        message: error,
+      });
+      return;
+    } finally {
+      loadingState(false);
     }
   }
 
@@ -52,6 +59,6 @@ export const useRequestStore = defineStore("request", () => {
   return {
     supabase,
     request,
-    supabaseRequest,
+    supabaseRequest
   };
 });

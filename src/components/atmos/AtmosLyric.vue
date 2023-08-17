@@ -37,13 +37,13 @@
           </div>
           <div
             class="absolute top-1/2 -translate-y-[50%] right-0 bg-slate-500/50 rounded-lg after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem]  hidden"
-            :class="[{ '!block': selected.loopLyric }, loopIconStyle(index)]" @click="seekTo(index)">
+            :class="[{ '!block': selected.loopLyric,'top-5':index === +editId }, loopIconStyle(index)]" @click="seekTo(index)">
             <loop-icon />
           </div>
           <div class="bg-slate-800 border border-slate-50/10 rounded-lg py-3 px-2 mt-2"
             :class="{ 'hidden': index !== +editId }">
             <input type="text" class="w-full bg-slate-900 caret-white outline-none" v-model="clickHiragana">
-            <p>{{ clickHanji }}</p>
+            <p>{{ clickKanji }}</p>
             <div class="flex">
               <button class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-slate-600 mr-3"
                 @click="editId = -1">取消</button>
@@ -90,9 +90,9 @@ const props = defineProps({
 const route = useRoute();
 
 const lyricStore = useLyricStore();
-const { lyricConfiguration, editLyric } = lyricStore;
+const { songPageOption, editLyrics } = lyricStore;
 const { timeStampState, lyricTimeStamp, spaceIndex } = toRefs(useLyricStore());
-const { fontSize, selected } = toRefs(lyricConfiguration);
+const { fontSize, selected } = toRefs(songPageOption);
 
 
 function loopIconStyle(index) {
@@ -130,7 +130,7 @@ watch(
 
 const clickHiragana = ref('')
 const initHiragana = ref('')
-const clickHanji = ref('')
+const clickKanji = ref('')
 const editId = ref(-1);
 
 const { controlVideoPlay, controlSeekTo } = useYoutubeStore();
@@ -143,7 +143,7 @@ function seekTo(index) {
 }
 
 function editHiragana() {
-  editLyric({ init: initHiragana.value, edit: clickHiragana.value, index: editId.value })
+  editLyrics({ init: initHiragana.value, edit: clickHiragana.value, index: editId.value })
   editId.value = -1
 }
 
@@ -151,10 +151,10 @@ let windowWidth = ref(window.innerWidth);
 const onWidthChange = () => windowWidth.value = window.innerWidth;
 
 const editRubi = () => {
-  if (event.target.closest('.hanji-word')) {
+  if (event.target.closest('.kanji-word')) {
     const text = event.target.textContent.split(/[()]/g);
     const index = event.target.dataset.index;
-    clickHanji.value = text[0];
+    clickKanji.value = text[0];
     clickHiragana.value = text[1];
     initHiragana.value = text[1];
     editId.value = index;
@@ -193,12 +193,12 @@ onUnmounted(() => {
   filter: drop-shadow(0px 0px 3px rgb(147, 197, 253, 0.8));
 }
 
-.hanji-word:hover {
+.kanji-word:hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
-.is-recommend-state .hanji-word:hover {
+.is-recommend-state .kanji-word:hover {
   text-decoration: none;
   cursor: unset;
 }

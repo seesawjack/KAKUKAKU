@@ -84,7 +84,7 @@ export const useApiStore = defineStore("api", () => {
   const handleSongContentUpdate = async ({
     hiragana,
     romaji,
-    hanji,
+    furigana,
     timestamp,
     spaceIndex,
     videoId,
@@ -95,7 +95,7 @@ export const useApiStore = defineStore("api", () => {
       .update({
         hiragana: hiragana,
         romaji: romaji,
-        hanji: hanji,
+        furigana: furigana,
         timestamp: timestamp,
         spaceIndex: spaceIndex,
       })
@@ -134,7 +134,7 @@ export const useApiStore = defineStore("api", () => {
     videoId,
     hiragana,
     romaji,
-    hanji,
+    furigana,
     timestamp,
     spaceIndex,
   }) => {
@@ -144,7 +144,7 @@ export const useApiStore = defineStore("api", () => {
         video_id: videoId,
         hiragana: hiragana,
         romaji: romaji,
-        hanji: hanji,
+        furigana: furigana,
         timestamp: timestamp,
         spaceIndex: spaceIndex,
       },

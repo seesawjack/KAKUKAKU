@@ -3,12 +3,13 @@ import { defineStore } from "pinia";
 import * as Yup from "yup";
 
 export const useAuthStore = defineStore("auth", () => {
+  //會員資訊
   const userInfo = ref("");
-
+  //判斷是否登入
   function isLoggedIn() {
     return !!userInfo.value;
   }
-
+  //回饋表單姓名自動帶入會員名稱
   const feedbackName = computed(() => {
     return isLoggedIn() ? userInfo.value.user_metadata?.name : "";
   });
@@ -256,11 +257,10 @@ export const useAuthStore = defineStore("auth", () => {
     }),
   });
 
-
   return {
+    userInfo,
     formSchema,
     validate,
-    userInfo,
     isLoggedIn
   };
 });

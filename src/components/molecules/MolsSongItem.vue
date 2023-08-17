@@ -25,7 +25,6 @@ import { ref, reactive, computed, onMounted, toRefs } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/song";
-import { useGlobalStore } from "../../stores";
 import { useRequestStore } from "../../stores/request";
 import { useApiStore } from "../../stores/api";
 
@@ -44,8 +43,9 @@ const { isLoggedIn, userInfo } = useAuthStore();
 const {
   lyricConfiguration: { selected },
   songState,
-  tolyrics,
+  toLyrics,
   removeLocal,
+  handleSongState,
 } = useLyricStore();
 
 const {
@@ -58,7 +58,6 @@ const {
   spaceIndex,
 } = toRefs(useLyricStore());
 
-const { loadingState } = useGlobalStore();
 const { supabaseRequest } = useRequestStore();
 const {
   handleSongInfoAdd,
@@ -181,15 +180,15 @@ onMounted(async () => {
       toSongState({ show: false, message: "查無此歌曲" });
       return;
     }
-
-    resultLyrics.value = contentData[0].hanji;
-    hiraganaLyrics.value = contentData[0].hiragana;
-    romajiLyrics.value = contentData[0].romaji;
-    lyricTimeStamp.value = contentData[0].timestamp;
-    spaceIndex.value = contentData[0].spaceIndex;
-
-    selected.isRecommend.state = itemData[0].recommend.state;
-    songInfo.value = itemData[0];
+    handleSongState({
+      result: contentData[0].hanji,
+      hiragana: contentData[0].hiragana,
+      romaji: contentData[0].romaji,
+      timeStamp: contentData[0].timestamp,
+      space: contentData[0].spaceIndex,
+      recommend: itemData[0].recommend.state,
+      info: itemData[0],
+    });
 
     buttonState({
       text: "確認修改",
@@ -204,6 +203,7 @@ onMounted(async () => {
     const { data: itemData } = await supabaseRequest(getSongInfo, {
       videoId: route.query.song_id,
     });
+
     if (!itemData.length) {
       toSongState({ show: false, message: "此歌曲不在推薦清單中" });
       return;
@@ -216,17 +216,19 @@ onMounted(async () => {
       toSongState({ show: false, message: "查無此歌曲" });
       return;
     }
-    resultLyrics.value = JSON.parse(data[0].hanji);
-    hiraganaLyrics.value = JSON.parse(data[0].hiragana);
-    romajiLyrics.value = JSON.parse(data[0].romaji);
-    lyricTimeStamp.value = JSON.parse(data[0].timestamp);
-    spaceIndex.value = JSON.parse(data[0].spaceIndex);
+    handleSongState({
+      result: data[0].hanji,
+      hiragana: data[0].hiragana,
+      romaji: data[0].romaji,
+      timeStamp: data[0].timestamp,
+      space: data[0].spaceIndex
+    });
     return;
   }
 
   //使用者未儲存歌曲，重整後可讀取自動存在 cookie 的資料
   if (route.query.song_id === songInfo.value?.id) {
-    await tolyrics(initLyrics.value);
+    await toLyrics(initLyrics.value);
     lyrics.value = resultLyrics.value;
   }
 

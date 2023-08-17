@@ -71,7 +71,8 @@ export const useLyricStore = defineStore("lyric", () => {
   }
 
   const spaceIndex = ref([]);
-  async function tolyrics(lyric) {
+  //日文歌詞轉換
+  async function toLyrics(lyric) {
     resultLyrics.value.length = 0; //初始化
 
     initLyrics.value = lyric;
@@ -123,6 +124,7 @@ export const useLyricStore = defineStore("lyric", () => {
     kanjiLabelHiragana(result, filtetLyric);
   }
 
+  //平假名 羅馬字轉換處理
   async function kanjiLabelHiragana(hiragana, lyrics) {
     spaceIndex.value = spaceIndex.value.filter(
       (spaceIndex, i, arr) => spaceIndex - 1 !== arr[i - 1]
@@ -134,9 +136,8 @@ export const useLyricStore = defineStore("lyric", () => {
     });
   }
 
+  //漢字標注平假名
   function furigana(lyrics, hiraganaLyrics, index) {
-    
-
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(lyrics, hiraganaLyrics);
     diff.push([0, ""]); //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
@@ -202,6 +203,7 @@ export const useLyricStore = defineStore("lyric", () => {
     },
   });
 
+  //已選歌曲
   function selectedSong(info) {
     songInfo.value = info;
     localStorage.setItem("songInfo", JSON.stringify(info));
@@ -213,6 +215,16 @@ export const useLyricStore = defineStore("lyric", () => {
   }
   function selectedFontStyle(style) {
     lyricConfiguration.selected.fontSize = style;
+  }
+
+  function handleSongState({result,hiragana,romaji,timeStamp,space,recommend,info}){
+    resultLyrics.value = result;
+    hiraganaLyrics.value = hiragana;
+    romajiLyrics.value = romaji;
+    lyricTimeStamp.value = timeStamp;
+    spaceIndex.value = space;
+    lyricConfiguration.selected.isRecommend.state = recommend;
+    songInfo.value = info;
   }
 
   //編輯功能
@@ -239,10 +251,11 @@ export const useLyricStore = defineStore("lyric", () => {
     spaceIndex,
     songState,
     kanjiLabelHiragana,
-    tolyrics,
+    toLyrics,
     selectedSong,
     selectedFontStyle,
     removeLocal,
     editLyric,
+    handleSongState
   };
 });

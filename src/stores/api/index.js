@@ -191,7 +191,8 @@ export const useApiStore = defineStore("api", () => {
       const { data, error } = await supabase
         .from("lyrics_list")
         .select()
-        .eq("video_id", videoId);
+        .eq("video_id", videoId)
+        .eq("recommend->state", true);
 
       if (error) return { error };
       return { data };

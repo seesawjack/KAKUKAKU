@@ -42,7 +42,7 @@ import AtmosInput from "../atmos/AtmosInput.vue";
 
 const router = useRouter();
 const route = useRoute();
-const { tolyrics, selectedSong } = useLyricStore();
+const { toLyrics, selectedSong } = useLyricStore();
 const { isError } = useGlobalStore();
 const { songIdRegex } = useRegexStore();
 
@@ -60,7 +60,7 @@ const songId = ref("");
 
 //歌詞轉換成平假名
 async function transformLyrics(lyric, id) {
-  await tolyrics(lyric);
+  await toLyrics(lyric);
   router.push(`/song/item?song_id=${id}`);
 }
 

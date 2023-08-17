@@ -97,6 +97,8 @@ import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../../stores/auth";
+import { useApiStore } from "../../stores/api";
+import { useRequestStore } from "../../stores/request";
 
 import InfoIcon from "../svg/InfoIcon.vue";
 import LogoutIcon from "../svg/LogoutIcon.vue";
@@ -108,13 +110,16 @@ import PlusPaperIcon from "../svg/PlusPaperIcon.vue";
 import FillinIcon from "../svg/FillinIcon.vue";
 import HomePageIcon from "../svg/HomePageIcon.vue";
 
-const { handleLogout, isLoggedIn } = useAuthStore();
+const { isLoggedIn } = useAuthStore();
 const { userInfo } = storeToRefs(useAuthStore());
+
+const { supabaseRequest } = useRequestStore();
+const { handleLogout } = useApiStore();
 
 const route = useRoute();
 const router = useRouter();
 async function logout() {
-  const result = await handleLogout();
+  await supabaseRequest(handleLogout);
   router.push({ path: "/login" }).then(() => {
     router.go();
   });

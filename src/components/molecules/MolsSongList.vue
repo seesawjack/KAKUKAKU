@@ -108,7 +108,6 @@ const {
 } = useApiStore();
 
 const songList = ref([]);
-const loggedIn = computed(() => isLoggedIn());
 const searchSongName = ref("");
 const deletedSong = ref([]);
 const searchError = ref({ state: "", message: "" });
@@ -134,7 +133,6 @@ async function searchSongs() {
   searchIsError({ state: 0, message: "" });
 
   if (!pageIsPersonal) return;
-  loadingState(true);
   if (route.path.indexOf("personal") > 0) {
     const { data, count } = await supabaseRequest(getSearchedSongList, {
       userId: userInfo.id,
@@ -159,9 +157,8 @@ async function searchSongs() {
   songList.value = songData.data;
   totalPages.value = Math.ceil(songData.count / 10);
   totalSongCount.value = songData.count;
-
-  loadingState(false);
 }
+
 //頁面判斷提示
 const pageIsPersonal = computed(() => {
   if (route.path.indexOf("recommend") > 0) {
@@ -181,6 +178,7 @@ const hasSearchText = computed(() => {
 
 //刪除歌曲
 async function toDeleteSong(id) {
+  totalSongCount.value --;
   deletedSong.value.push(id);
   songList.value = songList.value.filter((song) => song.video_id !== id);
 
@@ -222,6 +220,7 @@ async function pageChagne(value) {
 
   if (route.path.indexOf("personal") > 0) {
     const { data } = await supabaseRequest(handlePageChange, {
+      userId:userInfo.id,
       from: from,
       to: to,
     });
@@ -236,7 +235,6 @@ async function pageChagne(value) {
   }
 
   songList.value = songData.data;
-  loadingState(false);
 }
 const totalSongCount = ref(0);
 const totalPages = ref(0);
@@ -265,11 +263,18 @@ async function loadingLyricList() {
     songData.count = count;
   }
 
-  if (songData.data?.length === 0) {
-    searchIsError({
+  if (songData.data?.length === 0 ) {
+    if(route.path.indexOf("personal") > 0){      
+      searchIsError({
       state: 1,
       message: "您尚未新增歌曲",
     });
+    }else{
+      searchIsError({
+      state: 1,
+      message: "目前無會員提供推薦歌曲",
+    });
+    }
   }
   songList.value = songData.data;
   totalPages.value = Math.ceil(songData.count / 10);

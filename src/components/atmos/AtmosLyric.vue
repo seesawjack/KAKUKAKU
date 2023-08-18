@@ -2,10 +2,10 @@
   <div class="no-hover">
     <div v-if="windowWidth > 768"
       class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
-      :class="[font, className]">
+      :class="[font, selected.labelType]">
       <div class="absolute w-full left-1/2 translate-x-[-50%]"
         :class="{ 'is-recommend-state': route.query.recommend === 'true' }">
-        <template v-for="(lyric, index) in lyrics" :key="index">
+        <template v-for="(lyric, index) in furiganaLyrics" :key="index">
           <div v-if="lyricDisplay(index) || lyricDisplay(index - 1)">
             <p class="init tracking-[2px] test-ly leading-[2.75rem]"
               :class="{ 'text-slate-400': lyricDisplay(index - 1) }" v-html="lyric">
@@ -17,8 +17,8 @@
         </template>
       </div>
     </div>
-    <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, className]">
-      <template v-for="(lyric, index) in lyrics" :key="index">
+    <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, selected.labelType]">
+      <template v-for="(lyric, index) in furiganaLyrics" :key="index">
         <div class="group relative lyric"
           :class="{ 'mt-10': spaceIndex.indexOf(index) > -1, 'is-recommend-state': route.query.recommend === 'true' }"
           v-if="lyric !== ''">
@@ -54,7 +54,7 @@
           </div>
         </div>
         <br v-if="lyric == ''">
-        <div v-if="lyric !== ''" class="my-3" :class="{ 'lyric-line': index !== lyrics.length - 1 }"></div>
+        <div v-if="lyric !== ''" class="my-3" :class="{ 'lyric-line': index !== furiganaLyrics.length - 1 }"></div>
       </template>
     </div>
   </div>
@@ -69,11 +69,7 @@ import ClockIcon from "../svg/ClockIcon.vue";
 import LoopIcon from "../svg/LoopIcon.vue";
 
 const props = defineProps({
-  lyrics: {
-    type: Array,
-    required: true,
-  },
-  className: {
+  furiganaLyrics: {
     type: Array,
     required: true,
   },

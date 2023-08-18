@@ -1,11 +1,13 @@
 <template>
-  <div class="video-container">
+  <div class="video-container" :class="{ 'sticky top-0 z-10': videoFixed }">
     <div id="player"></div>
   </div>
 </template>
 
 <script setup>
-import { useYoutubeStore } from '../../stores/youtube';
+import { computed } from 'vue';
+import { useYoutubeStore } from "../../stores/youtube";
+import { useLyricStore } from "../../stores/song";
 
 const props = defineProps({
   id: {
@@ -15,9 +17,16 @@ const props = defineProps({
 });
 
 const { getVideoId } = useYoutubeStore();
+const {
+  songPageOption: { selected },
+} = useLyricStore();
 
 useYoutubeStore();
 getVideoId(props.id);
+
+const videoFixed = computed(() => {
+  return selected.fixedVideo ? true : false;
+});
 </script>
 
 <style>

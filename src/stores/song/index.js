@@ -14,7 +14,7 @@ export const useLyricStore = defineStore("lyric", () => {
   const timeStampState = ref([]);
   const lyricTimeStamp = ref({});
   const songInfo = ref({});
-  const songState = reactive({ show: true, message: "" });
+  const songDisplay = reactive({ show: true, message: "" });
 
   if (getCurrentInstance()) {
     onMounted(() => {
@@ -225,6 +225,11 @@ export const useLyricStore = defineStore("lyric", () => {
     songInfo.value = info;
   }
 
+  function handleSongDisplay({isShow,msg}){
+    songState.show = isShow;
+    songState.message = msg;
+  }
+
   //編輯功能
   function editLyrics({ init, edit, index }) {
     //修改振假名
@@ -247,12 +252,13 @@ export const useLyricStore = defineStore("lyric", () => {
     timeStampState,
     lyricTimeStamp,
     spaceIndex,
-    songState,
+    songDisplay,
     handleLyricTransform,
     selectedSong,
     selectedFontStyle,
     removeLocal,
     editLyrics,
-    handleSongState
+    handleSongState,
+    handleSongDisplay
   };
 });

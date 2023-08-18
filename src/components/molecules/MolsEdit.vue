@@ -42,7 +42,7 @@ import AtmosInput from "../atmos/AtmosInput.vue";
 
 const router = useRouter();
 const route = useRoute();
-const { handleLyricTransform, selectedSong } = useLyricStore();
+const { handleLyricTransform, handleSongSelected } = useLyricStore();
 const { isError } = useGlobalStore();
 const { songIdRegex } = useRegexStore();
 
@@ -87,7 +87,7 @@ function sendLyric() {
     try {
       const youtubeUrl = new URL(songUrl.value);
       songId.value = songIdRegex(youtubeUrl.search);
-      selectedSong({
+      handleSongSelected({
         id: songId.value,
         title: songName.value,
         url: `https://i.ytimg.com/vi/${songId.value}/mqdefault.jpg`,

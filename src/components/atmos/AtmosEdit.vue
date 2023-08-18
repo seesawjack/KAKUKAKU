@@ -3,7 +3,7 @@
     class="w-full resize-none bg-gray-900/50 border border-solid rounded-xl py-2 px-5 outline-none"
     cols="53"
     rows="14"
-    v-model.trim.lazy="lyricValue"
+    v-model.trim.lazy="uploadLyrics"
     :placeholder="placeholder"
   ></textarea>
 </template>
@@ -24,7 +24,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const lyricValue = computed({
+const uploadLyrics = computed({
   get() {
     return props.modelValue;
   },

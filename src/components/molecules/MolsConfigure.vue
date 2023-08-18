@@ -43,7 +43,7 @@
           <div class="flex justify-between items-end mt-3">
             <label
               :for="font.id"
-              v-for="(font, index) in fontSize"
+              v-for="(font, index) in lyricsFont"
               :key="index"
               class="border cursor-pointer hover:bg-slate-500 w-10 h-10 rounded-lg"
               :class="[
@@ -147,7 +147,7 @@ import RecommendIcon from "../svg/RecommendIcon.vue";
 
 const route = useRoute();
 const {
-  songPageOption: { fontSize, selected },
+  songPageOption: { lyricsFont, selected },
   selectedFontStyle,
 } = useLyricStore();
 

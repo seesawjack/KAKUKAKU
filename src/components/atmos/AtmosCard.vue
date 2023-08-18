@@ -2,7 +2,7 @@
   <div class="flex items-center" :class="{'disappear':disappear}">
     <component
       :is="href ? 'a' : 'div'"
-      @click="selected"
+      @click="songSelected"
       :href="href"
       class="flex max-md:justify-normal justify-center text-left w-full"
     >
@@ -50,7 +50,7 @@
 import { reactive } from "vue";
 import { useLyricStore } from "../../stores/song";
 
-const { selectedSong } = useLyricStore();
+const { handleSongSelected } = useLyricStore();
 
 const props = defineProps({
   data: Object,
@@ -74,9 +74,9 @@ const songDetail = reactive({
   subTitle: props.data?.channelTitle || props.subTitle,
 });
 
-function selected() {
+function songSelected() {
   if (!props.href || props.isAdded) return;
-  selectedSong(songDetail);
+  handleSongSelected(songDetail);
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="container flex items-center justify-center max-md:px-6 mx-auto">
-      <Form @submit="onSubmit" class="w-full" :validation-schema="validate">
+      <Form @submit="formSubmit" class="w-full" :validation-schema="validate">
         <div v-for="{ as, name, children, icon, icon2, ...attrs } in schema" :key="name" class="relative">
           <Field :as="as" :id="name" :name="name" v-bind="attrs" :ref="name"
             class="block w-full py-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8"
@@ -106,7 +106,7 @@ function changIcon() {
 
 const emits = defineEmits(["submit"]);
 
-function onSubmit(formValue) {
+function formSubmit(formValue) {
   emits("submit", { info: formValue });
 }
 </script>

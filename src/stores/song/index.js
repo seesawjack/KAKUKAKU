@@ -167,7 +167,7 @@ export const useLyricStore = defineStore("lyric", () => {
 
   //歌曲頁功能
   const songPageOption = reactive({
-    fontSize: {
+    lyricsFont: {
       big: {
         id: "big",
         name: "大",
@@ -199,7 +199,7 @@ export const useLyricStore = defineStore("lyric", () => {
   });
 
   //已選歌曲
-  function selectedSong(info) {
+  function handleSongSelected(info) {
     songInfo.value = info;
     localStorage.setItem("songInfo", JSON.stringify(info));
   }
@@ -231,7 +231,7 @@ export const useLyricStore = defineStore("lyric", () => {
   }
 
   //編輯功能
-  function editLyrics({ init, edit, index }) {
+  function handleFuriganaEdit({ init, edit, index }) {
     //修改振假名
     furiganaLyrics.value[index] = furiganaLyrics.value[index].replace(init, edit);
     //修改平假名
@@ -254,10 +254,10 @@ export const useLyricStore = defineStore("lyric", () => {
     spaceIndex,
     songDisplay,
     handleLyricTransform,
-    selectedSong,
+    handleSongSelected,
     selectedFontStyle,
     removeLocal,
-    editLyrics,
+    handleFuriganaEdit,
     handleSongState,
     handleSongDisplay
   };

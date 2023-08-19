@@ -39,8 +39,27 @@ $time-4: 600s;
   height: 100%;
   z-index: -1;
   overflow: hidden;
-  background: #2c2d44;
-  background-image: linear-gradient(45deg, #3f3251 2%, #002025 100%);
+  background: linear-gradient(
+    45deg,
+    #3f3251 2%,
+    #002025 100%,
+    #3f3251 2%,
+    #002025 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .particle,

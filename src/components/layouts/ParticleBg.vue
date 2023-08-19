@@ -47,18 +47,21 @@ $time-4: 600s;
     #002025 100%
   );
   background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+  animation: gradient 15s ease-in-out infinite;
 }
 
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
+    filter: blur(0px);
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 50% 50%;
+    filter: blur(15px);
   }
   100% {
     background-position: 0% 50%;
+    filter: blur(0px);
   }
 }
 

@@ -13,7 +13,7 @@ export const useApiStore = defineStore("api", () => {
         data: {
           ...meta,
         },
-        emailRedirectTo: "http://localhost:5173/onboarding",
+        emailRedirectTo: "http://localhost:5173/account/register-success",
       },
     });
     if (error) return { error };

@@ -85,7 +85,7 @@ async function handleSubmit(form) {
       level: form.info.level,
     });
     
-    if (result !== undefined && result.user) router.push("/onboarding");
+    if (result !== undefined) router.push("/account/onboarding");
   }
 }
 </script>

@@ -5,7 +5,7 @@
         <p
           class="w-2/3 pb-4 font-medium text-center text-white text-3xl capitalize border-b border-sky-400"
         >
-         {{ title }}
+          {{ title }}
         </p>
       </div>
       <p class="mt-10 text-lg">
@@ -19,27 +19,26 @@
 </template>
 
 <script setup>
-import { ref,onBeforeMount } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from 'vue-router';
 import { useAuthStore } from "../../stores/auth";
 
-const router = useRouter();
 const { isLoggedIn } = useAuthStore();
+const route = useRoute();
 
-const title = ref('');
-const subTitle = ref('');
+const loggedIn = computed(() => {
+  return isLoggedIn();
+});
+const title = ref("");
+const subTitle = ref("");
 
-onBeforeMount(()=>{
-  if(isLoggedIn()){
-    title.value = '驗證成功';
-    subTitle.value = '註冊會員成功，一分鐘後會自動替您跳轉到首頁';
-    
-    setTimeout(() => {
-      router.push('/song/search')
-    }, 1000);
-    return;
+onMounted(() => {
+  if (route.path.indexOf('register-success')>-1 && loggedIn) {
+    title.value = "驗證成功";
+    subTitle.value = "註冊會員成功，歡迎使用本網站會員相關功能";
+  } else {
+    title.value = "驗證您的信箱";
+    subTitle.value = "我們已寄信到您的信箱，請點擊信件中的連結後即註冊成功";
   }
-  title.value = '驗證您的信箱';
-  subTitle.value = '我們已寄信到您的信箱，請點擊信件中的連結後即註冊成功';
-})
+});
 </script>

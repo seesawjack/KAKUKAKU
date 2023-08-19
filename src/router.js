@@ -32,7 +32,7 @@ const router = createRouter({
     },
     { path: "/login", component: AuthPage },
     { path: "/signup", component: AuthPage },
-    { path: "/onboarding", component: OnboardingPage },
+    
     {
       path: "/account",
       children: [
@@ -44,6 +44,8 @@ const router = createRouter({
           path: "update-password",
           component: PasswordUpdate,
         },
+        { path: "onboarding", component: OnboardingPage },
+        { path: "register-success", component: OnboardingPage },
       ],
     },
     { path: "/about", component: AboutPage },

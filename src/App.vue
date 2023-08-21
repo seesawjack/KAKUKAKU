@@ -1,5 +1,4 @@
 <template>
-  <particle-bg />
   <atmos-loading v-if="isLoading"/>
   <atmos-dialog
     :show="errorMessage?.showError"
@@ -9,6 +8,7 @@
   <the-header />
   <router-view class="max-sm:pt-8 pt-14"></router-view>
   <the-footer />
+  <particle-bg />
 </template>
 
 <script setup>

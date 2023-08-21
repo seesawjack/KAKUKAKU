@@ -8,12 +8,12 @@
   <the-header />
   <router-view class="max-sm:pt-8 pt-14"></router-view>
   <the-footer />
-  <particle-bg />
+  <background-animate />
 </template>
 
 <script setup>
 import TheHeader from "./components/layouts/TheHeader.vue";
-import ParticleBg from "./components/layouts/ParticleBg.vue";
+import BackgroundAnimate from "./components/layouts/BackgroundAnimate.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
 import AtmosLoading from "./components/atmos/AtmosLoading.vue";
 import AtmosDialog from "./components/atmos/AtmosDialog.vue";

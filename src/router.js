@@ -11,7 +11,7 @@ import OnboardingPage from "./pages/Auth/OnboardingPage.vue";
 import PasswordForget from "./pages/Auth/PasswordForget.vue";
 import PasswordUpdate from "./pages/Auth/PasswordUpdate.vue";
 
-import AboutPage from "./pages/about/Index.vue";
+import AboutPage from "./pages/About/Index.vue";
 import FeedBackPage from "./pages/FeedBack/Index.vue";
 
 // import NotFound from './pages/NotFound.vue';

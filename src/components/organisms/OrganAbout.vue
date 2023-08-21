@@ -38,7 +38,7 @@ const faq = [
 
 const updateHistory = [
 {
-    header: "2023/07/28 ver1.0.0",
+    header: "2023/08/21 ver1.0.0",
     body: "網頁上架。",
   }
 ]

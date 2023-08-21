@@ -19,9 +19,9 @@ import FeedBackPage from "./pages/FeedBack/Index.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", redirect: "/song/search" },
+    { path: "/", redirect: "/KAKUKAKU/song/search" },
     {
-      path: "/song",
+      path: "/KAKUKAKU/song",
       children: [
         { path: "search", component: HomePage },
         { path: "upload", component: SongEdit },
@@ -30,11 +30,11 @@ const router = createRouter({
         { path: "item", component: SongItem },
       ],
     },
-    { path: "/login", component: AuthPage },
-    { path: "/signup", component: AuthPage },
+    { path: "/KAKUKAKU/login", component: AuthPage },
+    { path: "/KAKUKAKU/signup", component: AuthPage },
     
     {
-      path: "/account",
+      path: "/KAKUKAKU/account",
       children: [
         {
           path: "forget-password",
@@ -48,9 +48,9 @@ const router = createRouter({
         { path: "register-success", component: OnboardingPage },
       ],
     },
-    { path: "/about", component: AboutPage },
-    { path: "/feedback", component: FeedBackPage },
-    { path: "/:notFound(.*)", redirect: "/song/search" },
+    { path: "/KAKUKAKU/about", component: AboutPage },
+    { path: "/KAKUKAKU/feedback", component: FeedBackPage },
+    { path: "/KAKUKAKU/:notFound(.*)", redirect: "/KAKUKAKU/song/search" },
   ],
 });
 
@@ -59,7 +59,7 @@ router.beforeEach(async (to, from) => {
   const { data: { session } } = await supabase.auth.getSession();
 
   if (to.fullPath === "/login" || to.fullPath === "/signup") {
-    if (session?.user) return "/song/search";
+    if (session?.user) return "/KAKUKAKU/song/search";
   }
   return true;
 });

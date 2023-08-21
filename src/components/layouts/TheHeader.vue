@@ -2,7 +2,7 @@
   <header class="relative z-50">
     <div class="logo flex items-center py-2 px-5">
       <bars-icon class="sidebar mr-3 cursor-pointer" @click="showSidebar" />
-      <router-link to="/song/search" class="flex items-center">
+      <router-link to="/KAKUKAKU/song/search" class="flex items-center">
         <the-logo class="inline h-6 mr-1" />
         <h1 class="text-3 text-lg">KAKUKAKU</h1>
       </router-link>

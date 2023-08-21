@@ -27,7 +27,7 @@
           :id="item.video_id"
           :url="item.video_img"
           :title="item.title"
-          :href="`/song/item?song_id=${item.video_id}&${
+          :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&${
             route.path.indexOf('personal') > 0
               ? 'user=' + userInfo.user_metadata?.name
               : 'recommend=true'

@@ -7,7 +7,7 @@
         <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('search') > 0 }"
-          to="/song/search"
+          to="/KAKUKAKU/song/search"
         >
           <HomePageIcon />
           <span class="mx-2 text-sm font-medium">首頁</span>
@@ -16,7 +16,7 @@
         <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('upload') > 0 }"
-          to="/song/upload"
+          to="/KAKUKAKU/song/upload"
         >
           <plus-paper-icon />
           <span class="mx-2 text-sm font-medium">新增歌曲</span>
@@ -25,7 +25,7 @@
         <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('personal') > 0 }"
-          to="/song/personal/list"
+          to="/KAKUKAKU/song/personal/list"
         >
           <paper-icon />
           <span class="mx-2 text-sm font-medium">個人清單</span>
@@ -34,13 +34,13 @@
         <router-link
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('recommend') > 0 }"
-          to="/song/recommend/list"
+          to="/KAKUKAKU/song/recommend/list"
         >
           <recommend-icon />
           <span class="mx-2 text-sm font-medium">推薦清單</span>
         </router-link>
         <router-link
-          to="/feedback"
+          to="/KAKUKAKU/feedback"
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('feedback') > 0 }"
         >
@@ -49,7 +49,7 @@
         </router-link>
 
         <router-link
-          to="/about"
+          to="/KAKUKAKU/about"
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
           :class="{ 'bg-slate-500': route.path.indexOf('about') > 0 }"
         >
@@ -70,7 +70,7 @@
         >
           <a
             v-if="!loggedIn"
-            href="/login"
+            href="/KAKUKAKU/login"
             class="flex items-center gap-x-2 w-full"
           >
             <span class="text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -120,7 +120,7 @@ const route = useRoute();
 const router = useRouter();
 async function logout() {
   await supabaseRequest(handleLogout);
-  router.push({ path: "/login" }).then(() => {
+  router.push({ path: "/KAKUKAKU/login" }).then(() => {
     router.go();
   });
 }

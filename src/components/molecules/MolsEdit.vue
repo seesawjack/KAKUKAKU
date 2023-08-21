@@ -61,7 +61,7 @@ const songId = ref("");
 //歌詞轉換成平假名
 async function transformLyrics(lyric, id) {
   await handleLyricTransform(lyric);
-  router.push(`/song/item?song_id=${id}`);
+  router.push(`/KAKUKAKU/song/item?song_id=${id}`);
 }
 
 //歌詞確定送出

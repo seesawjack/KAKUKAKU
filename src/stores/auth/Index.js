@@ -28,6 +28,7 @@ export const useAuthStore = defineStore("auth", () => {
         as: "input",
         type: "password",
         placeholder: "請輸入密碼",
+        autocomplete:true,
         icon: "PasswordIcon",
         icon2: "EyeCloseIcon"
       },
@@ -122,6 +123,7 @@ export const useAuthStore = defineStore("auth", () => {
         as: "input",
         type: "password",
         placeholder: "請輸入密碼",
+        autocomplete:false,
         icon: "PasswordIcon",
         icon2: "EyeCloseIcon"
 
@@ -131,6 +133,7 @@ export const useAuthStore = defineStore("auth", () => {
         as: "input",
         type: "password",
         placeholder: "請再次輸入密碼",
+        autocomplete:false,
         icon: "PasswordIcon",
         icon2: "EyeCloseIcon"
       },

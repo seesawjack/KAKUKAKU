@@ -19,7 +19,6 @@ import FeedBackPage from "./pages/FeedBack/Index.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", redirect: "/KAKUKAKU/song/search" },
     {
       path: "/KAKUKAKU/song",
       children: [
@@ -32,7 +31,7 @@ const router = createRouter({
     },
     { path: "/KAKUKAKU/login", component: AuthPage },
     { path: "/KAKUKAKU/signup", component: AuthPage },
-    
+
     {
       path: "/KAKUKAKU/account",
       children: [
@@ -50,16 +49,19 @@ const router = createRouter({
     },
     { path: "/KAKUKAKU/about", component: AboutPage },
     { path: "/KAKUKAKU/feedback", component: FeedBackPage },
-    { path: "/KAKUKAKU/:notFound(.*)", redirect: "/KAKUKAKU/song/search" },
+    { path: "/:notFound(.*)", redirect: "/KAKUKAKU/song/search" },
   ],
 });
 
 router.beforeEach(async (to, from) => {
   const { supabase } = useRequestStore();
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (to.fullPath === "/login" || to.fullPath === "/signup") {
+  if (to.fullPath.indexOf("login") > -1 || to.fullPath.indexOf("signup") > -1) {
     if (session?.user) return "/KAKUKAKU/song/search";
+    return true;
   }
   return true;
 });

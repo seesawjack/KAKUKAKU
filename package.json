@@ -18,6 +18,7 @@
     "sass-loader": "^13.2.2",
     "vee-validate": "^4.9.5",
     "vue": "^3.2.47",
+    "vue-gtag": "^2.0.1",
     "vue-router": "4",
     "wanakana": "^5.1.0",
     "yup": "^1.2.0"

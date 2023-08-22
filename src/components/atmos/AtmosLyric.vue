@@ -263,4 +263,9 @@ onUnmounted(() => {
   text-decoration: none;
   cursor: unset;
 }
+.sentence-play {
+  color: #93c5fd;
+  text-shadow: #075985 0 0 10px;
+  font-weight: 500;
+}
 </style>

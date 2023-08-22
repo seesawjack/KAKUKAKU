@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-2xl">
+  <div class="w-full max-w-2xl max-md:px-5">
     <div class="w-full text-start pt-14">
       <h1 class="text-xl">關於 KAKUKAKU</h1>
       <hr class="w-full border-gray-200 dark:border-gray-500 my-3" />

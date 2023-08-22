@@ -142,12 +142,7 @@ onMounted(async () => {
   }
 
   //若網址含使用者參數
-  if (route.query?.user === userInfo.user_metadata?.name) {
-    // if (route.query.user !== userInfo.user_metadata?.name) {
-    //   handleSongDisplay({ show: false, message: "無法查看此歌曲" });
-    //   return;
-    // }
-
+  if (route.query?.user && route.query?.user === userInfo.user_metadata?.name) {
     const { data: itemData } = await supabaseRequest(getSongInfo, {
       videoId: route.query.song_id,
       userId: userInfo.id,

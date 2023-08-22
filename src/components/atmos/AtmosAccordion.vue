@@ -7,7 +7,7 @@
       <summary
         class="flex cursor-pointer items-center justify-between gap-1.5"
       >
-        <h2 class="font-bold text-lg">
+        <h2 class="font-bold text-lg max-md:text-base">
          {{ item.header }}
         </h2>
 
@@ -44,7 +44,7 @@
         </span>
       </summary>
 
-      <p class="mt-4 leading-relaxed">
+      <p class="mt-4 leading-relaxed max-md:text-sm">
         {{ item.body }}
       </p>
     </details>

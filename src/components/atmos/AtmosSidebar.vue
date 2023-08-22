@@ -1,60 +1,19 @@
 <template>
   <aside
-    class="flex flex-col max-sm:w-full w-64 h-screen px-5 py-8 overflow-y-auto bg-gray-900"
+    class="w-64 h-screen flex flex-col max-sm:w-full  px-5 py-8 overflow-y-auto bg-gray-900"
   >
-    <div class="flex flex-col justify-between flex-1 mt-6">
+    <div class="h-full flex flex-col justify-between flex-1 mt-6">
       <nav class="flex-1 -mx-3 space-y-3">
         <router-link
+          v-for="(item, index) in siteLinks"
+          :key="index"
           class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-          :class="{ 'bg-slate-500': route.path.indexOf('search') > 0 }"
-          to="/KAKUKAKU/song/search"
+          :class="{ 'bg-slate-500': route.path.indexOf(item.path) > 0 }"
+          :to="item.link"
+          @click="closeSidebar"
         >
-          <HomePageIcon />
-          <span class="mx-2 text-sm font-medium">首頁</span>
-        </router-link>
-
-        <router-link
-          class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-          :class="{ 'bg-slate-500': route.path.indexOf('upload') > 0 }"
-          to="/KAKUKAKU/song/upload"
-        >
-          <plus-paper-icon />
-          <span class="mx-2 text-sm font-medium">新增歌曲</span>
-        </router-link>
-
-        <router-link
-          class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-          :class="{ 'bg-slate-500': route.path.indexOf('personal') > 0 }"
-          to="/KAKUKAKU/song/personal/list"
-        >
-          <paper-icon />
-          <span class="mx-2 text-sm font-medium">個人清單</span>
-        </router-link>
-
-        <router-link
-          class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-          :class="{ 'bg-slate-500': route.path.indexOf('recommend') > 0 }"
-          to="/KAKUKAKU/song/recommend/list"
-        >
-          <recommend-icon />
-          <span class="mx-2 text-sm font-medium">推薦清單</span>
-        </router-link>
-        <router-link
-          to="/KAKUKAKU/feedback"
-          class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-          :class="{ 'bg-slate-500': route.path.indexOf('feedback') > 0 }"
-        >
-          <fillin-icon />
-          <span class="mx-2 text-sm font-medium"> 意見回饋 </span>
-        </router-link>
-
-        <router-link
-          to="/KAKUKAKU/about"
-          class="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-          :class="{ 'bg-slate-500': route.path.indexOf('about') > 0 }"
-        >
-          <info-icon />
-          <span class="mx-2 text-sm font-medium"> 關於網站 </span>
+          <component :is="item.icon" />
+          <span class="mx-2 text-sm font-medium">{{ item.name }}</span>
         </router-link>
       </nav>
 
@@ -118,6 +77,47 @@ const { handleLogout } = useApiStore();
 
 const route = useRoute();
 const router = useRouter();
+
+const emit = defineEmits(['closeSidebar'])
+
+const siteLinks = [
+  {
+    name: "首頁",
+    path: "search",
+    link: "/KAKUKAKU/song/search",
+    icon: HomePageIcon,
+  },
+  {
+    name: "新增歌曲",
+    path: "upload",
+    link: "/KAKUKAKU/song/upload",
+    icon: PlusPaperIcon,
+  },
+  {
+    name: "個人清單",
+    path: "personal",
+    link: "/KAKUKAKU/song/personal/list",
+    icon: PaperIcon,
+  },
+  {
+    name: "推薦清單",
+    path: "recommend",
+    link: "/KAKUKAKU/song/recommend/list",
+    icon: RecommendIcon,
+  },
+  {
+    name: "意見回饋",
+    path: "feedback",
+    link: "/KAKUKAKU/feedback",
+    icon: FillinIcon,
+  },
+  { name: "關於網站", path: "about", link: "/KAKUKAKU/about", icon: InfoIcon },
+];
+
+const loggedIn = computed(() => {
+  return isLoggedIn();
+});
+
 async function logout() {
   await supabaseRequest(handleLogout);
   router.push({ path: "/KAKUKAKU/login" }).then(() => {
@@ -125,7 +125,7 @@ async function logout() {
   });
 }
 
-const loggedIn = computed(() => {
-  return isLoggedIn();
-});
+function closeSidebar(){
+  emit('closeSidebar')
+}
 </script>

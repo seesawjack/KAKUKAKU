@@ -1,5 +1,5 @@
 <template>
-  <header class="relative z-50">
+  <header class="relative z-50 max-md:bg-slate-900/90">
     <div class="logo flex items-center py-2 px-5">
       <bars-icon class="sidebar mr-3 cursor-pointer" @click="showSidebar" />
       <router-link to="/KAKUKAKU/song/search" class="flex items-center">
@@ -8,7 +8,7 @@
       </router-link>
     </div>
   </header>
-  <atmos-sidebar class="sidebar fixed -left-[100%] transition-all z-30" :class="{ 'show': isShow }" />
+  <atmos-sidebar class="sidebar fixed -left-[100%] transition-all z-30" :class="{ 'show': isShow }" @close-sidebar="handleCloseSidebar"/>
 </template>
 
 <script setup>
@@ -20,6 +20,9 @@ import AtmosSidebar from "../atmos/AtmosSidebar.vue";
 const isShow = ref(false);
 function showSidebar() {
   isShow.value = !isShow.value;
+}
+function handleCloseSidebar(){
+  isShow.value = false;
 }
 
 const notClickSidebar = () => {

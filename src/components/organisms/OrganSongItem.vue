@@ -1,5 +1,5 @@
 <template>
-  <div class="max-md:!w-full flex justify-center max-md:px-5 mt-5"
+  <div class="max-md:!w-full flex justify-center max-md:px-5"
     :class="widthContainer">
     <mols-song-item/>
     <mols-configure v-if="songDisplay.show"

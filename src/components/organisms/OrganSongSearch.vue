@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-full ease-in-out duration-700"
-    :class="[isActive ? 'mt-5' : 'mt-56']"
+    :class="[isActive ? 'mt-5' : '!mt-56']"
   >
     <mols-song-search :className="disappear" @search="searchResult">
       <h1

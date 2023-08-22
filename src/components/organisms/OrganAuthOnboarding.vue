@@ -1,14 +1,14 @@
 <template>
-  <section class="mt-56">
+  <section class="!mt-56 px-5">
     <div class="container mx-auto">
       <div class="flex items-center justify-center">
         <p
-          class="w-2/3 pb-4 font-medium text-center text-white text-3xl capitalize border-b border-sky-400"
+          class="w-2/3 pb-4 font-medium text-white text-2xl capitalize border-b border-sky-400"
         >
           {{ title }}
         </p>
       </div>
-      <p class="mt-10 text-lg">
+      <p class="mt-10 text-lg max-md:text-base">
         {{ subTitle }}
       </p>
       <div v-if="!isLoggedIn" class="text-lg text-gray-300">

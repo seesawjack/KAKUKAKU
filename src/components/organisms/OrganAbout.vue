@@ -1,6 +1,6 @@
 <template>
   <div class="w-full max-w-2xl max-md:px-5">
-    <div class="w-full text-start pt-14">
+    <div class="w-full text-start">
       <h1 class="text-xl">關於 KAKUKAKU</h1>
       <hr class="w-full border-gray-200 dark:border-gray-500 my-3" />
       <p class="text-justify">提供使用者方便及快速的操作介面練習日文歌曲，且依據使用者回饋定期更新網站樣式及功能，期望能提供更完善的練習日文歌體驗。</p>

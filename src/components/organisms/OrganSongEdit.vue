@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col max-md:px-5 max-w-[510px] mx-auto mt-10">
+  <div class="flex flex-col max-md:px-5 max-w-[510px] mx-auto">
     <div v-if="isYoutubeSearch" class="relative">
       <atmos-card
         :id="songInfo.id"

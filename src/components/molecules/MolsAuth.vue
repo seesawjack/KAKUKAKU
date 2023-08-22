@@ -4,14 +4,14 @@
       <div class="flex items-center justify-center mt-6">
         <a
           href="/KAKUKAKU/login"
-          class="w-1/3 pb-4 font-medium text-center text-gray-500 text-3xl capitalize border-b"
+          class="w-1/3 pb-4 font-medium text-center text-gray-500 text-xl capitalize border-b"
           :class="{ 'border-sky-400 text-white': atLoginPage === 'login' }"
         >
           登入
         </a>
         <a
           href="/KAKUKAKU/signup"
-          class="w-1/3 pb-4 font-medium text-center text-3xl text-gray-600 capitalize border-b"
+          class="w-1/3 pb-4 font-medium text-center text-xl text-gray-600 capitalize border-b"
           :class="{ 'border-sky-400 text-white': atLoginPage === 'signup' }"
         >
           註冊

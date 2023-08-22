@@ -1,70 +1,38 @@
 <template>
-  <div class="w-full max-w-[600px] max-sm:px-5 mx-auto mt-5">
+  <div class="w-full max-w-[600px] max-sm:px-5 mx-auto">
     <div v-if="pageIsPersonal && searchError.state !== 1">
       <div class="w-full">
         <form @submit.prevent="searchSongs">
-          <atmos-input
-            class="w-full max-sm:text-sm mb-5"
-            :inputTips="'請輸入歌曲名稱'"
+          <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
             :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
-            v-model.trim="searchSongName"
-          >
-            <search-glasses
-              class="absolute right-3 top-2"
-              :class="hasSearchText"
-              @click="searchSongs"
-            />
+            v-model.trim="searchSongName">
+            <search-glasses class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
           </atmos-input>
         </form>
         <p v-if="songList?.length > 0" class="text-left mb-5">
           {{ searchedTips }}
         </p>
-        <atmos-card
-          class="max-sm:ml-0 ml-2 mb-5 group"
-          :class="`dropdown-${item.video_id}`"
-          v-for="item in songList"
-          :key="item.id"
-          :id="item.video_id"
-          :url="item.video_img"
-          :title="item.title"
-          :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&${
-            route.path.indexOf('personal') > 0
-              ? 'user=' + userInfo.user_metadata?.name
-              : 'recommend=true'
-          }`"
-          :isAdded="true"
-          :disappear="deletedSong.indexOf(item.video_id) > -1"
-        >
+        <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`" v-for="item in songList"
+          :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title" :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&${route.path.indexOf('personal') > 0
+            ? 'user=' + userInfo.user_metadata?.name
+            : 'recommend=true'
+            }`" :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1">
           <template #configure v-if="route.path.indexOf('personal') > 0">
             <div class="w-[22.5px] relative">
-              <more-icon
-                @click="showDropDown(item.video_id)"
-                class="hidden group-hover:block cursor-pointer max-md:block"
+              <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer max-md:block"
                 :class="[
                   { '!block': clickClassName === item.video_id },
                   { 'group-hover': !deletedSong },
-                ]"
-              />
-              <atmos-drop-down
-                class="top-4 right-3 py-1 px-2"
-                :show="clickClassName === item.video_id"
-              >
-                <button
-                  class="w-full py-1 rounded-md hover:bg-slate-800"
-                  @click="toDeleteSong(item.video_id)"
-                >
+                ]" />
+              <atmos-drop-down class="top-4 right-3 py-1 px-2" :show="clickClassName === item.video_id">
+                <button class="w-full py-1 rounded-md hover:bg-slate-800" @click="toDeleteSong(item.video_id)">
                   刪除此歌曲
                 </button>
               </atmos-drop-down>
             </div>
           </template>
         </atmos-card>
-        <atmos-pagination
-          v-if="totalSongCount > 10"
-          :nowPage="page + 1"
-          :totalPages="totalPages"
-          @search="pageChagne"
-        />
+        <atmos-pagination v-if="totalSongCount > 10" :nowPage="page + 1" :totalPages="totalPages" @search="pageChagne" />
       </div>
     </div>
     <atmos-not-found v-if="searchError.state > 0" :tips="searchError.message" />
@@ -117,7 +85,7 @@ const isSearch = ref(false);
 const searchedTips = computed(() => {
   return isSearch.value
     ? `符合搜尋結果 ${totalSongCount.value} 首`
-    : `已建立 ${totalSongCount.value} 首`;
+    : `已${route.path.indexOf("personal") > 0 ? '建立' : '推薦'} ${totalSongCount.value} 首`;
 });
 
 //搜尋結果錯誤訊息
@@ -178,7 +146,7 @@ const hasSearchText = computed(() => {
 
 //刪除歌曲
 async function toDeleteSong(id) {
-  totalSongCount.value --;
+  totalSongCount.value--;
   deletedSong.value.push(id);
   songList.value = songList.value.filter((song) => song.video_id !== id);
 
@@ -220,7 +188,7 @@ async function pageChagne(value) {
 
   if (route.path.indexOf("personal") > 0) {
     const { data } = await supabaseRequest(handlePageChange, {
-      userId:userInfo.id,
+      userId: userInfo.id,
       from: from,
       to: to,
     });
@@ -258,22 +226,22 @@ async function loadingLyricList() {
     songData.count = count;
   } else if (route.path.indexOf("recommend") > 0) {
     searchIsError({ state: 0, message: "" });
-    const { data,count } = await supabaseRequest(getRecoSongList);
+    const { data, count } = await supabaseRequest(getRecoSongList);
     songData.data = data;
     songData.count = count;
   }
 
-  if (songData.data?.length === 0 ) {
-    if(route.path.indexOf("personal") > 0){      
+  if (songData.data?.length === 0) {
+    if (route.path.indexOf("personal") > 0) {
       searchIsError({
-      state: 1,
-      message: "您尚未新增歌曲",
-    });
-    }else{
+        state: 1,
+        message: "您尚未新增歌曲",
+      });
+    } else {
       searchIsError({
-      state: 1,
-      message: "目前無會員提供推薦歌曲",
-    });
+        state: 1,
+        message: "目前無會員提供推薦歌曲",
+      });
     }
   }
   songList.value = songData.data;

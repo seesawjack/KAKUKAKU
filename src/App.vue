@@ -6,7 +6,7 @@
     @close="closeDialog"
   />
   <the-header />
-  <router-view class="max-sm:pt-8 pt-14"></router-view>
+  <router-view class="max-sm:pt-8 pt-14 max-md:mt-7"></router-view>
   <the-footer />
   <background-animate />
 </template>

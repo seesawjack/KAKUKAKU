@@ -17,10 +17,18 @@
   -webkit-text-size-adjust: 100%;
 }
 
+@layer utilities {
+  .h-my-screen {
+    height: 100vh;
+    height: 100dvh;
+  }
+}
+
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   position: relative;
 }
 
@@ -55,8 +63,8 @@ button {
   align-items: center;
 }
 
-.sentence-play{
-  @apply font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white	;
+.sentence-play {
+  @apply font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-400 [text-shadow:_0_0_10px_#075985] caret-white;
 }
 @media (prefers-color-scheme: light) {
   :root {

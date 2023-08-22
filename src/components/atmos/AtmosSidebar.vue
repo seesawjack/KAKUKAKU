@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="w-64 h-screen flex flex-col max-sm:w-full  px-5 py-8 overflow-y-auto bg-gray-900"
+    class="w-64 h-my-screen flex flex-col max-sm:w-full  px-5 py-8 overflow-y-auto bg-gray-900"
   >
     <div class="h-full flex flex-col justify-between flex-1 mt-6">
       <nav class="flex-1 -mx-3 space-y-3">

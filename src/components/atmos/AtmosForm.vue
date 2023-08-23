@@ -157,8 +157,6 @@ input[type="date"] {
   flex-direction: row-reverse;
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
-}
-input[type="select"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -167,6 +165,9 @@ input[type="select"] {
 select {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .unclickable {

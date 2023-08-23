@@ -68,9 +68,9 @@
           </div>
         </div>
         <hr class="border-gray-200 dark:border-gray-500 my-3" />
-        <!-- ▼下拉式選單 標註形式 -->
+        <!-- ▼下拉式選單 歌詞形式 -->
         <div>
-          <p class="text-left">標註形式</p>
+          <p class="text-left">歌詞形式</p>
           <select
             v-model="selectedLabelType"
             class="w-full mt-2 p-1 bg-slate-500 rounded-md outline-none"
@@ -104,7 +104,7 @@
           </label>
           <hr class="max-md:hidden border-gray-200 dark:border-gray-500 my-3" />
         </div>
-        <!-- ▼開關 單句循環 -->
+        <!-- ▼開關 單句重播 -->
         <div class="max-md:hidden">
           <label
             for="loopLyric"
@@ -121,7 +121,7 @@
             ></div>
             <span
               class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >單句循環</span
+              >單句重播</span
             >
           </label>
         </div>

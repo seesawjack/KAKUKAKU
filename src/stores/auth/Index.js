@@ -50,6 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
         name: "gender",
         as: "select",
         icon: "GenderIcon",
+        icon2: "ChervonDownIcon",
         children: [
           {
             tag: "option",
@@ -73,6 +74,7 @@ export const useAuthStore = defineStore("auth", () => {
         name: "level",
         as: "select",
         icon: "PaperIcon",
+        icon2: "ChervonDownIcon",
         children: [
           {
             tag: "option",
@@ -150,6 +152,7 @@ export const useAuthStore = defineStore("auth", () => {
         name: "questionType",
         as: "select",
         icon: "PaperIcon",
+        icon2: "ChervonDownIcon",
         children: [
           {
             tag: "option",

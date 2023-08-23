@@ -21,7 +21,7 @@ export const useAuthStore = defineStore("auth", () => {
         name: "email",
         as: "input",
         placeholder: "請輸入信箱",
-        icon: "EmailIcon",
+        icon: "icon_email",
       },
       password: {
         name: "password",
@@ -29,8 +29,8 @@ export const useAuthStore = defineStore("auth", () => {
         type: "password",
         placeholder: "請輸入密碼",
         autocomplete:true,
-        icon: "PasswordIcon",
-        icon2: "EyeCloseIcon"
+        icon: "icon_password",
+        icon2: "icon_eye_close"
       },
     },
     signup: {
@@ -38,19 +38,19 @@ export const useAuthStore = defineStore("auth", () => {
         name: "name",
         as: "input",
         placeholder: "請輸入使用者名稱",
-        icon: "UserIcon",
+        icon: "icon_user",
       },
       birth: {
         name: "birth",
         as: "input",
         type: "date",
-        icon: "CalenderIcon",
+        icon: "icon_calender",
       },
       gender: {
         name: "gender",
         as: "select",
-        icon: "GenderIcon",
-        icon2: "ChervonDownIcon",
+        icon: "icon_gender",
+        icon2: "icon_chervon_down",
         children: [
           {
             tag: "option",
@@ -73,8 +73,8 @@ export const useAuthStore = defineStore("auth", () => {
       level: {
         name: "level",
         as: "select",
-        icon: "PaperIcon",
-        icon2: "ChervonDownIcon",
+        icon: "icon_paper",
+        icon2: "icon_chervon_down",
         children: [
           {
             tag: "option",
@@ -118,7 +118,7 @@ export const useAuthStore = defineStore("auth", () => {
         name: "email",
         as: "input",
         placeholder: "請輸入信箱",
-        icon: "EmailIcon",
+        icon: "icon_email",
       },
       password: {
         name: "password",
@@ -126,8 +126,8 @@ export const useAuthStore = defineStore("auth", () => {
         type: "password",
         placeholder: "請輸入密碼",
         autocomplete:false,
-        icon: "PasswordIcon",
-        icon2: "EyeCloseIcon"
+        icon: "icon_password",
+        icon2: "icon_eye_close"
 
       },
       passwordConfirmed: {
@@ -136,23 +136,23 @@ export const useAuthStore = defineStore("auth", () => {
         type: "password",
         placeholder: "請再次輸入密碼",
         autocomplete:false,
-        icon: "PasswordIcon",
-        icon2: "EyeCloseIcon"
+        icon: "icon_password",
+        icon2: "icon_eye_close"
       },
     },
     feedback: {
-      name: {
+      userName: {
         name: "name",
         as: "input",
         value: feedbackName,
         placeholder: "請輸入使用者名稱",
-        icon: "UserIcon",
+        icon: "icon_user",
       },
       questionType: {
         name: "questionType",
         as: "select",
-        icon: "PaperIcon",
-        icon2: "ChervonDownIcon",
+        icon: "icon_paper",
+        icon2: "icon_chervon_down",
         children: [
           {
             tag: "option",
@@ -188,7 +188,7 @@ export const useAuthStore = defineStore("auth", () => {
         name: "email",
         as: "input",
         placeholder: "請輸入信箱",
-        icon: "EmailIcon",
+        icon: "icon_email",
       }
     },
     passwordUpdate: {
@@ -197,8 +197,8 @@ export const useAuthStore = defineStore("auth", () => {
         as: "input",
         type: "password",
         placeholder: "請輸入新密碼",
-        icon: "PasswordIcon",
-        icon2: "EyeCloseIcon"
+        icon: "icon_password",
+        icon2: "icon_eye_close"
 
       },
       passwordConfirmed: {
@@ -206,8 +206,8 @@ export const useAuthStore = defineStore("auth", () => {
         as: "input",
         type: "password",
         placeholder: "請再次輸入新密碼",
-        icon: "PasswordIcon",
-        icon2: "EyeCloseIcon"
+        icon: "icon_password",
+        icon2: "icon_eye_close"
       },
     }
   });

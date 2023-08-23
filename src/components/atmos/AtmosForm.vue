@@ -15,10 +15,12 @@
               </component>
             </template>
           </Field>
-          <component :is="iconGroup[icon]" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
-          <component v-if="icon2" :is="iconGroup[icon2]"
+          <atmos-svg-icon v-if="icon" :name="icon" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
+          <atmos-svg-icon 
+            v-if="icon2" 
+            :name="icon2"
             class="absolute right-0 top-3 mx-3 text-gray-300 dark:text-gray-500"
-            :class="{ 'stroke-white': icon2 === 'EyeIcon' }" @click="changPassworcIcon(icon2)" />
+            :class="{ 'stroke-white': icon2 === 'icon_eye' }" @click="changPassworcIcon(icon2)" />
           <ErrorMessage :name="name" class="absolute left-0 top-15 text-sm text-red-500" />
         </div>
         <button
@@ -35,22 +37,11 @@
 </template>
 
 <script setup>
-import { ref, computed, toRefs } from "vue";
+import { ref, toRefs } from "vue";
 import { Form, Field, ErrorMessage, useForm } from "vee-validate";
-import { useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 
-import UserIcon from "../svg/UserIcon.vue";
-import PasswordIcon from "../svg/PasswordIcon.vue";
-import EmailIcon from "../svg/EmailIcon.vue";
-import GenderIcon from "../svg/GenderIcon.vue";
-import PaperIcon from "../svg/PaperIcon.vue";
-import CalenderIcon from "../svg/CalenderIcon.vue";
-import EyeCloseIcon from "../svg/EyeCloseIcon.vue";
-import EyeIcon from "../svg/EyeIcon.vue";
-import ChervonDownIcon from "../svg/ChervonDownIcon.vue"
-
-const route = useRoute();
+import AtmosSvgIcon from "./AtmosSvgIcon.vue";
 
 const props = defineProps({
   schema: {
@@ -72,37 +63,26 @@ const props = defineProps({
 });
 
 const formName = ref(props.formType);
-const iconGroup = {
-  UserIcon: UserIcon,
-  PasswordIcon: PasswordIcon,
-  EmailIcon: EmailIcon,
-  GenderIcon: GenderIcon,
-  PaperIcon: PaperIcon,
-  CalenderIcon: CalenderIcon,
-  EyeCloseIcon: EyeCloseIcon,
-  EyeIcon: EyeIcon,
-  ChervonDownIcon: ChervonDownIcon
-};
 
 const { formSchema } = toRefs(useAuthStore());
 
 function changPassworcIcon(icon) {
-  if (icon !== "EyeIcon" && icon !== 'EyeCloseIcon') return;
+  if (icon !== "icon_eye" && icon !== 'icon_eye_close') return;
   const passwordObj = formSchema.value[formName.value].password;
   const passwordConfirmedObj = formSchema.value[formName.value].passwordConfirmed;
-  if (icon === 'EyeCloseIcon') {
+  if (icon === 'icon_eye_close') {
     passwordObj.type = "text";
-    passwordObj.icon2 = "EyeIcon";
+    passwordObj.icon2 = "icon_eye";
     if (passwordConfirmedObj) {
       passwordConfirmedObj.type = "text";
-      passwordConfirmedObj.icon2 = "EyeIcon";
+      passwordConfirmedObj.icon2 = "icon_eye";
     }
   } else {
     passwordObj.type = "password";
-    passwordObj.icon2 = "EyeCloseIcon";
+    passwordObj.icon2 = "icon_eye_close";
     if (passwordConfirmedObj) {
       passwordConfirmedObj.type = "password";
-      passwordConfirmedObj.icon2 = "EyeCloseIcon";
+      passwordConfirmedObj.icon2 = "icon_eye_close";
     }
   }
 }

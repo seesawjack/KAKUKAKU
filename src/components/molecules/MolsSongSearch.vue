@@ -1,22 +1,12 @@
 <template>
-  <div
-    class="w-full overflow-hidden max-sm:mb-2 mb-3 mx-auto"
-    :class="className"
-  >
+  <div class="w-full overflow-hidden max-sm:mb-2 mb-3 mx-auto" :class="className">
     <slot></slot>
   </div>
   <form @submit.prevent="searchSongs">
-    <atmos-input
-      class="max-sm:max-w-xs max-sm:text-sm max-w-xl mx-auto"
-      :inputTips="'請輸入想搜尋的歌曲名稱'"
+    <atmos-input class="max-sm:max-w-xs max-sm:text-sm max-w-xl mx-auto" :inputTips="'請輸入想搜尋的歌曲名稱'"
       :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
-      v-model="searchResult"
-    >
-      <search-glasses
-        class="absolute right-3 top-2"
-        :class="hasSearchText"
-        @click="searchSongs"
-      />
+      v-model="searchResult">
+      <atmos-svg-icon name="icon_search" class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
     </atmos-input>
   </form>
 </template>
@@ -27,7 +17,7 @@ import { useYoutubeStore } from "../../stores/youtube";
 import { useGlobalStore } from "../../stores/index";
 
 import AtmosInput from "../atmos/AtmosInput.vue";
-import SearchGlasses from "../svg/SearchGlasses.vue";
+import AtmosSvgIcon from "../atmos/AtmosSvgIcon.vue";
 
 const props = defineProps({
   className: {
@@ -38,14 +28,14 @@ const props = defineProps({
 
 const emit = defineEmits(["search"]);
 
-const { isError,loadingState } = useGlobalStore(); 
+const { isError, loadingState } = useGlobalStore();
 const { youtubeSearch } = useYoutubeStore();
 
 //判斷搜尋框是否含有資料(含 loading 及錯誤訊息顯示)
 const searchResult = ref("");
 async function searchSongs(value) {
-  if (!searchResult.value){
-    isError({showError:true,message:'請輸入歌曲名稱'});
+  if (!searchResult.value) {
+    isError({ showError: true, message: '請輸入歌曲名稱' });
     return;
   }
   loadingState(true);

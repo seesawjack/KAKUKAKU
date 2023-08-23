@@ -4,6 +4,7 @@ import router from './router'
 import './style.css'
 import App from './App.vue'
 import VueGtag from "vue-gtag";
+import 'virtual:svg-icons-register';
 
 const pinia = createPinia();
 const app = createApp(App)

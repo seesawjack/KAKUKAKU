@@ -1,120 +1,76 @@
 <template>
   <div>
     <!-- 影片下的歌詞字幕 -->
-    <div
-      v-if="windowWidth > 768"
+    <div v-if="windowWidth > 768"
       class="relative overflow-hidden flex-col items-center bg-black pt-1 pb-3 min-h-[104.5px]"
-      :class="[font, selected.labelType]"
-    >
-      <div
-        class="absolute w-full left-1/2 translate-x-[-50%]"
-        :class="{ 'is-recommend-state': route.query.recommend === 'true' }"
-      >
+      :class="[font, selected.labelType]">
+      <div class="absolute w-full left-1/2 translate-x-[-50%]"
+        :class="{ 'is-recommend-state': route.query.recommend === 'true' }">
         <template v-for="(lyric, index) in furiganaLyrics" :key="index">
           <div v-if="lyricsStyle(index) || lyricsStyle(index - 1)">
-            <p
-              class="init tracking-[2px] test-ly leading-[2.75rem]"
-              :class="{ 'text-slate-400': lyricsStyle(index - 1) }"
-              v-html="lyric"
-            ></p>
-            <p
-              v-if="selected.labelType === 'all-hiragana'"
-              class="hiraganatracking-[2px] test-ly leading-[2.75rem]"
-              :class="{ 'text-slate-400': lyricsStyle(index - 1) }"
-              v-html="hiraganaLyrics[index]"
-            ></p>
+            <p class="init tracking-[2px] test-ly leading-[2.75rem]" :class="{ 'text-slate-400': lyricsStyle(index - 1) }"
+              v-html="lyric"></p>
+            <p v-if="selected.labelType === 'all-hiragana'" class="hiraganatracking-[2px] test-ly leading-[2.75rem]"
+              :class="{ 'text-slate-400': lyricsStyle(index - 1) }" v-html="hiraganaLyrics[index]"></p>
           </div>
         </template>
       </div>
     </div>
     <!-- 整體歌詞 -->
-    <div
-      class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl"
-      :class="[font, selected.labelType]"
-    >
+    <div class="lyric mt-5 text-left bg-slate-950/60 px-3 py-2 rounded-xl" :class="[font, selected.labelType]">
       <template v-for="(lyric, index) in furiganaLyrics" :key="index">
-        <div
-          v-if="lyric !== ''"
-          class="group relative lyric"
-          :class="{
-            'mt-10': spaceIndex.indexOf(index) > -1,
-            'is-recommend-state': route.query.recommend === 'true',
-          }"
-        >
+        <div v-if="lyric !== ''" class="group relative lyric" :class="{
+          'mt-10': spaceIndex.indexOf(index) > -1,
+          'is-recommend-state': route.query.recommend === 'true',
+        }">
           <!-- 振假名歌詞 -->
-          <p
-            class="init tracking-[2px] test-ly flex-wrap pr-6 hover:no-underline"
-            :class="{ 'sentence-play': lyricsStyle(index) }"
-            v-html="lyric"
-          ></p>
+          <p class="init tracking-[2px] test-ly flex-wrap pr-6 hover:no-underline"
+            :class="{ 'sentence-play': lyricsStyle(index) }" v-html="lyric"></p>
           <!-- 平假名歌詞 -->
-          <p
-            class="hiragana flex-wrap pr-6"
-            :class="{ 'sentence-play': lyricsStyle(index) }"
-            v-html="hiraganaLyrics[index]"
-          ></p>
+          <p class="hiragana flex-wrap pr-6" :class="{ 'sentence-play': lyricsStyle(index) }"
+            v-html="hiraganaLyrics[index]"></p>
           <!-- 羅馬字歌詞 -->
           <p class="romaji flex-wrap pr-6" v-html="romajiLyrics[index]"></p>
           <!-- 時間戳記icon -->
-          <div
-            class="cursor-pointer absolute h-5 top-3 -left-12"
-            :class="{
-              hidden: !selected.timeStamp,
-              'clock-selected': lyricTimeStamp[index],
-            }"
-          >
-            <clock-icon @click="selectTimeStamp(index)" />
+          <div class="cursor-pointer absolute h-5 top-3 -left-12" :class="{
+            hidden: !selected.timeStamp,
+            'clock-selected': lyricTimeStamp[index],
+          }">
+            <atmos-svg-icon name="icon_clock" @click="selectTimeStamp(index)"/>
             <span class="text-xs block translate-x-[-5px] translate-y-0">{{
               lyricTimeStamp[index]?.slice(3, 8)
             }}</span>
           </div>
-          <!-- 單句循環icon -->
+          <!-- 單句重播icon -->
           <div
             class="absolute top-1/2 -translate-y-[50%] right-0 bg-slate-500/50 rounded-lg after:content-['1'] after:absolute after:top-1 after:text-xs after:left-[0.55rem] hidden"
             :class="[
-              {
-                '!block': selected.loopLyric,
-                'top-5': index === +sentenceIndex,
-              },
-              loopIconStyle(index),
-            ]"
-            @click="seekTo(index)"
-          >
-            <loop-icon />
+                  {
+                    '!block': selected.loopLyric,
+                    'top-5': index === +sentenceIndex,
+                  },
+                  loopIconStyle(index),
+                ]" @click="seekTo(index)">
+            <atmos-svg-icon name="icon_replay" />
           </div>
           <!-- 振假名修改功能 -->
-          <div
-            class="bg-slate-800 border border-slate-50/10 rounded-lg py-3 px-2 mt-2"
-            :class="{ hidden: index !== +sentenceIndex }"
-          >
-            <input
-              type="text"
-              class="w-full bg-slate-900 caret-white outline-none"
-              v-model="editHiraganaWord"
-            />
+          <div class="bg-slate-800 border border-slate-50/10 rounded-lg py-3 px-2 mt-2"
+            :class="{ hidden: index !== +sentenceIndex }">
+            <input type="text" class="w-full bg-slate-900 caret-white outline-none" v-model="editHiraganaWord" />
             <p>{{ furiganaWord }}</p>
             <div class="flex">
-              <button
-                class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-slate-600 mr-3"
-                @click="sentenceIndex = -1"
-              >
+              <button class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-slate-600 mr-3"
+                @click="sentenceIndex = -1">
                 取消
               </button>
-              <button
-                class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-sky-400/50"
-                @click="furiganaEdit"
-              >
+              <button class="w-full text-sm border rounded-lg py-1 px-5 mt-3 hover:bg-sky-400/50" @click="furiganaEdit">
                 修改
               </button>
             </div>
           </div>
         </div>
         <br v-if="lyric == ''" />
-        <div
-          v-if="lyric !== ''"
-          class="my-3"
-          :class="{ 'lyric-line': index !== furiganaLyrics.length - 1 }"
-        ></div>
+        <div v-if="lyric !== ''" class="my-3" :class="{ 'lyric-line': index !== furiganaLyrics.length - 1 }"></div>
       </template>
     </div>
   </div>
@@ -125,8 +81,8 @@ import { ref, computed, toRefs, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useLyricStore } from "../../stores/song";
 import { useYoutubeStore } from "../../stores/youtube";
-import ClockIcon from "../svg/ClockIcon.vue";
-import LoopIcon from "../svg/LoopIcon.vue";
+
+import AtmosSvgIcon from "./AtmosSvgIcon.vue";
 
 const props = defineProps({
   furiganaLyrics: {
@@ -156,7 +112,7 @@ const font = computed(() => lyricsFont[selected.fontSize].class[0]);
 const windowWidth = ref(window.innerWidth);
 const onWidthChange = () => (windowWidth.value = window.innerWidth);
 
-//單句循環 icon 根據是否以下時間戳記改變 css
+//單句重播 icon 根據是否以下時間戳記改變 css
 function loopIconStyle(index) {
   return Object.keys(lyricTimeStamp.value).indexOf(index.toString()) > -1
     ? "text-white after:text-white cursor-pointer"
@@ -263,6 +219,7 @@ onUnmounted(() => {
   text-decoration: none;
   cursor: unset;
 }
+
 .sentence-play {
   color: #93c5fd;
   text-shadow: #075985 0 0 10px;

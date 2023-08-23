@@ -1,12 +1,12 @@
 <template>
   <div class="flex max-md:flex-row flex-col items-center">
-    <tooth-icon class="max-md:mr-2 max-md:mb-0 mb-2 cursor-pointer" @click="showDropDown" />
+    <atmos-svg-icon name="icon_tooth" class="max-md:mr-2 max-md:mb-0 mb-2 cursor-pointer" @click="showDropDown"/>
     <slot name="otherConfigure"></slot>
   </div>
 </template>
 
 <script setup>
-import ToothIcon from "../svg/ToothIcon.vue";
+import AtmosSvgIcon from "./AtmosSvgIcon.vue";
 
 const emit = defineEmits(["showDrop"]);
 

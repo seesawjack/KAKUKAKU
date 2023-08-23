@@ -1,9 +1,9 @@
 <template>
   <header class="relative z-50 max-md:bg-slate-900/90">
     <div class="logo flex items-center py-2 px-5">
-      <bars-icon class="sidebar mr-3 cursor-pointer" @click="showSidebar" />
+      <atmos-svg-icon name="icon_bars" class="sidebar mr-3 cursor-pointer" @click="showSidebar"/>
       <router-link to="/KAKUKAKU/song/search" class="flex items-center">
-        <the-logo class="inline h-6 mr-1" />
+        <atmos-svg-icon name="icon_logo" class="inline h-6 mr-1"/>
         <h1 class="text-3 text-lg">KAKUKAKU</h1>
       </router-link>
     </div>
@@ -13,9 +13,9 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import TheLogo from "../svg/TheLogo.vue";
-import BarsIcon from "../svg/BarsIcon.vue";
+
 import AtmosSidebar from "../atmos/AtmosSidebar.vue";
+import AtmosSvgIcon from "../atmos/AtmosSvgIcon.vue";
 
 const isShow = ref(false);
 function showSidebar() {

@@ -6,7 +6,8 @@
           <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
             :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
             v-model.trim="searchSongName">
-            <search-glasses class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
+            <atmos-svg-icon name="icon_search" class="absolute right-3 top-2" :class="hasSearchText"
+              @click="searchSongs" />
           </atmos-input>
         </form>
         <p v-if="songList?.length > 0" class="text-left mb-5">
@@ -19,8 +20,8 @@
             }`" :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1">
           <template #configure v-if="route.path.indexOf('personal') > 0">
             <div class="w-[22.5px] relative">
-              <more-icon @click="showDropDown(item.video_id)" class="hidden group-hover:block cursor-pointer max-md:block"
-                :class="[
+              <atmos-svg-icon name="icon_more" @click="showDropDown(item.video_id)"
+                class="hidden group-hover:block cursor-pointer max-md:block" :class="[
                   { '!block': clickClassName === item.video_id },
                   { 'group-hover': !deletedSong },
                 ]" />
@@ -52,9 +53,8 @@ import AtmosCard from "../atmos/AtmosCard.vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
-import MoreIcon from "../svg/MoreIcon.vue";
-import SearchGlasses from "../svg/SearchGlasses.vue";
 import AtmosPagination from "../atmos/AtmosPagination.vue";
+import AtmosSvgIcon from "../atmos/AtmosSvgIcon.vue";
 
 const route = useRoute();
 

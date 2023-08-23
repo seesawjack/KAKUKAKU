@@ -1,8 +1,17 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
+import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
-  base:"/KAKUKAKU"
+  plugins: [vue(),
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+      symbolId: '[name]',
+      inject: 'body-last',
+      customDomId: '__svg__icons__dom__',
+    }),
+  ],
+  base: "/KAKUKAKU"
 })

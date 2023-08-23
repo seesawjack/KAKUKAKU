@@ -157,9 +157,7 @@ input[type="date"] {
   flex-direction: row-reverse;
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  min-height: 3.125rem;
 }
 
 select {

@@ -210,10 +210,6 @@ export const useLyricStore = defineStore("lyric", () => {
     localStorage.removeItem("initLyrics");
   }
 
-  function selectedFontStyle(style) {
-    songPageOption.selected.fontSize = style;
-  }
-
   //歌曲頁選項調整
   function handleSongState({ furigana, hiragana, romaji, timeStamp, space, recommend, info }) {
     furiganaLyrics.value = furigana;
@@ -255,7 +251,6 @@ export const useLyricStore = defineStore("lyric", () => {
     songDisplay,
     handleLyricTransform,
     handleSongSelected,
-    selectedFontStyle,
     removeLocal,
     handleFuriganaEdit,
     handleSongState,

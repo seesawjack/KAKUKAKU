@@ -2,19 +2,34 @@
   <div>
     <atmos-configure class="dropdown" @show-drop="showDropDown">
       <template #otherConfigure>
-        <div class="max-md:mx-2 my-2 cursor-pointer" @click="stopVideo">
+        <div class="group relative max-md:mx-2 my-2 cursor-pointer" @click="stopVideo">
+          <span
+            class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">{{
+              isPlayVideo ? '取消播放' : '播放音樂' }}</span>
           <atmos-svg-icon :name="!isPlayVideo ? 'icon_play_video' : 'icon_pause_video'"
             :class="{ 'is-click': isPlayVideo }" />
         </div>
-        <div class="max-md:mx-2 my-2 cursor-pointer" @click="lockVideo">
+        <div class="group relative max-md:mx-2 my-2 cursor-pointer" @click="lockVideo">
+          <span
+            class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">{{
+              isLock ? '取消固定' : '固定影片' }}</span>
           <atmos-svg-icon :name="!isLock ? 'icon_lock_open' : 'icon_lock_close'"
             :class="{ 'translate-x-[2px] w-[22px]': !isLock, 'is-click w-[22px]': isLock }" />
         </div>
-        <div class="max-md:hidden flex items-center max-md:mx-2 my-2 h-6 cursor-pointer" @click="changeScreen">
+        <div class="group relative max-md:hidden flex items-center max-md:mx-2 my-2 h-6 cursor-pointer"
+          @click="changeScreen">
+          <span
+            class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">{{
+              selected.dramaMode ? '正常模式' : '劇院模式' }}</span>
           <div class="border-2 h-4 round-sm w-[20px]" :class="{ 'is-dramaMode': selected.dramaMode }"></div>
         </div>
-        <div v-if="!isRecommendState" class="max-md:hidden max-md:mx-2 my-2 cursor-pointer" @click="recommendSong">
-          <atmos-svg-icon name="icon_recommend" class="translate-x-[2px] w-[22px]" :class="{ 'is-click': selected.isRecommend.state }"/>
+        <div v-if="!isRecommendListPage" class="group relative max-md:hidden max-md:mx-2 my-2 cursor-pointer"
+          @click="recommendSong">
+          <span
+            class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">{{
+              selected.isRecommend.state ? '已推薦歌曲' : '推薦歌曲' }}</span>
+          <atmos-svg-icon name="icon_recommend" class="translate-x-[2px] w-[22px]"
+            :class="{ 'is-click': selected.isRecommend.state }" />
         </div>
       </template>
     </atmos-configure>
@@ -53,7 +68,7 @@
         </div>
         <hr class="max-md:hidden border-gray-200 dark:border-gray-500 my-3" />
         <!-- ▼開關 時間戳記 -->
-        <div v-if="!isRecommendState" class="max-md:hidden">
+        <div v-if="!isRecommendListPage" class="max-md:hidden">
           <label for="timeStamp" class="w-full relative inline-flex justify-between items-center cursor-pointer">
             <input type="checkbox" id="timeStamp" v-model="timeStamp" class="sr-only peer" />
             <div
@@ -91,11 +106,10 @@ import AtmosSvgIcon from "../atmos/AtmosSvgIcon.vue";
 
 const route = useRoute();
 const {
-  songPageOption: { lyricsFont, selected },
-  selectedFontStyle,
+  songPageOption: { lyricsFont, selected }
 } = useLyricStore();
 
-const isRecommendState = computed(() => {
+const isRecommendListPage = computed(() => {
   return route.query.recommend === "true" ? true : false;
 });
 const { userInfo } = useAuthStore();
@@ -116,13 +130,11 @@ function lockVideo() {
   selected.fixedVideo = isLock.value;
 }
 
-const isRecommend = ref(false);
 function recommendSong() {
-  isRecommend.value = selected.isRecommend.state;
-
-  isRecommend.value = !isRecommend.value;
-  selected.isRecommend.state = isRecommend.value;
-  selected.isRecommend.recommender = userInfo.user_metadata?.name;
+  selected.isRecommend.state = !selected.isRecommend.state;
+  if (selected.isRecommend.state && selected.isRecommend.recommender === "") {
+    selected.isRecommend.recommender = userInfo.user_metadata?.name;
+  }
 }
 
 const isShow = ref(false);
@@ -138,7 +150,7 @@ function changeScreen() {
 }
 
 watch(fontSelect, () => {
-  selectedFontStyle(fontSelect.value);
+  selected.fontSize = fontSelect.value
 });
 
 watch(selectedLabelType, () => {

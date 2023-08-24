@@ -17,6 +17,9 @@
           註冊
         </a>
       </div>
+      <p v-if="atLoginPage === 'signup'" class="mt-4 text-justify bg-slate-400/30 py-3 px-2 rounded-lg">
+        說明：會員資料只有網站管理員看得到且會嚴密保護，以下資料可協助管理員分析用以改善網站功能。
+      </p>
       <atmos-form
         :form-type="atLoginPage"
         :schema="formSchema[atLoginPage]"
@@ -26,7 +29,9 @@
       ></atmos-form>
     </div>
     <div class="mt-5" v-if="atLoginPage === 'login'">
-      <router-link to="/KAKUKAKU/account/forget-password" class="hover:text-sky-400"
+      <router-link
+        to="/KAKUKAKU/account/forget-password"
+        class="hover:text-sky-400"
         >忘記密碼</router-link
       >
       <span class="mx-3">|</span>
@@ -72,7 +77,7 @@ async function handleSubmit(form) {
       email: form.info.email,
       password: form.info.password,
     });
-    
+
     if (result !== undefined && result.data?.session) router.back();
   } else {
     //註冊事件
@@ -84,7 +89,7 @@ async function handleSubmit(form) {
       gender: form.info.gender,
       level: form.info.level,
     });
-    
+
     if (result !== undefined) router.push("/KAKUKAKU/account/onboarding");
   }
 }

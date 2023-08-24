@@ -22,15 +22,57 @@ const router = createRouter({
     {
       path: "/KAKUKAKU/song",
       children: [
-        { path: "search", component: HomePage },
-        { path: "upload", component: SongEdit },
-        { path: "personal/list", component: SongList },
-        { path: "recommend/list", component: SongList },
-        { path: "item", component: SongItem },
+        {
+          path: "search",
+          component: HomePage,
+          meta: {
+            title: "KAKUKAKU｜一鍵平假名，輕鬆學日文歌",
+          },
+        },
+        {
+          path: "upload",
+          component: SongEdit,
+          meta: {
+            title: "新增歌曲｜KAKUKAKU",
+          },
+        },
+        {
+          path: "personal/list",
+          component: SongList,
+          meta: {
+            title: "個人清單｜KAKUKAKU",
+          },
+        },
+        {
+          path: "recommend/list",
+          component: SongList,
+          meta: {
+            title: "推薦清單｜KAKUKAKU",
+          },
+        },
+        {
+          path: "item",
+          component: SongItem,
+          meta: {
+            title: "歌曲｜KAKUKAKU",
+          },
+        },
       ],
     },
-    { path: "/KAKUKAKU/login", component: AuthPage },
-    { path: "/KAKUKAKU/signup", component: AuthPage },
+    {
+      path: "/KAKUKAKU/login",
+      component: AuthPage,
+      meta: {
+        title: "登入會員｜KAKUKAKU",
+      },
+    },
+    {
+      path: "/KAKUKAKU/signup",
+      component: AuthPage,
+      meta: {
+        title: "註冊會員｜KAKUKAKU",
+      },
+    },
 
     {
       path: "/KAKUKAKU/account",
@@ -38,22 +80,56 @@ const router = createRouter({
         {
           path: "forget-password",
           component: PasswordForget,
+          meta: {
+            title: "忘記密碼｜KAKUKAKU",
+          },
         },
         {
           path: "update-password",
           component: PasswordUpdate,
+          meta: {
+            title: "更新密碼｜KAKUKAKU",
+          },
         },
-        { path: "onboarding", component: OnboardingPage },
-        { path: "register-success", component: OnboardingPage },
+        {
+          path: "onboarding",
+          component: OnboardingPage,
+          meta: {
+            title: "驗證會員｜KAKUKAKU",
+          },
+        },
+        {
+          path: "register-success",
+          component: OnboardingPage,
+          meta: {
+            title: "註冊成功｜KAKUKAKU",
+          },
+        },
       ],
     },
-    { path: "/KAKUKAKU/about", component: AboutPage },
-    { path: "/KAKUKAKU/feedback", component: FeedBackPage },
+    {
+      path: "/KAKUKAKU/about",
+      component: AboutPage,
+      meta: {
+        title: "關於網站｜KAKUKAKU",
+      },
+    },
+    {
+      path: "/KAKUKAKU/feedback",
+      component: FeedBackPage,
+      meta: {
+        title: "意見回饋｜KAKUKAKU",
+      },
+    },
     { path: "/:notFound(.*)", redirect: "/KAKUKAKU/song/search" },
   ],
 });
 
 router.beforeEach(async (to, from) => {
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
+
   const { supabase } = useRequestStore();
   const {
     data: { session },
@@ -61,8 +137,8 @@ router.beforeEach(async (to, from) => {
 
   if (to.fullPath.indexOf("login") > -1 || to.fullPath.indexOf("signup") > -1) {
     if (session?.user) return "/KAKUKAKU/song/search";
-    return true;
   }
+
   return true;
 });
 

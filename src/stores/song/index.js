@@ -225,9 +225,9 @@ export const useLyricStore = defineStore("lyric", () => {
     songInfo.value = info;
   }
 
-  function handleSongDisplay({isShow,msg}){
-    songState.show = isShow;
-    songState.message = msg;
+  function handleSongDisplay({isShow,message}){
+    songDisplay.show = isShow;
+    songDisplay.message = message;
   }
 
   //編輯功能

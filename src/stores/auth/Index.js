@@ -13,41 +13,46 @@ export const useAuthStore = defineStore("auth", () => {
   const feedbackName = computed(() => {
     return isLoggedIn() ? userInfo.value.user_metadata?.name : "";
   });
-  
+
   //登入及註冊時的表單內容
   const formSchema = ref({
     login: {
       email: {
         name: "email",
+        label: "信箱",
         as: "input",
         placeholder: "請輸入信箱",
         icon: "icon_email",
       },
       password: {
         name: "password",
+        label: "密碼",
         as: "input",
         type: "password",
         placeholder: "請輸入密碼",
-        autocomplete:true,
+        autocomplete: true,
         icon: "icon_password",
-        icon2: "icon_eye_close"
+        icon2: "icon_eye_close",
       },
     },
     signup: {
       userName: {
         name: "name",
+        label: "使用者名稱",
         as: "input",
         placeholder: "請輸入使用者名稱",
         icon: "icon_user",
       },
       birth: {
         name: "birth",
+        label: "出生年月日(西元)",
         as: "input",
         type: "date",
         icon: "icon_calender",
       },
       gender: {
         name: "gender",
+        label: "性別",
         as: "select",
         icon: "icon_gender",
         icon2: "icon_chervon_down",
@@ -68,10 +73,16 @@ export const useAuthStore = defineStore("auth", () => {
             value: "female",
             text: "女",
           },
+          {
+            tag: "option",
+            value: "ohter",
+            text: "其他",
+          },
         ],
       },
       level: {
         name: "level",
+        label: "日本語能力",
         as: "select",
         icon: "icon_paper",
         icon2: "icon_chervon_down",
@@ -116,33 +127,36 @@ export const useAuthStore = defineStore("auth", () => {
       },
       email: {
         name: "email",
+        label: "信箱",
         as: "input",
         placeholder: "請輸入信箱",
         icon: "icon_email",
       },
       password: {
         name: "password",
+        label: "密碼",
         as: "input",
         type: "password",
         placeholder: "請輸入密碼",
-        autocomplete:false,
+        autocomplete: false,
         icon: "icon_password",
-        icon2: "icon_eye_close"
-
+        icon2: "icon_eye_close",
       },
       passwordConfirmed: {
         name: "passwordConfirmed",
+        label: "確認密碼",
         as: "input",
         type: "password",
         placeholder: "請再次輸入密碼",
-        autocomplete:false,
+        autocomplete: false,
         icon: "icon_password",
-        icon2: "icon_eye_close"
+        icon2: "icon_eye_close",
       },
     },
     feedback: {
       userName: {
         name: "name",
+        label: "使用者名稱",
         as: "input",
         value: feedbackName,
         placeholder: "請輸入使用者名稱",
@@ -150,6 +164,7 @@ export const useAuthStore = defineStore("auth", () => {
       },
       questionType: {
         name: "questionType",
+        label: "問題類型",
         as: "select",
         icon: "icon_paper",
         icon2: "icon_chervon_down",
@@ -179,6 +194,7 @@ export const useAuthStore = defineStore("auth", () => {
       },
       feedbackText: {
         name: "feedbackText",
+        label: "回饋內容",
         as: "textarea",
         placeholder: "請輸入意見或回饋",
       },
@@ -186,30 +202,32 @@ export const useAuthStore = defineStore("auth", () => {
     passwordForget: {
       email: {
         name: "email",
+        label: "信箱",
         as: "input",
         placeholder: "請輸入信箱",
         icon: "icon_email",
-      }
+      },
     },
     passwordUpdate: {
       password: {
         name: "password",
+        label: "密碼",
         as: "input",
         type: "password",
         placeholder: "請輸入新密碼",
         icon: "icon_password",
-        icon2: "icon_eye_close"
-
+        icon2: "icon_eye_close",
       },
       passwordConfirmed: {
         name: "passwordConfirmed",
+        label: "確認密碼",
         as: "input",
         type: "password",
         placeholder: "請再次輸入新密碼",
         icon: "icon_password",
-        icon2: "icon_eye_close"
+        icon2: "icon_eye_close",
       },
-    }
+    },
   });
 
   //驗證表單內容
@@ -267,6 +285,6 @@ export const useAuthStore = defineStore("auth", () => {
     userInfo,
     formSchema,
     validate,
-    isLoggedIn
+    isLoggedIn,
   };
 });

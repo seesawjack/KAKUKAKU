@@ -2,33 +2,60 @@
   <section>
     <div class="container flex items-center justify-center max-md:px-6 mx-auto">
       <Form @submit="formSubmit" class="w-full" :validation-schema="validate">
-        <div v-for="{ as, name, children, icon, icon2, ...attrs } in schema" :key="name" class="relative">
-          <Field :as="as" :id="name" :name="name" v-bind="attrs" :ref="name"
-            class="block w-full py-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 mt-8"
+        <div
+          v-for="{ as, name, label, children, icon, icon2, ...attrs } in schema"
+          :key="name"
+          class="relative mt-4"
+        >
+          <p class="text-left mb-2">{{ label }}</p>
+          <Field
+            :as="as"
+            :id="name"
+            :name="name"
+            v-bind="attrs"
+            :ref="name"
+            class="block w-full py-3 border rounded-lg dark:bg-gray-900 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             :class="{
               'pl-11': name !== 'birth' && icon?.length,
               'pl-3': name === 'birth' || !icon,
-            }">
+            }"
+          >
             <template v-if="children && children.length">
-              <component v-for="({ tag, text, ...childAttrs }, idx) in children" :key="idx" :is="tag" v-bind="childAttrs">
+              <component
+                v-for="({ tag, text, ...childAttrs }, idx) in children"
+                :key="idx"
+                :is="tag"
+                v-bind="childAttrs"
+              >
                 {{ text }}
               </component>
             </template>
           </Field>
-          <atmos-svg-icon v-if="icon" :name="icon" class="absolute top-3 mx-3 text-gray-300 dark:text-gray-500" />
-          <atmos-svg-icon 
-            v-if="icon2" 
+          <atmos-svg-icon
+            v-if="icon"
+            :name="icon"
+            class="absolute top-11 mx-3 text-gray-300 dark:text-gray-500"
+          />
+          <atmos-svg-icon
+            v-if="icon2"
             :name="icon2"
-            class="absolute right-0 top-3 mx-3 text-gray-300 dark:text-gray-500"
-            :class="{ 'stroke-white': icon2 === 'icon_eye' }" @click="changPassworcIcon(icon2)" />
-          <ErrorMessage :name="name" class="absolute left-0 top-15 text-sm text-red-500" />
+            class="absolute right-0 top-11 mx-3 text-gray-300 dark:text-gray-500"
+            :class="{ 'stroke-white': icon2 === 'icon_eye' }"
+            @click="changPassworcIcon(icon2)"
+          />
+          <ErrorMessage
+            :name="name"
+            class="absolute left-0 top-15 text-sm text-red-500"
+          />
         </div>
         <button
           class="w-full mt-8 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform border rounded-lg focus:outline-none"
           :class="{
             unclickable: !button.state,
             'hover:bg-sky-900/90': button.state,
-          }" :disabled="!button.state">
+          }"
+          :disabled="!button.state"
+        >
           {{ button.name }}
         </button>
       </Form>
@@ -67,10 +94,11 @@ const formName = ref(props.formType);
 const { formSchema } = toRefs(useAuthStore());
 
 function changPassworcIcon(icon) {
-  if (icon !== "icon_eye" && icon !== 'icon_eye_close') return;
+  if (icon !== "icon_eye" && icon !== "icon_eye_close") return;
   const passwordObj = formSchema.value[formName.value].password;
-  const passwordConfirmedObj = formSchema.value[formName.value].passwordConfirmed;
-  if (icon === 'icon_eye_close') {
+  const passwordConfirmedObj =
+    formSchema.value[formName.value].passwordConfirmed;
+  if (icon === "icon_eye_close") {
     passwordObj.type = "text";
     passwordObj.icon2 = "icon_eye";
     if (passwordConfirmedObj) {

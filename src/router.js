@@ -126,14 +126,23 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  if (to.meta.title) {
-    document.title = to.meta.title;
-  }
-
   const { supabase } = useRequestStore();
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
+  if (to.path.indexOf('item') > 0 && to.query.song_id) {
+    const { data, error } = await supabase
+      .from("lyrics_list")
+      .select()
+      .eq("video_id", to.query.song_id);
+    if (data.length > 0) {
+      document.title = data[0].title + '｜KAKUKAKU';
+    }
+  }
 
   if (to.fullPath.indexOf("login") > -1 || to.fullPath.indexOf("signup") > -1) {
     if (session?.user) return "/KAKUKAKU/song/search";

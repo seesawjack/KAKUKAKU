@@ -1,6 +1,6 @@
 <template>
-    <div class="absolute w-full h-screen bg-slate-900/70 z-50">
-        <div class="max-w-xl w-full mx-auto translate-y-full rounded-lg bg-white py-8 px-4 shadow-2xl">
+    <div class="absolute w-full h-screen bg-slate-900/70 z-50 max-md:px-4">
+        <div class="max-w-xl w-full mx-auto translate-y-full max-md:translate-y-1/2 rounded-lg bg-white py-8 px-4 shadow-2xl">
             <h2 class="text-lg font-bold text-gray-950">{{ title }}</h2>
 
             <p class="mt-2 text-sm text-gray-500 text-justify" v-html="content">

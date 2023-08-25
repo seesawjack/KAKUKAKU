@@ -75,9 +75,9 @@ export const useLyricStore = defineStore("lyric", () => {
 
     //依據全部歌詞是否含有英文分別處理
     if (haveEnglishLyrics) {
-      requestLyrics = lyric.replace(/\n/g, "||").replace(/[\w']/g, "※");
+      requestLyrics = lyric.replace(/\n/g, "||").replace(/[\w'-]/g, "※");
       englishLyrics = lyric
-        .replace(/[^\w']/g, "#")
+        .replace(/[^\w'-]/g, "#")
         .replace(/\#{1,}/g, ",")
         .replace(/^,/, "")
         .split(",");
@@ -93,16 +93,15 @@ export const useLyricStore = defineStore("lyric", () => {
       result = response.converted
         .replace(/\※{2,}/g, "※")
         .replace(/\※/g, () => "@" + englishLyrics[index++] + "@")
-        .replace(/\s+/g, "")
         .replace(/@/g, " ")
-        .replace(/\s{2,}/g, " ")
+        .replace(/\s{1,2}/g, " ")
         .replace(/ , /g, ",")
         .split("||")
         .map((i) => i.trim());
     } else {
       result = response.converted
         .replace(/[\s](?!\s)/gm, "")
-        .replace(/\s{2,}/g, " ")
+        .replace(/\s{1,2}/g, " ")
         .split("||")
         .map((i) => i.trim());
     }
@@ -139,7 +138,6 @@ export const useLyricStore = defineStore("lyric", () => {
     const dmp = new diff_match_patch();
     const diff = dmp.diff_main(sentence, hiraganaSentence);
     diff.push([0, ""]); //  每句結尾加 [0,''] 防止沒判斷到最後為漢字的狀況
-
     let html = "";
     diff.reduce(
       (acc, [kind, text]) => {

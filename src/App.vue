@@ -1,6 +1,6 @@
 <template>
-  <atmos-popup v-if="closePopup" :title="popupTitle" :content="popupContent" @agree="handleAgree"
-    @disagree="handleDisagree" />
+  <atmos-popup v-if="closePopup" :title="popupTitle" :content="popupContent" @agreeRules="handleAgree"
+    @disagreeRules="handleDisagree" />
   <atmos-loading v-if="isLoading" />
   <atmos-dialog :show="errorMessage?.showError" :title="errorMessage?.message" @close="closeDialog" />
 

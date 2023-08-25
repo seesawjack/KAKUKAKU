@@ -36,11 +36,11 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['argee','disagree']);
+const emits = defineEmits(["agreeRules","disagreeRules"]);
 function clickAgree(){
-    emit('agree')
+    emits("agreeRules")
 }
 function clickDisagree(){
-    emit('disagree')
+    emits("disagreeRules")
 }
 </script>

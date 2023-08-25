@@ -108,6 +108,7 @@ async function handleSongSubmit() {
       visible: true,
     });
   } else {
+    selected.isRecommend.recommender = userInfo.user_metadata?.name;
     await supabaseRequest(handleSongInfoAdd, {
       userId: userInfo.id,
       videoId: songInfo.value.id,
@@ -169,7 +170,7 @@ onMounted(async () => {
       romaji: contentData[0].romaji,
       timeStamp: contentData[0].timestamp,
       space: contentData[0].spaceIndex,
-      recommend: itemData[0].recommend.state,
+      recommend: itemData[0].recommend,
       info: itemData[0],
     });
 

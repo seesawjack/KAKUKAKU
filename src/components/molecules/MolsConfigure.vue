@@ -132,9 +132,6 @@ function lockVideo() {
 
 function recommendSong() {
   selected.isRecommend.state = !selected.isRecommend.state;
-  if (selected.isRecommend.state && selected.isRecommend.recommender === "") {
-    selected.isRecommend.recommender = userInfo.user_metadata?.name;
-  }
 }
 
 const isShow = ref(false);

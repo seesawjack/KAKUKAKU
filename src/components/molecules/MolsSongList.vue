@@ -17,7 +17,8 @@
           :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title" :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&${route.path.indexOf('personal') > 0
             ? 'user=' + userInfo.user_metadata?.name
             : 'recommend=true'
-            }`" :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1">
+            }`" :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1"
+          :sub-title="route.path.indexOf('personal') > 0 ? '' : item.recommend.recommender ? '推薦人:' + item.recommend.recommender : ''">
           <template #configure v-if="route.path.indexOf('personal') > 0">
             <div class="w-[22.5px] relative">
               <atmos-svg-icon name="icon_more" @click="showDropDown(item.video_id)"
@@ -80,6 +81,7 @@ const searchSongName = ref("");
 const deletedSong = ref([]);
 const searchError = ref({ state: "", message: "" });
 const isSearch = ref(false);
+const showRecommender = ref(false);
 
 //輸入框左下方提示文字
 const searchedTips = computed(() => {
@@ -224,11 +226,13 @@ async function loadingLyricList() {
     });
     songData.data = data;
     songData.count = count;
+    showRecommender.value = false;
   } else if (route.path.indexOf("recommend") > 0) {
     searchIsError({ state: 0, message: "" });
     const { data, count } = await supabaseRequest(getRecoSongList);
     songData.data = data;
     songData.count = count;
+    showRecommender.value = true;
   }
 
   if (songData.data?.length === 0) {

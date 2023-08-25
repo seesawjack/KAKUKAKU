@@ -215,7 +215,7 @@ export const useLyricStore = defineStore("lyric", () => {
     romajiLyrics.value = romaji;
     lyricTimeStamp.value = timeStamp;
     spaceIndex.value = space;
-    songPageOption.selected.isRecommend.state = recommend;
+    songPageOption.selected.isRecommend = recommend;
     songInfo.value = info;
   }
 

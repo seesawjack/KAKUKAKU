@@ -1,41 +1,21 @@
 <template>
-  <div class="flex items-center" :class="{'disappear':disappear}">
-    <component
-      :is="href ? 'a' : 'div'"
-      @click="songSelected"
-      :href="href"
-      class="flex max-md:justify-normal justify-center text-left w-full"
-    >
+  <div class="flex items-center" :class="{ 'disappear': disappear }">
+    <component :is="href ? 'a' : 'div'" @click="songSelected" :href="href"
+      class="flex max-md:justify-normal justify-center text-left w-full">
       <div class="w-full max-w-[120px] relative">
-        <p
-          v-if="!href"
-          class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1"
-        >
+        <p v-if="!href" class="text-xs absolute top-[-30px] bg-red-500 rounded-md p-1">
           已選歌曲
         </p>
-        <div
-          class="w-full relative before:block before:pb-[56.25%] overflow-hidden"
-        >
+        <div class="w-full relative before:block before:pb-[56.25%] overflow-hidden">
           <picture>
-            <source
-              :srcset="songDetail.url"
-              :media="`(min-width: ${songDetail.width}px)`"
-              :width="songDetail.width"
-              :height="songDetail.height"
-            />
-            <img
-              :srcset="songDetail.url"
-              :width="songDetail.width"
-              :height="songDetail.height"
-              :alt="songDetail.title"
-              class="img-to-cover transition-transform group-hover:scale-[125%]"
-            />
+            <source :srcset="songDetail.url" :media="`(min-width: ${songDetail.width}px)`" :width="songDetail.width"
+              :height="songDetail.height" />
+            <img :srcset="songDetail.url" :width="songDetail.width" :height="songDetail.height" :alt="songDetail.title"
+              class="img-to-cover transition-transform group-hover:scale-[125%]" />
           </picture>
         </div>
       </div>
-      <div
-        class="w-full max-sm:max-w-[190px] max-w-[500px] transition-all hover:bg-slate-300/[0.2] pl-5"
-      >
+      <div class="w-full max-sm:max-w-[190px] max-w-[500px] transition-all hover:bg-slate-300/[0.2] pl-5">
         <p class="line-clamp">{{ songDetail.title }}</p>
         <div v-if="songDetail.subTitle" class="text-xs text-slate-500 leading-5">
           <p>{{ songDetail.subTitle }}</p>
@@ -47,7 +27,7 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive,computed } from "vue";
 import { useLyricStore } from "../../stores/song";
 
 const { handleSongSelected } = useLyricStore();
@@ -65,18 +45,20 @@ const props = defineProps({
   disappear: Boolean
 });
 
-const songDetail = reactive({
-  id: props.id,
-  url: props.data?.thumbnails.medium.url || props.url,
-  width: props.data?.thumbnails.default.width || props.width || 120,
-  height: props.data?.thumbnails.default.height || props.height || 90,
-  title: props.data?.title || props.title,
-  subTitle: props.data?.channelTitle || props.subTitle,
+const songDetail = computed(() => {
+  return {
+    id: props.id,
+    url: props.data?.thumbnails.medium.url || props.url,
+    width: props.data?.thumbnails.default.width || props.width || 120,
+    height: props.data?.thumbnails.default.height || props.height || 90,
+    title: props.data?.title || props.title,
+    subTitle: props.data?.channelTitle || props.subTitle,
+  }
 });
 
 function songSelected() {
   if (!props.href || props.isAdded) return;
-  handleSongSelected(songDetail);
+  handleSongSelected(songDetail.value);
 }
 </script>
 
@@ -89,18 +71,21 @@ function songSelected() {
   object-fit: cover;
   position: absolute;
 }
+
 .transition-transform {
   transition-duration: 0.2s;
   transition-property: transform;
   transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
 }
+
 .line-clamp {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   display: -webkit-box;
   overflow: hidden;
 }
-.disappear{
+
+.disappear {
   display: none;
 }
 </style>

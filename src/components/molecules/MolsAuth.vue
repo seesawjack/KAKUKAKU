@@ -17,7 +17,7 @@
           註冊
         </a>
       </div>
-      <p v-if="atLoginPage === 'signup'" class="mt-4 text-justify bg-slate-400/30 py-3 px-2 rounded-lg">
+      <p v-if="atLoginPage === 'signup'" class="mt-4 text-justify bg-slate-400/30 py-3 px-2 max-md:mx-6 rounded-lg">
         說明：會員資料只有網站管理員看得到且會嚴密保護，以下資料可協助管理員分析用以改善網站功能。
       </p>
       <atmos-form

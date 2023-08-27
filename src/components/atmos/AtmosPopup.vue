@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute w-full h-screen bg-slate-900/70 z-50 max-md:px-4">
+    <div class="fixed w-full h-screen bg-slate-900/70 z-[100] max-md:px-4">
         <div class="max-w-xl w-full mx-auto translate-y-full max-md:translate-y-1/2 rounded-lg bg-white py-8 px-4 shadow-2xl">
             <h2 class="text-lg font-bold text-gray-950">{{ title }}</h2>
 

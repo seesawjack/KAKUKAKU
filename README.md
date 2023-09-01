@@ -13,7 +13,7 @@
 
 ## 使用技術
 
-- 前端框架：vite + vue3
+- 前端框架：vue3
 - 狀態管理：pinia
 - 路由管理：vue-router 
 - 資料庫：supabase

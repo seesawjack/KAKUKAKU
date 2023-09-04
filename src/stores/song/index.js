@@ -225,11 +225,15 @@ export const useLyricStore = defineStore("lyric", () => {
   }
 
   //編輯功能
-  function handleFuriganaEdit({ init, edit, index }) {
+  function handleFuriganaEdit({ init, edit, index, html }) {
+
     //修改振假名
-    furiganaLyrics.value[index] = furiganaLyrics.value[index].replace(init, edit);
+    const editSentenceHtml = html.replace(init,edit);
+    furiganaLyrics.value[index] = furiganaLyrics.value[index].replace(html, editSentenceHtml);
+
     //修改平假名
     hiraganaLyrics.value[index] = hiraganaLyrics.value[index].replace(init, edit);
+    
     //修改羅馬字
     romajiLyrics.value[index] = handleToRomaji(
       hiraganaLyrics.value[index].replace(init, edit)

@@ -144,6 +144,7 @@ const furiganaWord = ref("");
 const editHiraganaWord = ref("");
 const initHiraganaWord = ref("");
 const sentenceIndex = ref(-1);
+const wordHtml = ref('')
 
 const { controlVideoPlay, controlSeekTo } = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
@@ -160,6 +161,7 @@ function furiganaEdit() {
     init: initHiraganaWord.value,
     edit: editHiraganaWord.value,
     index: sentenceIndex.value,
+    html: wordHtml.value
   });
   sentenceIndex.value = -1;
 }
@@ -168,11 +170,12 @@ const clickFurigana = () => {
   if (event.target.closest(".kanji-word")) {
     const text = event.target.textContent.split(/[()]/g);
     const index = event.target.dataset.index;
-
+    
     furiganaWord.value = text[0];
     initHiraganaWord.value = text[1];
     editHiraganaWord.value = text[1];
     sentenceIndex.value = index;
+    wordHtml.value = event.target.outerHTML;
   }
   return;
 };

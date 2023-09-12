@@ -20,21 +20,21 @@
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: linear-gradient(5deg, #002025, #3f3251, #002025, #3f3251);
+  background: linear-gradient(60deg, #002025, #3f3251, #002025, #3f3251);
   background-size: 400% 400%;
   background-blend-mode: screen;
-  animation: gradient 20s ease-in-out infinite;
+  animation: gradient 15s ease-in-out infinite;
 }
 
 @keyframes gradient {
   0% {
-    background-position: 0% 50%;
+    background-position: 50% 50%;
   }
   50% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 50% 50%;
   }
 }
 </style>

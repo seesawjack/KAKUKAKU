@@ -131,15 +131,15 @@ async function handleSongSubmit() {
     selected.isRecommend.recommender = userInfo.user_metadata?.name;
     await supabaseRequest(handleSongInfoAdd, {
       userId: userInfo.id,
-      videoId: songInfo.value.id,
+      videoId: videoId.value,
       title: songInfo.value.title,
-      img: songInfo.value.url,
+      img: `https://i.ytimg.com/vi/${videoId.value}/mqdefault.jpg`,
       isRecommend: selected.isRecommend,
     });
 
     await supabaseRequest(handleSongContentAdd, {
       userId: userInfo.id,
-      videoId: songInfo.value.id,
+      videoId: videoId.value,
       hiragana: hiraganaLyrics.value,
       romaji: romajiLyrics.value,
       furigana: furiganaLyrics.value,
@@ -147,8 +147,9 @@ async function handleSongSubmit() {
       spaceIndex: spaceIndex.value,
     });
     handleBtnState({ text: "已新增", click: false, visible: true });
-    removeLocal();
     songUploaded.value = true;
+    removeLocal();
+    router.push(`/KAKUKAKU/song/item?song_id=${videoId.value}&user=${userInfo.user_metadata?.name}`);
   }
 }
 

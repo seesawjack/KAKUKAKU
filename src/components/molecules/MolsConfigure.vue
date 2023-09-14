@@ -148,7 +148,7 @@ function stopVideo() {
 const showPopup = ref(false);
 const popupText = `
   <ul class="list-disc pl-3">
-    <li>更換影片連結後，還需要下滑到頁面底部點擊「確認修改」按鈕才成功。</li>
+    <li>更換影片連結後，還需要下滑到頁面底部點擊「儲存修改/確認修改」按鈕才成功。</li>
     <li>由於新影片時間長度不一定與原影片吻合，故已設定的時間戳記有可能會不符合影片時間進度</li>
   </ul>`;
 const buttonText = ['確定', '取消'];

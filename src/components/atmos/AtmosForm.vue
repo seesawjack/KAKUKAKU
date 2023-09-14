@@ -5,7 +5,7 @@
         <div
           v-for="{ as, name, label, children, icon, icon2, ...attrs } in schema"
           :key="name"
-          class="relative mt-4"
+          class="relative mt-6"
         >
           <p class="text-left mb-2">{{ label }}</p>
           <Field

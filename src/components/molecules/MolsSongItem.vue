@@ -10,7 +10,7 @@
     <button
       v-if="btnState.visible"
       class="mt-3 border border-solid rounded-xl mr-2 hover:bg-slate-600"
-      :class="{ 'unclickable': !btnState.clickable }"
+      :class="{ unclickable: !btnState.clickable }"
       @click="handleSongSubmit"
     >
       {{ btnState.text }}
@@ -21,17 +21,20 @@
 
 <script setup>
 import { ref, reactive, onMounted, toRefs } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/song";
 import { useRequestStore } from "../../stores/request";
 import { useApiStore } from "../../stores/api";
+import { useYoutubeStore } from "../../stores/youtube";
+import { useRegexStore } from "../../stores/regex";
 
 import AtmosVideo from "../atmos/AtmosVideo.vue";
 import AtmosLyric from "../atmos/AtmosLyric.vue";
 import AtmosNotFound from "../atmos/AtmosNotFound.vue";
 
 const route = useRoute();
+const router = useRouter();
 
 const songId = ref(route.query.song_id);
 
@@ -62,9 +65,15 @@ const {
   handleSongContentAdd,
   handleSongRecommendUpdate,
   handleSongContentUpdate,
+  handleVideoUpdate,
   getSongContent,
   getSongInfo,
 } = useApiStore();
+
+const { videoId } = toRefs(useYoutubeStore());
+const { urlSongIdChangeRegex } = useRegexStore();
+const songIdInSupabase = ref(null);
+const songContentIdInSupabase = ref(null);
 
 const songUploaded = ref(false); //歌曲是否新增/修改狀態
 const btnState = reactive({
@@ -79,7 +88,7 @@ function handleBtnState({ text, click, visible }) {
   btnState.visible = visible;
 }
 
-//新增歌曲
+//新增/修改歌曲
 async function handleSongSubmit() {
   if (!btnState.clickable || !isLoggedIn() || !furiganaLyrics.value.length) {
     return;
@@ -92,15 +101,26 @@ async function handleSongSubmit() {
       userId: userInfo.id,
     });
 
+    await supabaseRequest(handleVideoUpdate, {
+      id: songIdInSupabase.value,
+      videoId: videoId.value,
+      img:`https://i.ytimg.com/vi/${videoId.value}/mqdefault.jpg`,
+      userId: userInfo.id,
+    });
+
     await supabaseRequest(handleSongContentUpdate, {
       hiragana: hiraganaLyrics.value,
       romaji: romajiLyrics.value,
       furigana: furiganaLyrics.value,
       timestamp: lyricTimeStamp.value,
       spaceIndex: spaceIndex.value,
-      videoId: route.query.song_id,
+      videoId: videoId.value,
+      id: songContentIdInSupabase.value,
       userId: userInfo.id,
     });
+    
+    const newPath = urlSongIdChangeRegex(route.fullPath, videoId.value);
+    router.push(newPath);
 
     handleBtnState({
       text: "已修改",
@@ -148,7 +168,7 @@ onMounted(async () => {
       videoId: route.query.song_id,
       userId: userInfo.id,
     });
-
+    
     if (itemData.length === 0) {
       handleSongDisplay({ show: false, message: "查無此歌曲" });
       return;
@@ -163,7 +183,7 @@ onMounted(async () => {
       handleSongDisplay({ show: false, message: "查無此歌曲" });
       return;
     }
-    
+
     handleSongState({
       furigana: contentData[0].furigana,
       hiragana: contentData[0].hiragana,
@@ -173,6 +193,9 @@ onMounted(async () => {
       recommend: itemData[0].recommend,
       info: itemData[0],
     });
+
+    songIdInSupabase.value = itemData[0].id; 
+    songContentIdInSupabase.value =  contentData[0].id  
 
     handleBtnState({
       text: "確認修改",

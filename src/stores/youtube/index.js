@@ -40,7 +40,8 @@ export const useYoutubeStore = defineStore('youtube', () => {
 
     function changeVideoId(id){
         player.loadVideoById(id);
-        player.pauseVideo();
+        player.pauseVideo(); 
+        videoId.value = id;             
     }
 
     let timer;
@@ -118,6 +119,7 @@ export const useYoutubeStore = defineStore('youtube', () => {
     }
 
     return {
+        videoId,
         isPlayVideo,
         isReasearch,
         getVideoId,

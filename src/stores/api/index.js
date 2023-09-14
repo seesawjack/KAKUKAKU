@@ -80,6 +80,18 @@ export const useApiStore = defineStore("api", () => {
     return { data };
   };
 
+  //單一歌曲影片更新
+  const handleVideoUpdate = async ({ id, videoId, img, userId }) => {
+    const { data, error } = await supabase
+      .from("lyrics_list")
+      .update({ video_id: videoId ,video_img:img})
+      .eq("id", id)
+      .eq("user_id", userId);
+
+    if (error) return { error };
+    return { data };
+  };
+
   //單一歌曲內容更新
   const handleSongContentUpdate = async ({
     hiragana,
@@ -88,6 +100,7 @@ export const useApiStore = defineStore("api", () => {
     timestamp,
     spaceIndex,
     videoId,
+    id,
     userId,
   }) => {
     const { data, error } = await supabase
@@ -98,8 +111,9 @@ export const useApiStore = defineStore("api", () => {
         furigana: furigana,
         timestamp: timestamp,
         spaceIndex: spaceIndex,
+        video_id: videoId,
       })
-      .eq("video_id", videoId)
+      .eq("id", id)
       .eq("user_id", userId);
 
     if (error) return { error };
@@ -308,6 +322,7 @@ export const useApiStore = defineStore("api", () => {
     handleFeedBack,
     handleSongRecommendUpdate,
     handleSongContentUpdate,
+    handleVideoUpdate,
     handleSongInfoAdd,
     handleSongContentAdd,
     getSongContent,

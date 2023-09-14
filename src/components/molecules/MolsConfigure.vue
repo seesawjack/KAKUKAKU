@@ -11,7 +11,7 @@
             :class="{ 'is-click': isPlayVideo }" />
         </div>
         <!-- 更換影片 -->
-        <div class="group relative max-md:hidden max-md:mx-2 my-2  pr-1 cursor-pointer" @click="chagneVideo">
+        <div v-if="!isRecommendListPage" class="group relative max-md:hidden max-md:mx-2 my-2  pr-1 cursor-pointer" @click="chagneVideo">
           <span
             class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">更換影片</span>
           <atmos-svg-icon name="icon_song_change" class="translate-x-[2px] w-[22px]" />

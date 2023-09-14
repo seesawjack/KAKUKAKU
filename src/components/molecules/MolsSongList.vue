@@ -6,8 +6,10 @@
           <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
             :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
             v-model.trim="searchSongName">
-            <atmos-svg-icon name="icon_search" class="absolute right-3 top-2" :class="hasSearchText"
-              @click="searchSongs" />
+            <template #icon>
+              <atmos-svg-icon name="icon_search" class="absolute right-3 top-2" :class="hasSearchText"
+                @click="searchSongs" />
+            </template>
           </atmos-input>
         </form>
         <p v-if="songList?.length > 0" class="text-left mb-5">

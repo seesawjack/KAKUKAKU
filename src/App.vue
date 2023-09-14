@@ -1,6 +1,5 @@
 <template>
-  <atmos-popup v-if="closePopup" :title="popupTitle" :content="popupContent" @agreeRules="handleAgree"
-    @disagreeRules="handleDisagree" />
+  <atmos-popup v-if="showPopup" :title="popupTitle" :content="popupContent" @buttonClick="handlePopupClick" />
   <atmos-loading v-if="isLoading" />
   <atmos-dialog :show="errorMessage?.showError" :title="errorMessage?.message" @close="closeDialog" />
 
@@ -11,7 +10,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, toRefs } from "vue";
+import { ref, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useGlobalStore } from "./stores/index";
 import { useAuthStore } from "./stores/auth";
@@ -34,7 +33,7 @@ const { errorMessage } = toRefs(useGlobalStore());
 
 const router = useRouter();
 
-const closePopup = ref(true);
+const showPopup = ref(true);
 const popupTitle = "網站使用規範";
 const popupContent = `
   <ul class="list-disc pl-3">
@@ -43,13 +42,15 @@ const popupContent = `
     <li>請僅在本站學習使用歌曲，切勿透過其他工具下載，本站不提供下載連結。</li>
   </ul>`
 
-function handleAgree() {
-  closePopup.value = false;
-  localStorage.setItem('cybernorms', true);
+function handlePopupClick(clickType) {
+  if (clickType) {
+    showPopup.value = false;
+    localStorage.setItem('cybernorms', true);
+  } else {
+    router.back();
+  }
 }
-function handleDisagree() {
-  router.back();
-}
+
 
 function closeDialog() {
   isError({ showError: false, message: "" });
@@ -57,13 +58,14 @@ function closeDialog() {
 }
 
 onMounted(() => {
+
   supabase.auth.onAuthStateChange((event, session) => {
     if (event == "SIGNED_IN") {
       userInfo.value = session?.user || null;
     }
   });
 
-  closePopup.value = localStorage.getItem('cybernorms') ? false : true;
+  showPopup.value = localStorage.getItem('cybernorms') ? false : true;
 });
 </script>
 

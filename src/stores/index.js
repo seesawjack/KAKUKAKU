@@ -14,7 +14,7 @@ export const useGlobalStore = defineStore('global', () => {
         errorMessage.showError = showError;
         errorMessage.message = message;
     }
-    
+
     return {
         isLoading,
         errorMessage,

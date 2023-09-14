@@ -6,7 +6,9 @@
     <atmos-input class="max-sm:max-w-xs max-sm:text-sm max-w-xl mx-auto" :inputTips="'請輸入想搜尋的歌曲名稱'"
       :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
       v-model="searchResult">
-      <atmos-svg-icon name="icon_search" class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
+      <template #icon>
+        <atmos-svg-icon name="icon_search" class="absolute right-3 top-2" :class="hasSearchText" @click="searchSongs" />
+      </template>
     </atmos-input>
   </form>
 </template>

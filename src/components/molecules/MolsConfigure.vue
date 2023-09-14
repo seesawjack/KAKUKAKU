@@ -2,6 +2,7 @@
   <div>
     <atmos-configure class="dropdown" @show-drop="showDropDown">
       <template #otherConfigure>
+        <!-- 播放音樂 -->
         <div class="group relative max-md:mx-2 my-2 cursor-pointer" @click="stopVideo">
           <span
             class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">{{
@@ -9,6 +10,13 @@
           <atmos-svg-icon :name="!isPlayVideo ? 'icon_play_video' : 'icon_pause_video'"
             :class="{ 'is-click': isPlayVideo }" />
         </div>
+        <!-- 更換影片 -->
+        <div class="group relative max-md:hidden max-md:mx-2 my-2  pr-1 cursor-pointer" @click="chagneVideo">
+          <span
+            class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">更換影片</span>
+          <atmos-svg-icon name="icon_song_change" class="translate-x-[2px] w-[22px]" />
+        </div>
+        <!-- 鎖定影片 -->
         <div class="group relative max-md:mx-2 my-2 cursor-pointer" @click="lockVideo">
           <span
             class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">{{
@@ -16,6 +24,7 @@
           <atmos-svg-icon :name="!isLock ? 'icon_lock_open' : 'icon_lock_close'"
             :class="{ 'translate-x-[2px] w-[22px]': !isLock, 'is-click w-[22px]': isLock }" />
         </div>
+        <!-- 調整螢幕長寬 -->
         <div class="group relative max-md:hidden flex items-center max-md:mx-2 my-2 h-6 cursor-pointer"
           @click="changeScreen">
           <span
@@ -23,6 +32,7 @@
               selected.dramaMode ? '正常模式' : '劇院模式' }}</span>
           <div class="border-2 h-4 round-sm w-[20px]" :class="{ 'is-dramaMode': selected.dramaMode }"></div>
         </div>
+        <!-- 推薦音歌曲 -->
         <div v-if="!isRecommendListPage" class="group relative max-md:hidden max-md:mx-2 my-2 cursor-pointer"
           @click="recommendSong">
           <span
@@ -90,6 +100,14 @@
         </div>
       </div>
     </atmos-drop-down>
+    <atmos-popup v-if="showPopup" title="請貼上新的影片連結" :content="popupText" :button="buttonText"
+      @buttonClick="handlePopupClick">
+      <template #inputContent>
+        <atmos-input id="songName" class="w-full max-sm:text-sm mx-auto my-3" :inputTips="'請輸入影片連結'"
+          :inputClass="'w-full block py-3 pl-3 text-black rounded-lg bg-gray-300 '" :error-message="errorMsg"
+          v-model.trim="videoURL" />
+      </template>
+    </atmos-popup>
   </div>
 </template>
 
@@ -98,23 +116,26 @@ import { ref, toRefs, computed, watch, onMounted, onUnmounted } from "vue";
 import { useLyricStore } from "../../stores/song";
 import { useRoute } from "vue-router";
 import { useYoutubeStore } from "../../stores/youtube";
-import { useAuthStore } from "../../stores/auth";
+import { useRegexStore } from "../../stores/regex";
 
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import AtmosConfigure from "../atmos/AtmosConfigure.vue";
 import AtmosSvgIcon from "../atmos/AtmosSvgIcon.vue";
+import AtmosInput from "../atmos/AtmosInput.vue";
+import AtmosPopup from "../atmos/AtmosPopup.vue";
 
 const route = useRoute();
 const {
   songPageOption: { lyricsFont, selected }
 } = useLyricStore();
 
+const { songIdRegex } = useRegexStore();
+
 const isRecommendListPage = computed(() => {
   return route.query.recommend === "true" ? true : false;
 });
-const { userInfo } = useAuthStore();
 
-const { controlVideoPlay } = useYoutubeStore();
+const { controlVideoPlay, changeVideoId } = useYoutubeStore();
 const { isPlayVideo } = toRefs(useYoutubeStore());
 
 const selectedLabelType = ref("kanji-rubi");
@@ -122,6 +143,33 @@ const selectedLabelType = ref("kanji-rubi");
 function stopVideo() {
   isPlayVideo.value = !isPlayVideo.value;
   controlVideoPlay(isPlayVideo.value);
+}
+
+const showPopup = ref(false);
+const popupText = `
+  <ul class="list-disc pl-3">
+    <li>更換影片連結後，還需要下滑到頁面底部點擊「確認修改」按鈕才成功。</li>
+    <li>由於新影片時間長度不一定與原影片吻合，故已設定的時間戳記有可能會不符合影片時間進度</li>
+  </ul>`;
+const buttonText = ['確定', '取消'];
+const videoURL = ref('');
+const errorMsg = ref('')
+function chagneVideo() {
+  showPopup.value = true
+}
+
+function handlePopupClick(clickType) {
+  if (clickType) {
+    const result = songIdRegex(videoURL.value);
+    if (!result) {
+      errorMsg.value = '無法解析影片連結，請確認輸入內容是否正確';
+      return;
+    }
+    changeVideoId(result);
+  }
+  showPopup.value = false;
+  errorMsg.value = ''
+
 }
 
 const isLock = ref(false);

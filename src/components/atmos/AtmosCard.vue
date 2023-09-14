@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { reactive,computed } from "vue";
+import { computed } from "vue";
 import { useLyricStore } from "../../stores/song";
 
 const { handleSongSelected } = useLyricStore();

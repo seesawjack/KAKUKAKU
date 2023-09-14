@@ -11,7 +11,7 @@
             :class="{ 'is-click': isPlayVideo }" />
         </div>
         <!-- 更換影片 -->
-        <div v-if="!isRecommendListPage" class="group relative max-md:hidden max-md:mx-2 my-2  pr-1 cursor-pointer" @click="chagneVideo">
+        <div v-if="!isRecommendListPage" class="group relative max-md:hidden max-md:mx-2 my-2  pr-1 cursor-pointer" @click="showPopup">
           <span
             class="max-md:!hidden hidden w-20 absolute top-[2px] left-7 text-sm bg-slate-600 rounded-xl group-hover:inline">更換影片</span>
           <atmos-svg-icon name="icon_song_change" class="translate-x-[2px] w-[22px]" />
@@ -100,7 +100,7 @@
         </div>
       </div>
     </atmos-drop-down>
-    <atmos-popup v-if="showPopup" title="請貼上新的影片連結" :content="popupText" :button="buttonText"
+    <atmos-popup v-if="isPopupShow" title="請貼上新的影片連結" :content="popupText" :button="buttonText"
       @buttonClick="handlePopupClick">
       <template #inputContent>
         <atmos-input id="songName" class="w-full max-sm:text-sm mx-auto my-3" :inputTips="'請輸入影片連結'"
@@ -145,7 +145,7 @@ function stopVideo() {
   controlVideoPlay(isPlayVideo.value);
 }
 
-const showPopup = ref(false);
+const isPopupShow = ref(false);
 const popupText = `
   <ul class="list-disc pl-3">
     <li>更換影片連結後，還需要下滑到頁面底部點擊「儲存修改/確認修改」按鈕才成功。</li>
@@ -154,8 +154,8 @@ const popupText = `
 const buttonText = ['確定', '取消'];
 const videoURL = ref('');
 const errorMsg = ref('')
-function chagneVideo() {
-  showPopup.value = true
+function showPopup() {
+  isPopupShow.value = true
 }
 
 function handlePopupClick(clickType) {
@@ -167,7 +167,7 @@ function handlePopupClick(clickType) {
     }
     changeVideoId(result);
   }
-  showPopup.value = false;
+  isPopupShow.value = false;
   errorMsg.value = ''
 
 }

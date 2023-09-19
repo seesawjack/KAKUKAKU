@@ -75,12 +75,8 @@ export const useLyricStore = defineStore("lyric", () => {
 
     //依據全部歌詞是否含有英文分別處理
     if (haveEnglishLyrics) {
-      requestLyrics = lyric.replace(/\n/g, "||").replace(/[\w'-]/g, "※");
-      englishLyrics = lyric
-        .replace(/[^\w'-]/g, "#")
-        .replace(/\#{1,}/g, ",")
-        .replace(/^,/, "")
-        .split(",");
+      requestLyrics = lyric.replace(/\n/g, "||").replace(/[\w'-]+/g, "※");
+      englishLyrics = lyric.match(/[\w'-]+/g);
     } else {
       requestLyrics = lyric.replace(/\n/g, "||");
     }
@@ -90,14 +86,23 @@ export const useLyricStore = defineStore("lyric", () => {
     //依據全部歌詞是否含有英文分別處理
     if (haveEnglishLyrics) {
       let index = 0;
+
       result = response.converted
-        .replace(/\※{2,}/g, "※")
-        .replace(/\※/g, () => "@" + englishLyrics[index++] + "@")
-        .replace(/@/g, " ")
-        .replace(/\s{1,2}/g, " ")
-        .replace(/ , /g, ",")
+        .replace(/\※/g, () => englishLyrics[index++])
+        .replace(/\s{2,}/g, " ")
         .split("||")
         .map((i) => i.trim());
+
+      const testRes = response.converted
+        .replace(/\※/g, () => englishLyrics[index++])
+        .replace(/\s{2,}/g, " ")
+        .split("||")
+        .map((i) => i.trim());
+      // .replace(/@/g, " ")
+      // .replace(/\s{1,2}/g, " ")
+      // .replace(/ , /g, ",")
+      // .split("||")
+      // .map((i) => i.trim());
     } else {
       result = response.converted
         .replace(/[\s](?!\s)/gm, "")
@@ -245,7 +250,7 @@ export const useLyricStore = defineStore("lyric", () => {
     const editAllHirgana = furiganaLyrics.value[index]
       .replace(/<[^>]+>/g, "")
       .match(/[ぁ-んァ-ンー々〆〤a-zA-Z]+/g)
-      .map((item) => /[a-zA-Z]/.test(item) ? " " + item : item)
+      .map((item) => (/[a-zA-Z]/.test(item) ? " " + item : item))
       .join("");
 
     //修改平假名

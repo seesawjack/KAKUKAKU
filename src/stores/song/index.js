@@ -75,40 +75,29 @@ export const useLyricStore = defineStore("lyric", () => {
 
     //依據全部歌詞是否含有英文分別處理
     if (haveEnglishLyrics) {
-      requestLyrics = lyric.replace(/\n/g, "||").replace(/[\w'-]+/g, "※");
+      requestLyrics = lyric.replace(/\n/g, "||").replace(/\s/g, "★").replace(/[\w'-]+/g, "※");
       englishLyrics = lyric.match(/[\w'-]+/g);
     } else {
-      requestLyrics = lyric.replace(/\n/g, "||");
+      requestLyrics = lyric.replace(/\n/g, "||").replace(/\s/g, "★");
     }
 
     const response = await getHiragana(requestLyrics);
-
     //依據全部歌詞是否含有英文分別處理
     if (haveEnglishLyrics) {
       let index = 0;
-
       result = response.converted
         .replace(/\※/g, () => englishLyrics[index++])
-        .replace(/\s{2,}/g, " ")
+        .replace(/\s/g, "")
+        .replace(/★/g, " ")
         .split("||")
         .map((i) => i.trim());
-
-      const testRes = response.converted
-        .replace(/\※/g, () => englishLyrics[index++])
-        .replace(/\s{2,}/g, " ")
-        .split("||")
-        .map((i) => i.trim());
-      // .replace(/@/g, " ")
-      // .replace(/\s{1,2}/g, " ")
-      // .replace(/ , /g, ",")
-      // .split("||")
-      // .map((i) => i.trim());
     } else {
       result = response.converted
-        .replace(/[\s](?!\s)/gm, "")
-        .replace(/\s{1,2}/g, " ")
+        .replace(/\s/g, "")
+        .replace(/★/g, " ")
         .split("||")
         .map((i) => i.trim());
+
     }
 
     //計算平假名歌詞含有空白段落的位置，並返回不含空白段落的歌詞
@@ -127,7 +116,8 @@ export const useLyricStore = defineStore("lyric", () => {
     hiraganaLyrics.value = result;
     romajiLyrics.value = handleAllToRomaji(result);
 
-    const initArrLyrics = lyric.split("\n").filter((i) => i !== "");
+    const initArrLyrics = lyric.replace(/\n/g, "||").replace(/\s/g, " ").split("||").filter((i) => i !== "");
+
     handleLyricsLabel(result, initArrLyrics);
   }
 
@@ -151,9 +141,8 @@ export const useLyricStore = defineStore("lyric", () => {
             html +=
               acc.kanji.match(/\s$/g) || acc.kanji.match(/[a-zA-Z]+/gm)
                 ? acc.kanji
-                : `<ruby class="kanji-word" data-index="${index}">${
-                    acc.kanji
-                  }<rp>(</rp><rt>${acc.hiragana || "?"}</rt><rp>)</rp></ruby>`;
+                : `<ruby class="kanji-word" data-index="${index}">${acc.kanji
+                }<rp>(</rp><rt>${acc.hiragana || "?"}</rt><rp>)</rp></ruby>`;
             acc.kanji = null;
             acc.hiragana = null;
           }

@@ -14,7 +14,7 @@ import { ref, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useGlobalStore } from "./stores/index";
 import { useAuthStore } from "./stores/auth";
-import { useRequestStore } from "./stores/request";
+import { useSupabase } from "./composables/useSupabase";
 
 import TheHeader from "./components/layouts/TheHeader.vue";
 import BackgroundAnimate from "./components/layouts/BackgroundAnimate.vue";
@@ -26,7 +26,7 @@ import AtmosPopup from "./components/atmos/AtmosPopup.vue";
 const { isLoading } = toRefs(useGlobalStore())
 const { isError } = useGlobalStore();
 
-const { supabase } = useRequestStore();
+const { supabase } = useSupabase();
 
 const { userInfo } = toRefs(useAuthStore());
 const { errorMessage } = toRefs(useGlobalStore());

@@ -88,8 +88,7 @@ import { useRoute } from "vue-router";
 import { useGlobalStore } from "../../stores/index";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/song";
-import { useRequestStore } from "../../stores/request";
-import { useApiStore } from "../../stores/api";
+import { useSupabase } from "../../composables/useSupabase";
 
 import AtmosCard from "../atmos/AtmosCard.vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
@@ -105,8 +104,8 @@ const { loadingState } = useGlobalStore();
 const {
   songPageOption: { selected },
 } = useLyricStore();
-const { supabaseRequest } = useRequestStore();
 const {
+  sbRequest,
   getSearchedSongList,
   getSearchedRecomSongList,
   deleteSong,
@@ -114,8 +113,8 @@ const {
   handlePageChange,
   handleRecoPageChange,
   getSongList,
-  getRecoSongList,
-} = useApiStore();
+  getRecoSongList
+} = useSupabase();
 
 const songList = ref([]);
 const searchSongName = ref("");
@@ -147,7 +146,7 @@ async function searchSongs() {
 
   if (!pageIsPersonal) return;
   if (route.path.indexOf("personal") > 0) {
-    const { data, count } = await supabaseRequest(getSearchedSongList, {
+    const { data, count } = await sbRequest(getSearchedSongList, {
       userId: userInfo.id,
       name: searchSongName.value,
     });
@@ -155,7 +154,7 @@ async function searchSongs() {
     songData.data = data;
     songData.count = count;
   } else if (route.path.indexOf("recommend") > 0) {
-    const { data, count } = await supabaseRequest(getSearchedRecomSongList, {
+    const { data, count } = await sbRequest(getSearchedRecomSongList, {
       name: searchSongName.value,
     });
 
@@ -196,10 +195,10 @@ async function toDeleteSong(id) {
   songList.value = songList.value.filter((song) => song.video_id !== id);
 
   //歌曲清單刪除該歌曲
-  await supabaseRequest(deleteSong, { videoId: id });
+  await sbRequest(deleteSong, { videoId: id });
 
   //歌詞內容清單刪除該歌曲的歌詞
-  await supabaseRequest(deleteSongContent, { videoId: id });
+  await sbRequest(deleteSongContent, { videoId: id });
 }
 
 const clickClassName = ref("");
@@ -232,7 +231,7 @@ async function pageChagne(value) {
   const { from, to } = getPagination(page.value, 10);
 
   if (route.path.indexOf("personal") > 0) {
-    const { data } = await supabaseRequest(handlePageChange, {
+    const { data } = await sbRequest(handlePageChange, {
       userId: userInfo.id,
       from: from,
       to: to,
@@ -240,7 +239,7 @@ async function pageChagne(value) {
 
     songData.data = data;
   } else if (route.path.indexOf("recommend") > 0) {
-    const { data } = await supabaseRequest(handleRecoPageChange, {
+    const { data } = await sbRequest(handleRecoPageChange, {
       from: from,
       to: to,
     });
@@ -264,7 +263,7 @@ async function loadingLyricList() {
   loadingState(true);
   if (isLoggedIn() && route.path.indexOf("personal") > 0) {
     searchIsError({ state: 0, message: "" });
-    const { data, count } = await supabaseRequest(getSongList, {
+    const { data, count } = await sbRequest(getSongList, {
       userId: userInfo.id,
     });
     songData.data = data;
@@ -272,7 +271,7 @@ async function loadingLyricList() {
     showRecommender.value = false;
   } else if (route.path.indexOf("recommend") > 0) {
     searchIsError({ state: 0, message: "" });
-    const { data, count } = await supabaseRequest(getRecoSongList);
+    const { data, count } = await sbRequest(getRecoSongList);
     songData.data = data;
     songData.count = count;
     showRecommender.value = true;

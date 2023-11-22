@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useRequestStore } from "./stores/request";
+import { useSupabase } from "./composables/useSupabase";
 import HomePage from "./pages/Home/Index.vue";
 
 import SongEdit from "./pages/Song/SongEdit.vue";
@@ -126,7 +126,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  const { supabase } = useRequestStore();
+  const { supabase } = useSupabase();
   const {
     data: { session },
   } = await supabase.auth.getSession();

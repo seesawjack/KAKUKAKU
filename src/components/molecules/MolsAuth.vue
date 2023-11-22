@@ -46,8 +46,7 @@
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
-import { useApiStore } from "../../stores/api";
-import { useRequestStore } from "../../stores/request";
+import { useSupabase } from "../../composables/useSupabase";
 
 import AtmosForm from "../atmos/AtmosForm.vue";
 
@@ -55,8 +54,7 @@ const route = useRoute();
 const router = useRouter();
 
 const { formSchema, validate } = useAuthStore();
-const { supabaseRequest } = useRequestStore();
-const { handleLogin, handleSignup } = useApiStore();
+const { sbRequest,handleLogin, handleSignup } = useSupabase();
 
 //判斷目前在「登入」或「註冊」Tab
 const atLoginPage = computed(() => {
@@ -73,7 +71,7 @@ const buttonState = computed(() => {
 async function handleSubmit(form) {
   //登入事件
   if (atLoginPage.value === "login") {
-    const result = await supabaseRequest(handleLogin, {
+    const result = await sbRequest(handleLogin, {
       email: form.info.email,
       password: form.info.password,
     });
@@ -81,7 +79,7 @@ async function handleSubmit(form) {
     if (result !== undefined && result.data?.session) router.back();
   } else {
     //註冊事件
-    const result = await supabaseRequest(handleSignup, {
+    const result = await sbRequest(handleSignup, {
       email: form.info.email,
       password: form.info.password,
       name: form.info.name,

@@ -38,16 +38,14 @@ import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../../stores/auth";
-import { useApiStore } from "../../stores/api";
-import { useRequestStore } from "../../stores/request";
+import { useSupabase } from "../../composables/useSupabase";
 
 import AtmosSvgIcon from "./AtmosSvgIcon.vue";
 
 const { isLoggedIn } = useAuthStore();
 const { userInfo } = storeToRefs(useAuthStore());
 
-const { supabaseRequest } = useRequestStore();
-const { handleLogout } = useApiStore();
+const { sbRequest,handleLogout } = useSupabase();
 
 const route = useRoute();
 const router = useRouter();
@@ -93,7 +91,7 @@ const loggedIn = computed(() => {
 });
 
 async function logout() {
-  await supabaseRequest(handleLogout);
+  await sbRequest(handleLogout);
   router.push({ path: "/KAKUKAKU/login" }).then(() => {
     router.go();
   });

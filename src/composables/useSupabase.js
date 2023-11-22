@@ -1,8 +1,31 @@
-import { defineStore } from "pinia";
-import { useRequestStore } from "../request";
+import { createClient } from "@supabase/supabase-js";
+import { useGlobalStore } from "../stores/index";
 
-export const useApiStore = defineStore("api", () => {
-  const { supabase } = useRequestStore();
+export function useSupabase() {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+  const { isError, loadingState } = useGlobalStore();
+
+
+  const sbRequest = async (func, meta) => {
+    try {
+      loadingState(true);
+      const { data, count = 0, error } = await func(meta);
+      if (error) throw error;
+      return { data, count };
+    } catch (error) {
+      if (error) {
+        isError({
+          showError: true,
+          message: error.error_description || error.message,
+        });
+        return;
+      }
+    } finally {
+      loadingState(false);
+    }
+  };
 
   //註冊
   const handleSignup = async ({ email, password, ...meta }) => {
@@ -84,7 +107,7 @@ export const useApiStore = defineStore("api", () => {
   const handleVideoUpdate = async ({ id, videoId, img, userId }) => {
     const { data, error } = await supabase
       .from("lyrics_list")
-      .update({ video_id: videoId ,video_img:img})
+      .update({ video_id: videoId, video_img: img })
       .eq("id", id)
       .eq("user_id", userId);
 
@@ -314,6 +337,8 @@ export const useApiStore = defineStore("api", () => {
   };
 
   return {
+    supabase,
+    sbRequest,
     handleSignup,
     handleLogin,
     handleLogout,
@@ -336,4 +361,4 @@ export const useApiStore = defineStore("api", () => {
     getSongList,
     getRecoSongList,
   };
-});
+}

@@ -22,20 +22,18 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "../../stores/auth";
-import { useApiStore } from "../../stores/api";
-import { useRequestStore } from "../../stores/request";
+import { useSupabase } from "../../composables/useSupabase";
 
 import AtmosForm from "../atmos/AtmosForm.vue";
 
 const { formSchema, validate, isLoggedIn } = useAuthStore();
-const { supabaseRequest } = useRequestStore();
-const { handleFeedBack } = useApiStore();
+const { sbRequest,handleFeedBack } = useSupabase();
 
 const buttonState = ref({ state: true, name: "確認送出" });
 
 //送出意見回饋
 async function handleSubmit(form) {
-  const result = await supabaseRequest(handleFeedBack, {
+  const result = await sbRequest(handleFeedBack, {
     name: form.info.name,
     type: form.info.questionType,
     text: form.info.feedbackText,

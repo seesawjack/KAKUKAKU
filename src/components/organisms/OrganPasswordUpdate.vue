@@ -15,19 +15,17 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '../../stores/auth';
-import { useRequestStore } from '../../stores/request';
-import { useApiStore } from '../../stores/api';
+import { useSupabase } from '../../composables/useSupabase';
 
 import AtmosForm from '../atmos/AtmosForm.vue';
 
 const { formSchema, validate } = useAuthStore();
-const { supabaseRequest } = useRequestStore();
-const { handlePasswordReset } = useApiStore();
+const { sbRequest,handlePasswordReset } = useSupabase();
 
 const buttonState = ref({ state: true, name: "確認送出" })
 
 async function handleSubmit(form) {
-    await supabaseRequest(handlePasswordReset,{password:form.info.password});
+    await sbRequest(handlePasswordReset,{password:form.info.password});
     buttonState.value = { state: false, name: '已送出' }
 }
 </script>

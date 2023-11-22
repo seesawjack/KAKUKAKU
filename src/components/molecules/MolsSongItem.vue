@@ -24,10 +24,9 @@ import { ref, reactive, onMounted, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import { useLyricStore } from "../../stores/song";
-import { useRequestStore } from "../../stores/request";
-import { useApiStore } from "../../stores/api";
 import { useYoutubeStore } from "../../stores/youtube";
 import { useRegex } from "../../composables/useRegex";
+import { useSupabase } from "../../composables/useSupabase";
 
 import AtmosVideo from "../atmos/AtmosVideo.vue";
 import AtmosLyric from "../atmos/AtmosLyric.vue";
@@ -59,8 +58,8 @@ const {
   songInfo,
 } = toRefs(useLyricStore());
 
-const { supabaseRequest } = useRequestStore();
 const {
+  sbRequest,
   handleSongInfoAdd,
   handleSongContentAdd,
   handleSongRecommendUpdate,
@@ -68,7 +67,7 @@ const {
   handleVideoUpdate,
   getSongContent,
   getSongInfo,
-} = useApiStore();
+} = useSupabase();
 
 const { videoId } = toRefs(useYoutubeStore());
 const { urlSongIdChangeRegex } = useRegex();
@@ -95,20 +94,20 @@ async function handleSongSubmit() {
   }
 
   if (songUploaded.value) {
-    await supabaseRequest(handleSongRecommendUpdate, {
+    await sbRequest(handleSongRecommendUpdate, {
       isRecommend: selected.isRecommend,
       videoId: route.query.song_id,
       userId: userInfo.id,
     });
 
-    await supabaseRequest(handleVideoUpdate, {
+    await sbRequest(handleVideoUpdate, {
       id: songIdInSupabase.value,
       videoId: videoId.value,
-      img:`https://i.ytimg.com/vi/${videoId.value}/mqdefault.jpg`,
+      img: `https://i.ytimg.com/vi/${videoId.value}/mqdefault.jpg`,
       userId: userInfo.id,
     });
 
-    await supabaseRequest(handleSongContentUpdate, {
+    await sbRequest(handleSongContentUpdate, {
       hiragana: hiraganaLyrics.value,
       romaji: romajiLyrics.value,
       furigana: furiganaLyrics.value,
@@ -118,7 +117,7 @@ async function handleSongSubmit() {
       id: songContentIdInSupabase.value,
       userId: userInfo.id,
     });
-    
+
     const newPath = urlSongIdChangeRegex(route.fullPath, videoId.value);
     router.push(newPath);
 
@@ -129,7 +128,7 @@ async function handleSongSubmit() {
     });
   } else {
     selected.isRecommend.recommender = userInfo.user_metadata?.name;
-    await supabaseRequest(handleSongInfoAdd, {
+    await sbRequest(handleSongInfoAdd, {
       userId: userInfo.id,
       videoId: videoId.value,
       title: songInfo.value.title,
@@ -137,7 +136,7 @@ async function handleSongSubmit() {
       isRecommend: selected.isRecommend,
     });
 
-    await supabaseRequest(handleSongContentAdd, {
+    await sbRequest(handleSongContentAdd, {
       userId: userInfo.id,
       videoId: videoId.value,
       hiragana: hiraganaLyrics.value,
@@ -149,7 +148,9 @@ async function handleSongSubmit() {
     handleBtnState({ text: "已新增", click: false, visible: true });
     songUploaded.value = true;
     removeLocal();
-    router.push(`/KAKUKAKU/song/item?song_id=${videoId.value}&user=${userInfo.user_metadata?.name}`);
+    router.push(
+      `/KAKUKAKU/song/item?song_id=${videoId.value}&user=${userInfo.user_metadata?.name}`
+    );
   }
 }
 
@@ -165,17 +166,17 @@ onMounted(async () => {
 
   //若網址含使用者參數
   if (route.query?.user && route.query?.user === userInfo.user_metadata?.name) {
-    const { data: itemData } = await supabaseRequest(getSongInfo, {
+    const { data: itemData } = await sbRequest(getSongInfo, {
       videoId: route.query.song_id,
       userId: userInfo.id,
     });
-    
+
     if (itemData.length === 0) {
       handleSongDisplay({ show: false, message: "查無此歌曲" });
       return;
     }
 
-    const { data: contentData } = await supabaseRequest(getSongContent, {
+    const { data: contentData } = await sbRequest(getSongContent, {
       videoId: route.query.song_id,
       userId: userInfo.id,
     });
@@ -195,8 +196,8 @@ onMounted(async () => {
       info: itemData[0],
     });
 
-    songIdInSupabase.value = itemData[0].id; 
-    songContentIdInSupabase.value =  contentData[0].id  
+    songIdInSupabase.value = itemData[0].id;
+    songContentIdInSupabase.value = contentData[0].id;
 
     handleBtnState({
       text: "確認修改",
@@ -210,7 +211,7 @@ onMounted(async () => {
 
   //是分享狀態
   if (route.query.recommend === "true") {
-    const { data: itemData } = await supabaseRequest(getSongInfo, {
+    const { data: itemData } = await sbRequest(getSongInfo, {
       videoId: route.query.song_id,
     });
 
@@ -218,7 +219,7 @@ onMounted(async () => {
       handleSongDisplay({ show: false, message: "此歌曲不在推薦清單中" });
       return;
     }
-    const { data } = await supabaseRequest(getSongContent, {
+    const { data } = await sbRequest(getSongContent, {
       videoId: route.query.song_id,
     });
 

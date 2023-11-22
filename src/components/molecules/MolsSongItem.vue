@@ -27,7 +27,7 @@ import { useLyricStore } from "../../stores/song";
 import { useRequestStore } from "../../stores/request";
 import { useApiStore } from "../../stores/api";
 import { useYoutubeStore } from "../../stores/youtube";
-import { useRegexStore } from "../../stores/regex";
+import { useRegex } from "../../composables/useRegex";
 
 import AtmosVideo from "../atmos/AtmosVideo.vue";
 import AtmosLyric from "../atmos/AtmosLyric.vue";
@@ -71,7 +71,7 @@ const {
 } = useApiStore();
 
 const { videoId } = toRefs(useYoutubeStore());
-const { urlSongIdChangeRegex } = useRegexStore();
+const { urlSongIdChangeRegex } = useRegex();
 const songIdInSupabase = ref(null);
 const songContentIdInSupabase = ref(null);
 

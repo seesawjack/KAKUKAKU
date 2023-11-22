@@ -35,7 +35,7 @@ import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useLyricStore } from "../../stores/song";
 import { useGlobalStore } from "../../stores/index";
-import { useRegexStore } from "../../stores/regex";
+import { useRegex } from "../../composables/useRegex";
 
 import AtmosEdit from "../atmos/AtmosEdit.vue";
 import AtmosInput from "../atmos/AtmosInput.vue";
@@ -44,7 +44,7 @@ const router = useRouter();
 const route = useRoute();
 const { handleLyricTransform, handleSongSelected } = useLyricStore();
 const { isError } = useGlobalStore();
-const { songIdRegex } = useRegexStore();
+const { songIdRegex } = useRegex();
 
 const props = defineProps({
   isYoutubeSearch: {

@@ -116,7 +116,7 @@ import { ref, toRefs, computed, watch, onMounted, onUnmounted } from "vue";
 import { useLyricStore } from "../../stores/song";
 import { useRoute } from "vue-router";
 import { useYoutubeStore } from "../../stores/youtube";
-import { useRegexStore } from "../../stores/regex";
+import { useRegex } from "../../composables/useRegex";
 
 import AtmosDropDown from "../atmos/AtmosDropDown.vue";
 import AtmosConfigure from "../atmos/AtmosConfigure.vue";
@@ -129,7 +129,7 @@ const {
   songPageOption: { lyricsFont, selected }
 } = useLyricStore();
 
-const { songIdRegex } = useRegexStore();
+const { songIdRegex } = useRegex();
 
 const isRecommendListPage = computed(() => {
   return route.query.recommend === "true" ? true : false;

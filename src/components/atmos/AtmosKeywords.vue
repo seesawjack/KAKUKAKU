@@ -4,13 +4,13 @@
       <li class="mr-3">
         <span class="p-1 bg-slate-700 rounded text-xs">歌詞關鍵字搜尋</span>
       </li>
-      <li v-for="(key, index) in title" :key="index">
+      <li v-for="(word, index) in keywords" :key="index">
         <a
-          :href="`https://www.google.com/search?q=${key}+歌詞`"
+          :href="`https://www.google.com/search?q=${word}+歌詞`"
           target="_blank"
           class="p-1 bg-slate-600 rounded text-xs mb-3"
-          :class="{ 'mr-3': index != title.length - 1 }"
-          >{{ key }}
+          :class="{ 'mr-3': index != keywords.length - 1 }"
+          >{{ word }}
         </a>
       </li>
     </ul>
@@ -20,11 +20,12 @@
 <script setup>
 import { ref } from "vue";
 import { useLyricStore } from "../../stores/song";
-import { useRegexStore } from "../../stores/regex";
+import { useRegex } from "../../composables/useRegex";
 
 const { songInfo } = useLyricStore();
-const { songTitleRegex } = useRegexStore();
+const { songTitleRegex } = useRegex();
 
-const title = ref(songTitleRegex(songInfo.title));
+const keywords = ref(null);
+keywords.value = songTitleRegex(songInfo.title)
 
 </script>

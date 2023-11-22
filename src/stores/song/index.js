@@ -2,10 +2,10 @@ import { defineStore } from "pinia";
 import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 import { diff_match_patch } from "diff-match-patch";
 import { toRomaji } from "wanakana";
-import { useRequestStore } from "../request";
+import { useFetch } from "../../composables/useFetch";
 
 export const useLyricStore = defineStore("lyric", () => {
-  const { request } = useRequestStore();
+  const { fetchData } = useFetch();
 
   const initLyrics = ref([]);
   const furiganaLyrics = ref([]);
@@ -31,7 +31,7 @@ export const useLyricStore = defineStore("lyric", () => {
       sentence: lyric,
     });
 
-    return await request({
+    return await fetchData({
       url: "https://labs.goo.ne.jp/api/hiragana",
       method: "POST",
       sendData: requsetData.value,

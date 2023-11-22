@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, toRefs } from 'vue';
 import { useLyricStore } from '../song/index.js';
-import { useRequestStore } from '../request';
+import { useFetch } from "../../composables/useFetch.js";
 
 export const useYoutubeStore = defineStore('youtube', () => {
 
@@ -83,7 +83,7 @@ export const useYoutubeStore = defineStore('youtube', () => {
     //youtube 搜尋
     const youtubeURL = ref('https://youtube.googleapis.com/youtube/v3/search?');
 
-    const { request } = useRequestStore();
+    const { fetchData } = useFetch()
     const nextPage = ref('');
     const prevPage = ref('');
     const isReasearch = ref(false);
@@ -100,7 +100,7 @@ export const useYoutubeStore = defineStore('youtube', () => {
         for (const [key, value] of Object.entries(queryString)) {
             youtubeURL.value += `${key}=${value}&`;
         }
-        const data = await request({ url: youtubeURL.value });
+        const data = await fetchData({ url: youtubeURL.value });
         nextPage.value = data.nextPageToken;
         prevPage.value = data.prevPageToken;
         return data
@@ -112,7 +112,7 @@ export const useYoutubeStore = defineStore('youtube', () => {
         let pageUrl = youtubeURL.value;
         pageUrl += next ? `pageToken=${nextPage.value}` : `pageToken=${prevPage.value}`
 
-        const data = await request({ url: pageUrl });
+        const data = await fetchData({ url: pageUrl });
         nextPage.value = data.nextPageToken;
         prevPage.value = data.prevPageToken;
         return data

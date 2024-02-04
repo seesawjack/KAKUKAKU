@@ -16,12 +16,12 @@ export const useLyricStore = defineStore("lyric", () => {
   const songInfo = ref({});
   const songDisplay = reactive({ show: true, message: "" });
 
-  if (getCurrentInstance()) {
-    onMounted(() => {
-      songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
-      initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
-    });
-  }
+  // if (getCurrentInstance()) {
+  //   onMounted(() => {
+  //     songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
+  //     initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
+  //   });
+  // }
 
   //發出轉換成平假名的請求
   async function getHiragana(lyric) {

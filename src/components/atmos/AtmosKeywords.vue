@@ -22,10 +22,11 @@ import { ref } from "vue";
 import { useLyricStore } from "../../stores/song";
 import { useRegex } from "../../composables/useRegex";
 
-const { songInfo } = useLyricStore();
+
+const props = defineProps(['songInfo'])
 const { songTitleRegex } = useRegex();
 
 const keywords = ref(null);
-keywords.value = songTitleRegex(songInfo.title)
+keywords.value = songTitleRegex(props.songInfo.title)
 
 </script>

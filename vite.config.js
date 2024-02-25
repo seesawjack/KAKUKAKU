@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
-import path from 'path';
+import path, { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,5 +13,10 @@ export default defineConfig({
       customDomId: '__svg__icons__dom__',
     }),
   ],
+  resolve:{
+    alias:{
+      '@':resolve(__dirname,'src')
+    }
+  },
   base: "/KAKUKAKU"
 })

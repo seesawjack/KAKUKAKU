@@ -1,18 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useSupabase } from "./composables/useSupabase";
-import HomePage from "./pages/Home/Index.vue";
+import { useSupabase } from "../composables/useSupabase";
+import HomePage from "@/pages/Home/Index.vue";
 
-import SongEdit from "./pages/Song/SongEdit.vue";
-import SongList from "./pages/Song/SongList.vue";
-import SongItem from "./pages/Song/SongItem.vue";
+import SongEdit from "@/pages/Song/SongEdit.vue";
+import SongList from "@/pages/Song/SongList.vue";
+import SongItem from "@/pages/Song/SongItem.vue";
 
-import AuthPage from "./pages/Auth/Index.vue";
-import OnboardingPage from "./pages/Auth/OnboardingPage.vue";
-import PasswordForget from "./pages/Auth/PasswordForget.vue";
-import PasswordUpdate from "./pages/Auth/PasswordUpdate.vue";
+import AuthPage from "@/pages/Auth/Index.vue";
+import OnboardingPage from "@/pages/Auth/OnboardingPage.vue";
+import PasswordForget from "@/pages/Auth/PasswordForget.vue";
+import PasswordUpdate from "@/pages/Auth/PasswordUpdate.vue";
 
-import AboutPage from "./pages/About/Index.vue";
-import FeedBackPage from "./pages/FeedBack/Index.vue";
+import AboutPage from "@/pages/About/Index.vue";
+import FeedBackPage from "@/pages/FeedBack/Index.vue";
 
 // import NotFound from './pages/NotFound.vue';
 

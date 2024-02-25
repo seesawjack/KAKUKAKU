@@ -1,7 +1,7 @@
 <template>
-    <organ-auth/>
+    <auth class="w-full max-w-sm"/>
 </template>
 
 <script setup>
-import OrganAuth from '../../components/organisms/OrganAuth.vue'
+import Auth from '@/components/molecules/MolsAuth.vue';
 </script>

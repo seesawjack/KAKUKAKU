@@ -1,7 +1,7 @@
 <template>
-    <organ-song-list/>
+    <song-list/>
 </template>
 
 <script setup>
-import OrganSongList from "../../components/organisms/OrganSongList.vue";
+import SongList from "@/components/molecules/MolsSongList.vue";
 </script>

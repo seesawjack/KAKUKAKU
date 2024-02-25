@@ -1,7 +1,7 @@
 <template>
-    <organ-feed-back/>
+    <feed-back class="w-full max-w-sm"/>
 </template>
 
 <script setup>
-import OrganFeedBack from '../../components/organisms/OrganFeedBack.vue';
+import FeedBack from '@/components/molecules/MolsFeedBack.vue';
 </script>

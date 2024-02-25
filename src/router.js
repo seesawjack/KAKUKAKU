@@ -135,12 +135,12 @@ router.beforeEach(async (to, from) => {
     document.title = to.meta.title;
   }
   if (to.path.indexOf('item') > 0 && to.query.song_id) {
-    const { data, error } = await supabase
+    const res = await supabase
       .from("lyrics_list")
       .select()
       .eq("video_id", to.query.song_id);
-    if (data.length > 0) {
-      document.title = data[0].title + '｜KAKUKAKU';
+    if (res?.data) {
+      document.title = res?.data[0].title + '｜KAKUKAKU';
     }
   }
 

@@ -15,13 +15,7 @@ export function useSupabase() {
       if (error) throw error;
       return { data, count };
     } catch (error) {
-      if (error) {
-        isError({
-          showError: true,
-          message: error.error_description || error.message,
-        });
-        return;
-      }
+      console.error(error.message)
     } finally {
       loadingState(false);
     }

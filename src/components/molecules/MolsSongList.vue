@@ -1,6 +1,6 @@
 <template>
   <div class="w-full max-w-[600px] max-sm:px-5 mx-auto">
-    <div v-if="pageIsPersonal && searchError.state !== 1">
+    <div v-if="(pageIsPersonal && searchError.state !== 1) && songData">
       <div class="w-full">
         <form @submit.prevent="searchSongs">
           <atmos-input
@@ -78,7 +78,7 @@
         />
       </div>
     </div>
-    <atmos-not-found v-if="searchError.state > 0" :tips="searchError.message" />
+    <atmos-not-found v-if="searchError.state > 0 || !songData" :tips="searchError.message" />
   </div>
 </template>
 
@@ -260,24 +260,23 @@ function pageDataInit() {
 //頁面載入所有已建立歌曲
 async function loadingLyricList() {
   let songData = {};
+  searchIsError({ state: 0, message: "" });
   loadingState(true);
   if (isLoggedIn() && route.path.indexOf("personal") > 0) {
-    searchIsError({ state: 0, message: "" });
-    const { data, count } = await sbRequest(getSongList, {
+    const res = await sbRequest(getSongList, {
       userId: userInfo.id,
     });
-    songData.data = data;
-    songData.count = count;
+    songData.data = res?.data;
+    songData.count = res?.count;
     showRecommender.value = false;
   } else if (route.path.indexOf("recommend") > 0) {
-    searchIsError({ state: 0, message: "" });
-    const { data, count } = await sbRequest(getRecoSongList);
-    songData.data = data;
-    songData.count = count;
+    const res = await sbRequest(getRecoSongList);
+    songData.data = res?.data;
+    songData.count = res?.count;
     showRecommender.value = true;
   }
 
-  if (songData.data?.length === 0) {
+  if (!songData?.data) {
     if (route.path.indexOf("personal") > 0) {
       searchIsError({
         state: 1,
@@ -286,7 +285,7 @@ async function loadingLyricList() {
     } else {
       searchIsError({
         state: 1,
-        message: "目前無會員提供推薦歌曲",
+        message: "歌曲功能有誤，請聯絡網站管理員",
       });
     }
   }
@@ -295,6 +294,7 @@ async function loadingLyricList() {
   totalSongCount.value = songData.count;
   loadingState(false);
 }
+loadingLyricList();
 
 watch(
   () => route.path,
@@ -308,7 +308,6 @@ watch(
 
 onMounted(async () => {
   document.addEventListener("click", notClickDropdwonSelf);
-  loadingLyricList();
 });
 
 onUnmounted(() => {

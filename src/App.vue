@@ -16,9 +16,9 @@ import { useGlobalStore } from "./stores/index";
 import { useAuthStore } from "./stores/auth";
 import { useSupabase } from "./composables/useSupabase";
 
-import TheHeader from "./components/layouts/TheHeader.vue";
-import BackgroundAnimate from "./components/layouts/BackgroundAnimate.vue";
-import TheFooter from "./components/layouts/TheFooter.vue";
+import TheHeader from "@/layouts/TheHeader.vue";
+import BackgroundAnimate from "@/layouts/BackgroundAnimate.vue";
+import TheFooter from "@/layouts/TheFooter.vue";
 import AtmosLoading from "./components/atmos/AtmosLoading.vue";
 import AtmosDialog from "./components/atmos/AtmosDialog.vue";
 import AtmosPopup from "./components/atmos/AtmosPopup.vue";

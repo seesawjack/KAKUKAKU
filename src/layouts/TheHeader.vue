@@ -14,8 +14,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 
-import AtmosSidebar from "../atmos/AtmosSidebar.vue";
-import AtmosSvgIcon from "../atmos/AtmosSvgIcon.vue";
+import AtmosSidebar from "@/components/atmos/AtmosSidebar.vue";
+import AtmosSvgIcon from "@/components/atmos/AtmosSvgIcon.vue";
 
 const isShow = ref(false);
 function showSidebar() {

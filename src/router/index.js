@@ -4,6 +4,7 @@ import HomePage from "@/pages/Home/Index.vue";
 
 import SongEdit from "@/pages/Song/SongEdit.vue";
 import SongList from "@/pages/Song/SongList.vue";
+import RecommendSongList from "@/pages/RecommendSongList/Index.vue";
 import SongItem from "@/pages/Song/SongItem.vue";
 
 import AuthPage from "@/pages/Auth/Index.vue";
@@ -45,7 +46,7 @@ const router = createRouter({
         },
         {
           path: "recommend/list",
-          component: SongList,
+          component: RecommendSongList,
           meta: {
             title: "推薦清單｜KAKUKAKU",
           },

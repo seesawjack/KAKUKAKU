@@ -131,17 +131,8 @@ router.beforeEach(async (to, from) => {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (to.meta.title) {
+  if (to.meta.title && !to.fullPath.includes('song/item')) {
     document.title = to.meta.title;
-  }
-  if (to.path.indexOf('item') > 0 && to.query.song_id) {
-    const res = await supabase
-      .from("lyrics_list")
-      .select()
-      .eq("video_id", to.query.song_id);
-    if (res?.data) {
-      document.title = res?.data[0]?.title + '｜KAKUKAKU';
-    }
   }
 
   if (to.fullPath.indexOf("login") > -1 || to.fullPath.indexOf("signup") > -1) {

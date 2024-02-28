@@ -2,9 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useSupabase } from "../composables/useSupabase";
 import HomePage from "@/pages/Home/Index.vue";
 
-import SongEdit from "@/pages/Song/SongEdit.vue";
+import SongEditor from "@/pages/SongEditor/Index.vue";
 import SongList from "@/pages/SongList/Index.vue";
-import SongItem from "@/pages/Song/SongItem.vue";
+import SongDetail from "@/pages/SongDetail/Index.vue";
 
 import AuthPage from "@/pages/Auth/Index.vue";
 import OnboardingPage from "@/pages/Auth/OnboardingPage.vue";
@@ -31,7 +31,7 @@ const router = createRouter({
         },
         {
           path: "upload",
-          component: SongEdit,
+          component: SongEditor,
           meta: {
             title: "新增歌曲｜KAKUKAKU",
           },
@@ -52,7 +52,7 @@ const router = createRouter({
         },
         {
           path: "item",
-          component: SongItem,
+          component: SongDetail,
           meta: {
             title: "歌曲｜KAKUKAKU",
           },

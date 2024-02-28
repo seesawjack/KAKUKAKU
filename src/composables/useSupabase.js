@@ -10,14 +10,12 @@ export function useSupabase() {
 
   const sbRequest = async (func, meta) => {
     try {
-      loadingState(true);
       const { data, count = 0, error } = await func(meta);
       if (error) throw error;
       return { data, count };
     } catch (error) {
       console.error(error.message)
     } finally {
-      loadingState(false);
     }
   };
 

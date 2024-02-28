@@ -1,14 +1,14 @@
 <template>
     <div class="w-full max-w-[600px] max-sm:px-5 mx-auto">
-        <div v-if="songList">
+        <div v-if="songList.length">
             <div class="w-full">
-                <form @submit.prevent="searchSongs">
+                <form @submit.prevent="searchSong">
                     <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
                         :inputClass="'resize-none bg-[transparent] border border-solid rounded-3xl py-2 px-5 w-full outline-none'"
                         v-model.trim="searchSongName">
                         <template #icon>
                             <atmos-svg-icon name="icon_search" class="absolute right-3 top-2" :class="hasSearchText"
-                                @click="searchSongs" />
+                                @click="searchSong" />
                         </template>
                     </atmos-input>
                 </form>
@@ -39,16 +39,14 @@
                     @search="pageChagne" />
             </div>
         </div>
-        <atmos-not-found v-else :tips="searchError.message" />
+        <atmos-not-found v-if="searchError.message" :tips="searchError.message" />
     </div>
 </template>
   
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
 import { useGlobalStore } from "@/stores/index";
 import { useAuthStore } from "@/stores/auth";
-import { useLyricStore } from "@/stores/song";
 import { useSupabase } from "@/composables/useSupabase";
 
 import AtmosCard from "@/components/atmos/AtmosCard.vue";
@@ -58,31 +56,21 @@ import AtmosDropDown from "@/components/atmos/AtmosDropDown.vue";
 import AtmosPagination from "@/components/atmos/AtmosPagination.vue";
 import AtmosSvgIcon from "@/components/atmos/AtmosSvgIcon.vue";
 
-const route = useRoute();
-
 const { userInfo, isLoggedIn } = useAuthStore();
 const { loadingState } = useGlobalStore();
 const {
-    songPageOption: { selected },
-} = useLyricStore();
-const {
     sbRequest,
     getSearchedSongList,
-    getSearchedRecomSongList,
     deleteSong,
     deleteSongContent,
     handlePageChange,
-    handleRecoPageChange,
     getSongList,
-    getRecoSongList
 } = useSupabase();
 
 const songList = ref([]);
 const searchSongName = ref("");
 const deletedSong = ref([]);
 const searchError = ref({ state: "", message: "" });
-const isSearch = ref(false);
-const showRecommender = ref(false);
 const totalSongCount = ref(0);
 const totalPages = ref(0);
 const clickClassName = ref("");
@@ -99,7 +87,7 @@ function searchIsError({ state, message }) {
     searchError.value.message = message;
 }
 //搜尋歌曲
-async function searchSongs() {
+async function searchSong() {
     page.value = 0;
     
     const res = await sbRequest(getSearchedSongList, {
@@ -171,13 +159,6 @@ async function pageChagne(value) {
     songList.value = songData.data;
 }
 
-
-//初始化資料
-function pageDataInit() {
-    isSearch.value = false;
-    searchSongName.value = "";
-}
-
 //頁面載入所有已建立歌曲
 async function loadingLyricList() {
     loadingState(true);
@@ -185,16 +166,21 @@ async function loadingLyricList() {
         const res = await sbRequest(getSongList, {
             userId: userInfo.id,
         });
-        songList.value = res?.data;
-        totalSongCount.value = res?.count;
-        totalPages.value = Math.ceil(res?.count/ 10);
-    }
-    if (!songList.value) {
+
+        if (!res.data) {
         searchIsError({
             state: 1,
             message: "您尚未新增歌曲",
         });
     }
+        songList.value = res?.data;
+        totalSongCount.value = res?.count;
+        totalPages.value = Math.ceil(res?.count/ 10);
+    }
+    searchIsError({
+            state: 1,
+            message: "登入會員後才能看到個人歌曲清單",
+        });
     loadingState(false);
 }
 loadingLyricList();

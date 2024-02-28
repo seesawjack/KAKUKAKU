@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-[600px] max-sm:px-5 mx-auto">
-        <div v-if="songList">
+        <div v-if="initState">
             <div class="w-full">
                 <form @submit.prevent="searchSongs">
                     <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
@@ -12,20 +12,21 @@
                         </template>
                     </atmos-input>
                 </form>
-                <p v-if="songList?.length > 0" class="text-left mb-5">
-                    {{ searchedTips }}
-                </p>
-                <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`"
-                    v-for="item in songList" :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title"
-                    :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&${route.path.indexOf('personal') > 0
-                            ? 'user=' + userInfo.user_metadata?.name
-                            : 'recommend=true'
-                        }`" :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1" :sub-title="item.recommend.recommender
-        ? '推薦人:' + item.recommend.recommender
-        : ''">
-                </atmos-card>
-                <atmos-pagination v-if="totalSongCount > 10" :nowPage="page + 1" :totalPages="totalPages"
-                    @search="pageChagne" />
+                <template v-if="songList.length">
+                    <p class="text-left mb-5">
+                        {{ searchedTips }}
+                    </p>
+                    <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`"
+                        v-for="item in songList" :key="item.id" :id="item.video_id" :url="item.video_img"
+                        :title="item.title" :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&recommend=true`"
+                        :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1" :sub-title="item.recommend.recommender
+                            ? '推薦人:' + item.recommend.recommender
+                            : ''">
+                    </atmos-card>
+                    <atmos-pagination v-if="totalSongCount > 10" :nowPage="page + 1" :totalPages="totalPages"
+                        @search="pageChange" />
+                </template>
+                <p v-else>搜尋不到對應歌曲，請重新搜尋</p>
             </div>
         </div>
         <atmos-not-found v-else :tips="searchError.message" />
@@ -34,7 +35,6 @@
   
 <script setup>
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
 import { useGlobalStore } from "@/stores/index";
 import { useSupabase } from "@/composables/useSupabase";
 
@@ -44,7 +44,6 @@ import AtmosNotFound from "@/components/atmos/AtmosNotFound.vue";
 import AtmosPagination from "@/components/atmos/AtmosPagination.vue";
 import AtmosSvgIcon from "@/components/atmos/AtmosSvgIcon.vue";
 
-const route = useRoute();
 const { loadingState } = useGlobalStore();
 const {
     sbRequest,
@@ -57,15 +56,9 @@ const songList = ref([]);
 const searchSongName = ref("");
 const deletedSong = ref([]);
 const searchError = ref({ state: "", message: "" });
-const isSearch = ref(false);
 const showRecommender = ref(false);
-
-//輸入框左下方提示文字
-const searchedTips = computed(() => {
-    return searchSongName.value
-        ? `符合搜尋結果 ${totalSongCount.value} 首`
-        : `已推薦 ${totalSongCount.value} 首`;
-});
+const initState = ref(true);
+const searchedTips = ref("");
 
 //搜尋結果錯誤訊息
 function searchIsError({ state, message }) {
@@ -74,24 +67,16 @@ function searchIsError({ state, message }) {
 }
 //搜尋歌曲
 async function searchSongs() {
-    let songData = {};
     page.value = 0;
-    searchIsError({ state: 0, message: "" });
 
-    const { data, count } = await sbRequest(getSearchedRecomSongList, {
+    const res = await sbRequest(getSearchedRecomSongList, {
         name: searchSongName.value,
     });
 
-    songData.data = data;
-    songData.count = count;
-
-    if (songData.data.length === 0) {
-        searchIsError({ state: 2, message: "搜尋不到對應歌曲，請重新搜尋" });
-    }
-
-    songList.value = songData.data;
-    totalPages.value = Math.ceil(songData.count / 10);
-    totalSongCount.value = songData.count;
+    songList.value = res?.data;
+    totalSongCount.value = res?.count;
+    totalPages.value = Math.ceil(res?.count / 10);
+    searchedTips.value = `${searchSongName.value ? '符合搜尋結果': '已推薦'} ${res?.count} 首`;
 }
 
 //根據搜尋框內是否含有效文字而顯示對應樣式
@@ -109,42 +94,39 @@ const getPagination = (page, size) => {
 };
 
 const page = ref(0);
-async function pageChagne(value) {
-    let songData = {};
+async function pageChange(value) {
+    loadingState(true);
     page.value += value ? 1 : -1;
-
     const { from, to } = getPagination(page.value, 10);
-
-    const { data } = await sbRequest(handleRecoPageChange, {
+    const res = await sbRequest(handleRecoPageChange, {
         from: from,
         to: to,
     });
-    songData.data = data;
-
-    songList.value = songData.data;
+    songList.value = res?.data;
+    loadingState(false);
 }
 const totalSongCount = ref(0);
 const totalPages = ref(0);
 
 //頁面載入所有已建立歌曲
 async function loadingLyricList() {
-    let songData = {};
-    searchIsError({ state: 0, message: "" });
+
     loadingState(true);
     const res = await sbRequest(getRecoSongList);
-    songData.data = res?.data;
-    songData.count = res?.count;
-    showRecommender.value = true;
-    if (!songData.data) {
+    if (!res?.data) {
+        initState.value = false
         searchIsError({
             state: 1,
             message: "歌曲功能有誤，請聯絡網站管理員",
         });
     }
-    songList.value = songData.data;
-    totalPages.value = Math.ceil(songData.count / 10);
-    totalSongCount.value = songData.count;
+    songList.value = res?.data;
+    totalSongCount.value = res?.count;
+    totalPages.value = Math.ceil(res?.count / 10);
+    showRecommender.value = true;
+    searchedTips.value = `已推薦 ${res?.count} 首`;
     loadingState(false);
+
 }
 loadingLyricList();
 </script>

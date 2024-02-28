@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-[600px] max-sm:px-5 mx-auto">
-        <div v-if="songList.length">
+        <div v-if="isLogged">
             <div class="w-full">
                 <form @submit.prevent="searchSong">
                     <atmos-input class="w-full max-sm:text-sm mb-5" :inputTips="'請輸入歌曲名稱'"
@@ -12,34 +12,38 @@
                         </template>
                     </atmos-input>
                 </form>
-                <p v-if="songList?.length > 0" class="text-left mb-5">
-                    {{ searchedTips }}
-                </p>
-                <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`"
-                    v-for="item in songList" :key="item.id" :id="item.video_id" :url="item.video_img" :title="item.title"
-                    :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`"
-                    :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1">
-                    <template #configure>
-                        <div class="w-[22.5px] relative">
-                            <atmos-svg-icon name="icon_more" @click="showDropDown(item.video_id)"
-                                class="hidden group-hover:block cursor-pointer max-md:block" :class="[
-                                    { '!block': clickClassName === item.video_id },
-                                    { 'group-hover': !deletedSong },
-                                ]" />
-                            <atmos-drop-down class="top-4 right-3 py-1 px-2" :show="clickClassName === item.video_id">
-                                <button class="w-full py-1 rounded-md hover:bg-slate-800"
-                                    @click="toDeleteSong(item.video_id)">
-                                    刪除此歌曲
-                                </button>
-                            </atmos-drop-down>
-                        </div>
-                    </template>
-                </atmos-card>
-                <atmos-pagination v-if="totalSongCount > 10" :nowPage="page + 1" :totalPages="totalPages"
-                    @search="pageChagne" />
+                <template v-if="songList.length">
+                    <p v-if="songList?.length > 0" class="text-left mb-5">
+                        {{ searchedTips }}
+                    </p>
+                    <atmos-card class="max-sm:ml-0 ml-2 mb-5 group" :class="`dropdown-${item.video_id}`"
+                        v-for="item in songList" :key="item.id" :id="item.video_id" :url="item.video_img"
+                        :title="item.title"
+                        :href="`/KAKUKAKU/song/item?song_id=${item.video_id}&user=${userInfo.user_metadata?.name}`"
+                        :isAdded="true" :disappear="deletedSong.indexOf(item.video_id) > -1">
+                        <template #configure>
+                            <div class="w-[22.5px] relative">
+                                <atmos-svg-icon name="icon_more" @click="showDropDown(item.video_id)"
+                                    class="hidden group-hover:block cursor-pointer max-md:block" :class="[
+                                        { '!block': clickClassName === item.video_id },
+                                        { 'group-hover': !deletedSong },
+                                    ]" />
+                                <atmos-drop-down class="top-4 right-3 py-1 px-2" :show="clickClassName === item.video_id">
+                                    <button class="w-full py-1 rounded-md hover:bg-slate-800"
+                                        @click="toDeleteSong(item.video_id)">
+                                        刪除此歌曲
+                                    </button>
+                                </atmos-drop-down>
+                            </div>
+                        </template>
+                    </atmos-card>
+                    <atmos-pagination v-if="totalSongCount > 10" :nowPage="page + 1" :totalPages="totalPages"
+                        @search="pageChagne" />
+                </template>
+                <p v-else>搜尋不到對應歌曲，請重新搜尋</p>
             </div>
         </div>
-        <atmos-not-found v-if="searchError.message" :tips="searchError.message" />
+        <atmos-not-found v-else :tips="searchError.message" />
     </div>
 </template>
   
@@ -55,7 +59,7 @@ import AtmosNotFound from "@/components/atmos/AtmosNotFound.vue";
 import AtmosDropDown from "@/components/atmos/AtmosDropDown.vue";
 import AtmosPagination from "@/components/atmos/AtmosPagination.vue";
 import AtmosSvgIcon from "@/components/atmos/AtmosSvgIcon.vue";
-
+//沒有登入 沒有建資料 找不到資料
 const { userInfo, isLoggedIn } = useAuthStore();
 const { loadingState } = useGlobalStore();
 const {
@@ -69,6 +73,7 @@ const {
 
 const songList = ref([]);
 const searchSongName = ref("");
+const searchedTips = ref("");
 const deletedSong = ref([]);
 const searchError = ref({ state: "", message: "" });
 const totalSongCount = ref(0);
@@ -76,10 +81,10 @@ const totalPages = ref(0);
 const clickClassName = ref("");
 const page = ref(0);
 
-//輸入框左下方提示文字
-const searchedTips = computed(() => {
-    return `${searchSongName.value ? '符合搜尋結果' : '已建立'} ${totalSongCount.value} 首`
-});
+//是否為登入狀態
+const isLogged = computed(() => {
+    return isLoggedIn();
+})
 
 //搜尋結果錯誤訊息
 function searchIsError({ state, message }) {
@@ -89,19 +94,16 @@ function searchIsError({ state, message }) {
 //搜尋歌曲
 async function searchSong() {
     page.value = 0;
-    
+
     const res = await sbRequest(getSearchedSongList, {
         userId: userInfo.id,
         name: searchSongName.value,
     });
 
-    if (res?.data) {
-        searchIsError({ state: 2, message: "搜尋不到對應歌曲，請重新搜尋" });
-    }
-
     songList.value = res?.data;
     totalSongCount.value = res?.count;
     totalPages.value = Math.ceil(res?.count / 10);
+    searchedTips.value = `${searchSongName.value ? '符合搜尋結果': '已建立'} ${res?.count} 首`;
 }
 
 //根據搜尋框內是否含有效文字而顯示對應樣式
@@ -168,19 +170,20 @@ async function loadingLyricList() {
         });
 
         if (!res.data) {
-        searchIsError({
-            state: 1,
-            message: "您尚未新增歌曲",
-        });
-    }
+            searchIsError({
+                state: 1,
+                message: "您尚未新增歌曲",
+            });
+        }
         songList.value = res?.data;
         totalSongCount.value = res?.count;
-        totalPages.value = Math.ceil(res?.count/ 10);
+        totalPages.value = Math.ceil(res?.count / 10);
+        searchedTips.value = `已建立 ${res?.count} 首`
     }
     searchIsError({
-            state: 1,
-            message: "登入會員後才能看到個人歌曲清單",
-        });
+        state: 1,
+        message: "登入會員後才能看到個人歌曲清單",
+    });
     loadingState(false);
 }
 loadingLyricList();

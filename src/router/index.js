@@ -3,7 +3,7 @@ import { useSupabase } from "../composables/useSupabase";
 import HomePage from "@/pages/Home/Index.vue";
 
 import SongEdit from "@/pages/Song/SongEdit.vue";
-import SongList from "@/pages/Song/SongList.vue";
+import PersonalSongList from "@/pages/PersonalSongList/Index.vue";
 import RecommendSongList from "@/pages/RecommendSongList/Index.vue";
 import SongItem from "@/pages/Song/SongItem.vue";
 
@@ -39,7 +39,7 @@ const router = createRouter({
         },
         {
           path: "personal/list",
-          component: SongList,
+          component: PersonalSongList,
           meta: {
             title: "個人清單｜KAKUKAKU",
           },
@@ -141,7 +141,7 @@ router.beforeEach(async (to, from) => {
       .select()
       .eq("video_id", to.query.song_id);
     if (res?.data) {
-      document.title = res?.data[0].title + '｜KAKUKAKU';
+      document.title = res?.data[0]?.title + '｜KAKUKAKU';
     }
   }
 

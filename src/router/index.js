@@ -3,8 +3,7 @@ import { useSupabase } from "../composables/useSupabase";
 import HomePage from "@/pages/Home/Index.vue";
 
 import SongEdit from "@/pages/Song/SongEdit.vue";
-import PersonalSongList from "@/pages/PersonalSongList/Index.vue";
-import RecommendSongList from "@/pages/RecommendSongList/Index.vue";
+import SongList from "@/pages/SongList/Index.vue";
 import SongItem from "@/pages/Song/SongItem.vue";
 
 import AuthPage from "@/pages/Auth/Index.vue";
@@ -39,14 +38,14 @@ const router = createRouter({
         },
         {
           path: "personal/list",
-          component: PersonalSongList,
+          component: SongList,
           meta: {
             title: "個人清單｜KAKUKAKU",
           },
         },
         {
           path: "recommend/list",
-          component: RecommendSongList,
+          component: SongList,
           meta: {
             title: "推薦清單｜KAKUKAKU",
           },

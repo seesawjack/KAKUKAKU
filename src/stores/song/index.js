@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, reactive, onMounted, getCurrentInstance } from "vue";
+import { ref, reactive } from "vue";
 import { diff_match_patch } from "diff-match-patch";
 import { toRomaji } from "wanakana";
 import { useFetch } from "../../composables/useFetch";
@@ -15,13 +15,6 @@ export const useLyricStore = defineStore("lyric", () => {
   const lyricTimeStamp = ref({});
   const songInfo = ref({});
   const songDisplay = reactive({ show: true, message: "" });
-
-  // if (getCurrentInstance()) {
-  //   onMounted(() => {
-  //     songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
-  //     initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
-  //   });
-  // }
 
   //發出轉換成平假名的請求
   async function getHiragana(lyric) {

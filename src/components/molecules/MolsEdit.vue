@@ -36,9 +36,10 @@ import { useRouter, useRoute } from "vue-router";
 import { useLyricStore } from "../../stores/song";
 import { useGlobalStore } from "../../stores/index";
 import { useRegex } from "../../composables/useRegex";
+import Song from "@/utils/useSong.js"
 
-import AtmosEdit from "../atmos/AtmosEdit.vue";
-import AtmosInput from "../atmos/AtmosInput.vue";
+import AtmosEdit from "@/components/atmos/AtmosEdit.vue";
+import AtmosInput from "@/components/atmos/AtmosInput.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -59,9 +60,11 @@ const songUrl = ref("");
 const songId = ref("");
 
 //歌詞轉換成平假名
-async function transformLyrics(lyric, id) {
-  await handleLyricTransform(lyric);
-  router.push(`/KAKUKAKU/song/item?song_id=${id}`);
+function handleLyric(lyric, id) {
+  const song = new Song(lyric);
+  song.handleLyric();
+  console.log(song.hiraganaLyrics)
+  // router.push(`/KAKUKAKU/song/item?song_id=${id}`);
 }
 
 //歌詞確定送出
@@ -80,7 +83,7 @@ function sendLyric() {
     return;
   }
 
-  //根據從 youtube 搜尋或直接搜尋而進相對應行為
+  // //根據從 youtube 搜尋或直接搜尋而進相對應行為
   if (props.isYoutubeSearch) {
     songId.value = route.query.song_id;
   } else {
@@ -98,7 +101,7 @@ function sendLyric() {
     }
   }
 
-  transformLyrics(lyrics.value, songId.value);
+  handleLyric(lyrics.value, songId.value);
 }
 
 //上傳歌詞功能

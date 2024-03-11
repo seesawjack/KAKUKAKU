@@ -43,7 +43,7 @@ import AtmosInput from "@/components/atmos/AtmosInput.vue";
 
 const router = useRouter();
 const route = useRoute();
-const { handleLyricTransform, handleSongSelected } = useLyricStore();
+const { handleSongSelected } = useLyricStore();
 const { isError } = useGlobalStore();
 const { songIdRegex } = useRegex();
 
@@ -60,11 +60,10 @@ const songUrl = ref("");
 const songId = ref("");
 
 //歌詞轉換成平假名
-function handleLyric(lyric, id) {
+async function handleLyric(lyric, id) {
   const song = new Song(lyric);
-  song.handleLyric();
-  console.log(song.hiraganaLyrics)
-  // router.push(`/KAKUKAKU/song/item?song_id=${id}`);
+  await song.handleLyric();
+  router.push(`/KAKUKAKU/song/item?song_id=${id}`);
 }
 
 //歌詞確定送出

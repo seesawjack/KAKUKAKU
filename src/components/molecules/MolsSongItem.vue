@@ -27,6 +27,7 @@ import { useLyricStore } from "../../stores/song";
 import { useYoutubeStore } from "../../stores/youtube";
 import { useRegex } from "../../composables/useRegex";
 import { useSupabase } from "../../composables/useSupabase";
+import Song from "@/utils/useSong.js"
 
 import AtmosVideo from "../atmos/AtmosVideo.vue";
 import AtmosLyric from "../atmos/AtmosLyric.vue";
@@ -211,14 +212,6 @@ onMounted(async () => {
 
   //是分享狀態
   if (route.query.recommend === "true") {
-    const { data: itemData } = await sbRequest(getSongInfo, {
-      videoId: route.query.song_id,
-    });
-
-    if (!itemData.length) {
-      handleSongDisplay({ show: false, message: "此歌曲不在推薦清單中" });
-      return;
-    }
     const { data } = await sbRequest(getSongContent, {
       videoId: route.query.song_id,
     });

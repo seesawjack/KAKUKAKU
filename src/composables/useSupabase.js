@@ -184,47 +184,55 @@ export function useSupabase() {
   };
 
   //讀取指定歌曲內容
-  const getSongContent = async ({ videoId, userId }) => {
-    if (userId) {
+  const getSongContent = async ({ videoId }) => {
+    try {
       const { data, error } = await supabase
         .from("lyrics_content")
         .select()
         .eq("video_id", videoId)
-        .eq("user_id", userId);
-
-      if (error) return { error };
+      if (error) {
+        throw error
+      };
       return { data };
-    } else {
-      const { data, error } = await supabase
-        .from("lyrics_content")
-        .select()
-        .eq("video_id", videoId);
-
-      if (error) return { error };
-      return { data };
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  //讀取歌曲資訊
+  //取得歌曲資訊
   const getSongInfo = async ({ videoId, userId }) => {
-    if (userId) {
+    try {
       const { data, error } = await supabase
         .from("lyrics_list")
         .select()
         .eq("video_id", videoId)
         .eq("user_id", userId);
 
-      if (error) return { error };
+      if (error) {
+        console.log(error)
+        throw error
+      };
       return { data };
-    } else {
+    } catch (error) {
+      console.error('API: getSongInfo: \n' + error.message);
+    }
+  };
+
+  //取得推薦歌曲資訊
+  const getRecommendSongInfo = async ({ videoId }) => {
+    try {
       const { data, error } = await supabase
         .from("lyrics_list")
         .select()
         .eq("video_id", videoId)
         .eq("recommend->state", true);
 
-      if (error) return { error };
+      if (error) {
+        throw error
+      };
       return { data };
+    } catch (error) {
+      console.log(error);
     }
   };
 

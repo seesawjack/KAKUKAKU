@@ -200,13 +200,12 @@ export function useSupabase() {
   };
 
   //取得歌曲資訊
-  const getSongInfo = async ({ videoId, userId }) => {
+  const getSongInfo = async ({ videoId }) => {
     try {
       const { data, error } = await supabase
         .from("lyrics_list")
         .select()
         .eq("video_id", videoId)
-        .eq("user_id", userId);
 
       if (error) {
         console.log(error)
@@ -215,24 +214,6 @@ export function useSupabase() {
       return { data };
     } catch (error) {
       console.error('API: getSongInfo: \n' + error.message);
-    }
-  };
-
-  //取得推薦歌曲資訊
-  const getRecommendSongInfo = async ({ videoId }) => {
-    try {
-      const { data, error } = await supabase
-        .from("lyrics_list")
-        .select()
-        .eq("video_id", videoId)
-        .eq("recommend->state", true);
-
-      if (error) {
-        throw error
-      };
-      return { data };
-    } catch (error) {
-      console.log(error);
     }
   };
 

@@ -38,25 +38,24 @@ export default class Song {
 
     //發出轉換成平假名的請求
     async getHiragana(lyric) {
-        const requestData = JSON.stringify({
-            app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
-            output_type: "hiragana",
-            sentence: lyric,
-        });
-
         try {
             const response = await fetch('https://labs.goo.ne.jp/api/hiragana', {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
                 },
-                body: requestData
+                body: JSON.stringify({
+                    app_id: import.meta.env.VITE_HIRAGANA_API_KEY,
+                    output_type: "hiragana",
+                    sentence: lyric,
+                })
             });
+            
             if (!response.ok) {
                 throw new Error(`${response.status}_請求失敗`);
             }
-            const data = await response.json();
-            return data
+
+            return await response.json()
         } catch (error) {
             console.log(error)
         }
@@ -65,42 +64,46 @@ export default class Song {
     //取得平假名歌詞
     async getHiraganaLyric(lyric) {
         const haveEnglishLyrics = /\w/g.test(lyric);
-        let requestLyrics, englishLyrics, result;
 
         //依據全部歌詞是否含有英文分別處理
         if (haveEnglishLyrics) {
-            requestLyrics = lyric.replace(/\n/g, "||").replace(/\s/g, "★").replace(/[\w'-]+/g, "※");
-            englishLyrics = lyric.match(/[\w'-]+/g);
+          return this.handleEnglishInLyrics(lyric);
         } else {
-            requestLyrics = lyric.replace(/\n/g, "||").replace(/\s/g, "★");
+           return this.handleOnlyJapaneseLyrics(lyric)
         }
+    }
+
+    async handleEnglishInLyrics(lyric){
+        const requestLyrics = lyric.replace(/\n/g, "||").replace(/\s/g, "★").replace(/[\w'-]+/g, "※");
+        const englishLyrics = lyric.match(/[\w'-]+/g);
+
         const response = await this.getHiragana(requestLyrics);
 
-        //依據全部歌詞是否含有英文分別處理
-        if (haveEnglishLyrics) {
-            let index = 0;
-            result = response.converted
-                .replace(/\※/g, () => englishLyrics[index++])
-                .replace(/\s/g, "")
-                .replace(/★/g, " ")
-                .split("||")
-                .map((i) => i.trim());
-        } else {
-            result = response.converted
-                .replace(/\s/g, "")
-                .replace(/★/g, " ")
-                .split("||")
-                .map((i) => i.trim());
+        let index = 0;
+        return response.converted
+            .replace(/\※/g, () => englishLyrics[index++])
+            .replace(/\s/g, "")
+            .replace(/★/g, " ")
+            .split("||")
+            .map((i) => i.trim());
+    }
 
-        }
-        return result;
+    async handleOnlyJapaneseLyrics(lyric){
+        const requestLyrics = lyric.replace(/\n/g, "||").replace(/\s/g, "★");
+        const response = await this.getHiragana(requestLyrics);
+        return response.converted
+            .replace(/\s/g, "")
+            .replace(/★/g, " ")
+            .split("||")
+            .map((i) => i.trim());
     }
 
     //日文歌詞轉換
     async handleLyric() {
         localStorage.setItem("initLyrics", JSON.stringify(this.initLyrics));
         const result = await this.getHiraganaLyric(this.initLyrics)
-
+        const test = await this.getHiragana(this.initLyrics);
+        console.log(test)
         //計算歌詞含有空白段落的位置，並返回不含空白段落的歌詞
         this.hiraganaLyrics = result.filter((sentence, index) => {
             if (sentence === "") {

@@ -168,9 +168,6 @@ async function handleSongSubmit() {
 }
 
 onMounted(async () => {
-  songInfo.value = JSON.parse(localStorage.getItem("songInfo"));
-  initLyrics.value = JSON.parse(localStorage.getItem("initLyrics"));
-
   //防呆機制
   if (!route.query.song_id) {
     handleSongDisplay({ show: false, message: "此歌曲尚未建立" });

@@ -63,7 +63,7 @@ const songId = ref("");
 async function handleLyric(lyric, id) {
   const song = new Song(lyric);
   await song.handleLyric();
-  router.push(`/KAKUKAKU/song/item?song_id=${id}`);
+  // router.push(`/KAKUKAKU/song/item?song_id=${id}`);
 }
 
 //歌詞確定送出
